@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Radosław Mikrut",
-  "homepage": "https://radeon2211/github.io/programming-passion",
+  "homepage": "http://Radeon2211/github.io/programming-passion",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
