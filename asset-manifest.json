@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/github.io/programming-passion/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/github.io/programming-passion/static/js/main.759df3e2.chunk.js",
-    "main.js.map": "/github.io/programming-passion/static/js/main.759df3e2.chunk.js.map",
-    "runtime-main.js": "/github.io/programming-passion/static/js/runtime-main.b91f7a8f.js",
-    "runtime-main.js.map": "/github.io/programming-passion/static/js/runtime-main.b91f7a8f.js.map",
-    "static/js/2.6c4d2527.chunk.js": "/github.io/programming-passion/static/js/2.6c4d2527.chunk.js",
-    "static/js/2.6c4d2527.chunk.js.map": "/github.io/programming-passion/static/js/2.6c4d2527.chunk.js.map",
-    "index.html": "/github.io/programming-passion/index.html",
-    "precache-manifest.17eef40b47c62c2a134b8057802eccc5.js": "/github.io/programming-passion/precache-manifest.17eef40b47c62c2a134b8057802eccc5.js",
-    "service-worker.js": "/github.io/programming-passion/service-worker.js",
-    "static/css/main.5ecd60fb.chunk.css.map": "/github.io/programming-passion/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.6c4d2527.chunk.js.LICENSE.txt": "/github.io/programming-passion/static/js/2.6c4d2527.chunk.js.LICENSE.txt"
+    "main.css": "/programming-passion/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/programming-passion/static/js/main.55a8eeb3.chunk.js",
+    "main.js.map": "/programming-passion/static/js/main.55a8eeb3.chunk.js.map",
+    "runtime-main.js": "/programming-passion/static/js/runtime-main.33922841.js",
+    "runtime-main.js.map": "/programming-passion/static/js/runtime-main.33922841.js.map",
+    "static/js/2.6c4d2527.chunk.js": "/programming-passion/static/js/2.6c4d2527.chunk.js",
+    "static/js/2.6c4d2527.chunk.js.map": "/programming-passion/static/js/2.6c4d2527.chunk.js.map",
+    "index.html": "/programming-passion/index.html",
+    "precache-manifest.cdc78f200a2ae81a57449aba2daf8f09.js": "/programming-passion/precache-manifest.cdc78f200a2ae81a57449aba2daf8f09.js",
+    "service-worker.js": "/programming-passion/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/programming-passion/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.6c4d2527.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.6c4d2527.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b91f7a8f.js",
+    "static/js/runtime-main.33922841.js",
     "static/js/2.6c4d2527.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.759df3e2.chunk.js"
+    "static/js/main.55a8eeb3.chunk.js"
   ]
 }
