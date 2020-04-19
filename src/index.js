@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './containers/App';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import rootReducer from './store/reducers/rootReducer';
@@ -13,7 +13,8 @@ import { reduxFirestore, getFirestore, createFirestoreInstance } from 'redux-fir
 import fbConfig from './config/fbConfig';
 import firebase from 'firebase/app';
 
-const reduxDevToolsEnhancer = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
+// TODO - REMOVE USER AGENT CHECK BELOW
+const reduxDevToolsEnhancer = (process.env.NODE_ENV === 'development' && !navigator.userAgent.match(/Android/i) ) ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const store = createStore(rootReducer, reduxDevToolsEnhancer(
     compose(
@@ -58,15 +59,6 @@ ReactDOM.render(
         </AuthIsLoaded>
       </ReactReduxFirebaseProvider>
     </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

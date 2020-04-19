@@ -1,0 +1,54 @@
+@import '../../../css/variables';
+
+.Navbar {
+  align-items: center;
+  background-color: var(--theme);
+  box-shadow: 0 1px 6px 2px rgba(0, 0, 0, .4);
+  display: flex;
+  position: fixed;
+  justify-content: space-between;
+  left: 0;
+  padding: 1rem 5rem;
+  top: 0;
+  width: 100%;
+  z-index: var(--z-index-4);
+
+  .Heading {
+    font-size: 3.3rem;
+    font-family: var(--font-logo);
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .Logo {
+    width: 6.4rem;
+    height: 6.4rem;
+    display: none;
+  }
+
+  .HeadingLink:link,
+  .HeadingLink:visited {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .NavList {
+    display: flex;
+    list-style: none;
+
+    & > *:not(:last-child) {
+      margin-right: 2.4rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .Heading {
+    display: none;
+  }
+
+  .Logo {
+    display: block;
+  }
+}

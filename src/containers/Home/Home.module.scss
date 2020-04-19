@@ -1,0 +1,45 @@
+@import '../../css/variables.scss';
+
+.Home {
+  display: grid;
+  grid-template-rows: 1fr repeat(2, max-content) repeat(2, 1fr);
+  row-gap: 4rem;
+  margin: 0 auto;
+  max-width: 100rem;
+
+  .Heading {
+    font-family: var(--font-home-heading);
+    font-size: 5.2rem;
+    grid-row: 2 / 3;
+    letter-spacing: 1px;
+    text-align: center;
+
+    & > * {
+      display: block;
+    }
+  }
+
+  .ButtonBox {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    grid-row: 3 / 4;
+  }
+
+  .LoginCaption {
+    font-size: 1.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .LoginLink:link,
+  .LoginLink:visited, {
+    color: var(--green);
+    margin-left: .7rem;
+    text-decoration: none;
+    transition: color .12s;
+
+    &:hover {
+      color: var(--green-dark);
+    }
+  }
+}

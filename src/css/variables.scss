@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+
+:root {
+  --theme: rgb(52, 73, 94);
+  --green: rgb(55, 215, 183);
+  --green-dark: rgb(47, 204, 173);
+  --grey-1: rgb(239, 239, 239);
+  --grey-2: rgb(234, 234, 234);
+  --grey-3: rgb(223, 223, 223);
+
+  --font-logo: 'Sriracha', cursive;
+  --font-home-heading: 'Handlee', cursive;
+
+  --z-index-1: 10;
+  --z-index-2: 100;
+  --z-index-3: 1000;
+  --z-index-4: 10000;
+  --z-index-5: 100000;
+}

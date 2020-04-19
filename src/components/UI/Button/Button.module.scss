@@ -1,0 +1,42 @@
+@import '../../../css/variables';
+
+.Button {
+  border: 1px solid var(--green);
+  border-radius: 1px;
+  cursor: pointer;
+  outline: none;
+  transition: all .12s;
+
+  &:hover {
+    border: 1px solid var(--green-dark);
+  }
+}
+
+.Empty {
+  background-color: transparent;
+  color: var(--green);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, .03);
+    color: var(--green-dark);
+  }
+}
+
+.Filled {
+  background-color: var(--green);
+  color: #fff;
+
+  &:hover {
+    background-color: var(--green-dark);
+  }
+}
+
+.Small {
+  font-size: 1.8rem;
+  padding: .9rem 2rem;
+}
+
+.Big {
+  font-size: 3rem;
+  padding: 1.5rem 3.6rem;
+}
