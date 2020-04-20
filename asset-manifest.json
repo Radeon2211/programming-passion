@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/programming-passion/static/css/main.191fc901.chunk.css",
-    "main.js": "/programming-passion/static/js/main.135f00c5.chunk.js",
-    "main.js.map": "/programming-passion/static/js/main.135f00c5.chunk.js.map",
+    "main.css": "/programming-passion/static/css/main.9f0c4a50.chunk.css",
+    "main.js": "/programming-passion/static/js/main.e1f12665.chunk.js",
+    "main.js.map": "/programming-passion/static/js/main.e1f12665.chunk.js.map",
     "runtime-main.js": "/programming-passion/static/js/runtime-main.33922841.js",
     "runtime-main.js.map": "/programming-passion/static/js/runtime-main.33922841.js.map",
-    "static/js/2.a8c92cb0.chunk.js": "/programming-passion/static/js/2.a8c92cb0.chunk.js",
-    "static/js/2.a8c92cb0.chunk.js.map": "/programming-passion/static/js/2.a8c92cb0.chunk.js.map",
+    "static/js/2.981dfd7d.chunk.js": "/programming-passion/static/js/2.981dfd7d.chunk.js",
+    "static/js/2.981dfd7d.chunk.js.map": "/programming-passion/static/js/2.981dfd7d.chunk.js.map",
     "index.html": "/programming-passion/index.html",
-    "precache-manifest.f151325204ddde55d0677a77922cc435.js": "/programming-passion/precache-manifest.f151325204ddde55d0677a77922cc435.js",
+    "precache-manifest.fab061104c53fdc607818df8b1c5b23d.js": "/programming-passion/precache-manifest.fab061104c53fdc607818df8b1c5b23d.js",
     "service-worker.js": "/programming-passion/service-worker.js",
-    "static/css/main.191fc901.chunk.css.map": "/programming-passion/static/css/main.191fc901.chunk.css.map",
-    "static/js/2.a8c92cb0.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.a8c92cb0.chunk.js.LICENSE.txt",
-    "static/media/logo.png": "/programming-passion/static/media/logo.28f46ac1.png"
+    "static/css/main.9f0c4a50.chunk.css.map": "/programming-passion/static/css/main.9f0c4a50.chunk.css.map",
+    "static/js/2.981dfd7d.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.981dfd7d.chunk.js.LICENSE.txt",
+    "static/media/sprite.svg": "/programming-passion/static/media/sprite.b72b66d7.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.33922841.js",
-    "static/js/2.a8c92cb0.chunk.js",
-    "static/css/main.191fc901.chunk.css",
-    "static/js/main.135f00c5.chunk.js"
+    "static/js/2.981dfd7d.chunk.js",
+    "static/css/main.9f0c4a50.chunk.css",
+    "static/js/main.e1f12665.chunk.js"
   ]
 }
