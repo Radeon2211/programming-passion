@@ -3,12 +3,14 @@
 .Button {
   border: 1px solid var(--green);
   border-radius: 1px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, .3);
   cursor: pointer;
   outline: none;
   transition: all .12s;
 
   &:hover {
-    border: 1px solid var(--green-dark);
+    border: 1px solid var(--green-dark-1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
   }
 }
 
@@ -18,7 +20,7 @@
 
   &:hover {
     background-color: rgba(0, 0, 0, .03);
-    color: var(--green-dark);
+    color: var(--green-dark-1);
   }
 }
 
@@ -27,7 +29,7 @@
   color: #fff;
 
   &:hover {
-    background-color: var(--green-dark);
+    background-color: var(--green-dark-1);
   }
 }
 
@@ -39,4 +41,15 @@
 .Big {
   font-size: 3rem;
   padding: 1.5rem 3.6rem;
+}
+
+.Disabled {
+  background-color: var(--green-dark-2);
+  border: 1px solid var(--green-dark-2);
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: var(--green-dark-2);
+    border: 1px solid var(--green-dark-2);
+  }
 }

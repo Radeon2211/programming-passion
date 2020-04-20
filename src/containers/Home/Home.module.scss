@@ -1,11 +1,12 @@
 @import '../../css/variables.scss';
 
 .Home {
+  align-self: stretch;
   display: grid;
   grid-template-rows: 1fr repeat(2, max-content) repeat(2, 1fr);
-  row-gap: 4rem;
   margin: 0 auto;
   max-width: 100rem;
+  row-gap: 4rem;
 
   .Heading {
     font-family: var(--font-home-heading);
@@ -13,6 +14,7 @@
     grid-row: 2 / 3;
     letter-spacing: 1px;
     text-align: center;
+    text-shadow: 0 0 3px rgba(0, 0, 0, .3);
 
     & > * {
       display: block;
@@ -28,7 +30,7 @@
 
   .LoginCaption {
     font-size: 1.6rem;
-    margin-top: 1.5rem;
+    margin-top: 1.6rem;
   }
 
   .LoginLink:link,
@@ -39,7 +41,7 @@
     transition: color .12s;
 
     &:hover {
-      color: var(--green-dark);
+      color: var(--green-dark-1);
     }
   }
 }

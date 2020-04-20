@@ -5,6 +5,7 @@ import Main from './components/UI/Main/Main';
 import SignIn from './containers/Auth/SignIn';
 import SignUp from './containers/Auth/SignUp';
 import Home from './containers/Home/Home';
+import Footer from './components/Footer/Footer';
 
 class App extends Component {
   render () {
@@ -19,6 +20,7 @@ class App extends Component {
             <Redirect to="/" />
           </Switch>
         </Main>
+        <Footer />
       </Fragment>
     );
   }

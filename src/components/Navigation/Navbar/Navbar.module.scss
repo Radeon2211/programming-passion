@@ -14,17 +14,18 @@
   z-index: var(--z-index-4);
 
   .Heading {
-    font-size: 3.3rem;
+    font-size: 3.5rem;
     font-family: var(--font-logo);
     font-weight: 400;
     letter-spacing: 2px;
     line-height: 1;
+    text-shadow: 0 0 3px rgba(0, 0, 0, .3);
   }
 
   .Logo {
-    width: 6.4rem;
-    height: 6.4rem;
+    height: 5rem;
     display: none;
+    vertical-align: middle;
   }
 
   .HeadingLink:link,
@@ -44,11 +45,20 @@
 }
 
 @media only screen and (max-width: 900px) {
-  .Heading {
-    display: none;
-  }
+  .Navbar {
 
-  .Logo {
-    display: block;
+    .Heading {
+      display: none;
+    }
+
+    .Logo {
+      display: initial;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Navbar {
+    padding: 1rem 2rem;
   }
 }

@@ -1,12 +1,18 @@
 import React from 'react';
 import classes from './Button.module.scss';
 
-const Button = (props) => {
-  const btnClasses = [classes.Button, classes[props.size], classes[props.fill]];
+const Button = ({ size, fill, type, disabled, children }) => {
+  const btnClasses = [classes.Button, classes[size], classes[fill]];
+  if (disabled) btnClasses.push(classes.Disabled);
+  console.log(disabled);
 
   return (
-    <button className={btnClasses.join(' ')}>
-      {props.children}
+    <button
+      className={btnClasses.join(' ')}
+      type={type}
+      disabled={disabled}
+    >
+      {children}
     </button>
   );
 }

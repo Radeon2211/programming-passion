@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './Navbar.module.scss';
-import logo from '../../../images/logo.png';
+import logo from '../../../images/logo.jpg';
 import { Link } from 'react-router-dom';
 import SignedInLinks from '../SignedInLinks/SignedInLinks';
 import SignedOutLinks from '../SignedOutLinks/SignedOutLinks';
