@@ -7,6 +7,7 @@
     background-color: rgba(0, 0, 0, .1);
     border: none;
     border-bottom: 3px solid rgba(0, 0, 0, .1);
+    box-shadow: 0 0 1px rgba(0, 0, 0, .1);
     color: #fff;
     font-size: 1.5rem;
     font-family: inherit;
@@ -20,7 +21,7 @@
     }
 
     &:focus {
-      border-bottom: 3px solid rgba(0, 0, 0, .3);
+      border-bottom: 3px solid rgba(0, 0, 0, .35);
     }
   }
 

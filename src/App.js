@@ -9,6 +9,7 @@ import SignOut from './containers/Auth/SignOut';
 import Home from './containers/Home/Home';
 import CreatePost from './containers/CreatePost/CreatePost';
 import Posts from './containers/Posts/Posts';
+import Settings from './containers/Settings/Settings';
 import Footer from './components/Footer/Footer';
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
         <Switch>
           <Route path="/create" component={CreatePost} />
           <Route path="/posts" component={Posts} />
+          <Route path="/settings" component={Settings} />
           <Route path="/signout" component={SignOut} />
           <Redirect to="/posts" />
         </Switch>

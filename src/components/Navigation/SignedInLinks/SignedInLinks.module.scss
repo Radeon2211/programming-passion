@@ -1,3 +1,36 @@
-.SignedInLinks > *:not(:last-child) {
-  margin-right: 2.4rem;
+.SignedInLinks {
+  display: flex;
+
+  & > *:not(:last-child) {
+    margin-right: 2.4rem;
+  }
+
+  .User {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .UserPhoto {
+    border-radius: 50%;
+    height: 4.5rem;
+    overflow: hidden;
+    width: 4.5rem;
+  }
+
+  .Arrow {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 9px solid #fff;
+    height: 0;
+    margin-left: 1.2rem;
+    transform: rotate(0);
+    transition: transform .4s;
+    width: 0;
+  }
+
+  .Rotated {
+    transform: rotate(180deg);
+  }
 }
