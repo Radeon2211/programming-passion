@@ -7,13 +7,14 @@ export const updateObject = (oldObject, updatedProps) => ({
 });
 
 export const createInputElements = (state, changeHandler) => (
-  Object.values(state).map(({ kind, label, value, config, valid, touched }) => (
+  Object.values(state).map(({ kind, label, value, config, validation, valid, touched }) => (
     <Input
       key={config.id}
       kind={kind}
       label={label}
       value={value}
       config={config}
+      validation={validation}
       valid={valid}
       touched={touched}
       changed={(e) => changeHandler(config.id, e)}
@@ -32,6 +33,7 @@ export const createStateInput = (kind, label, value, config, validation, valid =
 });
 
 export const checkValidity = (value, rules) => {
+  if (!rules) return true;
   const val = value.trim();
   const steps = [];
 

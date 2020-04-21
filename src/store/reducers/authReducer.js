@@ -15,7 +15,11 @@ const authSuccess = (state) => {
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { loading: false, error: action.error });
+  return updateObject(state, { loading: false, error: action.error.message });
+};
+
+const deleteError = (state) => {
+  return updateObject(state, { error: null });
 };
 
 const authReducer = (state = initialState, action) => {
@@ -23,6 +27,7 @@ const authReducer = (state = initialState, action) => {
     case (actionTypes.AUTH_START): return authStart(state, action);
     case (actionTypes.AUTH_SUCCESS): return authSuccess(state, action);
     case (actionTypes.AUTH_FAIL): return authFail(state, action);
+    case (actionTypes.DELETE_ERROR): return deleteError(state, action);
     default: return state;
   }
 };

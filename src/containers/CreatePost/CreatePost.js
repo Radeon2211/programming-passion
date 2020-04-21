@@ -6,21 +6,15 @@ import * as actions from '../../store/actions/indexActions';
 
 class SignUp extends Component {
   state = {
-    email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      null,
-      true
+    title: createStateInput('input', 'Title', '',
+      { type: 'text', id: 'title', autoComplete: 'off', placeholder: 'Post title...' },
+      { minLength: 1, maxLength: 100 }
     ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
-      null,
-      true,
+    content: createStateInput('textarea', 'Content', '',
+      { id: 'content', placeholder: 'Share your thoughts...' },
+      { minLength: 1, maxLength: 400 }
     ),
   };
-
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
 
   inputChangedHandler = (inputId, e) => {
     this.setState({
@@ -38,7 +32,7 @@ class SignUp extends Component {
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onSignIn(data);
+    this.props.onCreatePost(data);
   };
 
   render () {
@@ -46,8 +40,8 @@ class SignUp extends Component {
 
     return (
       <Form
-        headingText="Sign In"
-        btnText="Login"
+        headingText="Create Post"
+        btnText="Create"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
       >
@@ -58,8 +52,7 @@ class SignUp extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onSignIn: (data) => dispatch(actions.signIn(data)),
-  onDeleteError: () => dispatch(actions.deleteError()),
+  onCreatePost: (data) => dispatch(actions.createPost(data)),
 });
 
 export default connect(null, mapDispatchToProps)(SignUp);

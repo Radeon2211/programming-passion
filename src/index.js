@@ -12,6 +12,7 @@ import { ReactReduxFirebaseProvider, getFirebase, isLoaded } from 'react-redux-f
 import { reduxFirestore, getFirestore, createFirestoreInstance } from 'redux-firestore';
 import fbConfig from './config/fbConfig';
 import firebase from 'firebase/app';
+import Loader from './components/UI/Loader/Loader';
 
 // TODO - REMOVE USER AGENT CHECK BELOW
 const reduxDevToolsEnhancer = (process.env.NODE_ENV === 'development' && !navigator.userAgent.match(/Android/i) ) ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
@@ -42,9 +43,9 @@ const rrfProps = {
   sessions: 'sessions',
 };
 
-function AuthIsLoaded({ children }) {
+const AuthIsLoaded = ({ children }) => {
   const auth = useSelector(state => state.firebase.auth);
-  if (!isLoaded(auth)) return <div className="center">Loading...</div>;
+  if (!isLoaded(auth)) return <div className="LoaderWrapper"><Loader size="Big" /></div>;
   return children;
 }
 

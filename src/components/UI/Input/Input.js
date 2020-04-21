@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from './Input.module.scss';
 
-const Input = ({ kind, label, value, config, valid, touched, changed }) => {
+const Input = ({ kind, label, value, config, validation, valid, touched, changed }) => {
   let input = null;
   let validClass = null;
-  if (touched) {
+  if (touched && validation) {
     validClass = valid ? classes.Valid : classes.Invalid;
   }
   const inputWrapperClasses = [classes.InputWrapper, validClass];

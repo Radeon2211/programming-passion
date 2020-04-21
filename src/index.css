@@ -54,5 +54,10 @@ body::-webkit-scrollbar-thumb {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
+}
+
+.LoaderWrapper {
+  text-align: center;
+  margin-top: 5rem;
 }

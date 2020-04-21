@@ -24,6 +24,10 @@ class SignUp extends Component {
     )
   };
 
+  componentDidMount() {
+    this.props.onDeleteError();
+  }
+
   inputChangedHandler = (inputId, e) => {
     this.setState({
       [inputId]: updateObject(this.state[inputId], {
@@ -36,6 +40,7 @@ class SignUp extends Component {
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
+    if (!checkFormValidation(this.state)) return;
     const data = {};
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
@@ -59,12 +64,9 @@ class SignUp extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  loading: state.auth.loading,
-});
-
 const mapDispatchToProps = (dispatch) => ({
   onSignUp: (data) => dispatch(actions.signUp(data)),
+  onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(SignUp);

@@ -23,7 +23,7 @@
   }
 
   .Logo {
-    height: 5rem;
+    height: 4.6rem;
     display: none;
     vertical-align: middle;
   }
@@ -32,15 +32,6 @@
   .HeadingLink:visited {
     color: #fff;
     text-decoration: none;
-  }
-
-  .NavList {
-    display: flex;
-    list-style: none;
-
-    & > *:not(:last-child) {
-      margin-right: 2.4rem;
-    }
   }
 }
 
