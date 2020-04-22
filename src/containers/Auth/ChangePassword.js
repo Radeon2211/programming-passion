@@ -4,24 +4,23 @@ import { updateObject, createInputElements, createStateInput, checkValidity, che
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class SignUp extends Component {
+class ChangePassword extends Component {
   state = {
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      { isEmail: true },
+      null,
+      true,
     ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'new-password', placeholder: 'Type safe password...' },
+    oldPassword: createStateInput('input', 'Old password', '',
+      { type: 'password', id: 'oldPassword', autoComplete: 'current-password', placeholder: 'Your old password...' },
+      null,
+      true,
+    ),
+    newPassword: createStateInput('input', 'New password', '',
+      { type: 'password', id: 'newPassword', autoComplete: 'new-password', placeholder: 'Type safe password...' },
       { minLength: 6 },
+      false,
     ),
-    firstName: createStateInput('input', 'First name', '',
-      { type: 'text', id: 'firstName', autoComplete: 'given-name', placeholder: 'Your first name...' },
-      { minLength: 1, maxLength: 50 },
-    ),
-    lastName: createStateInput('input', 'Last name', '',
-      { type: 'text', id: 'lastName', autoComplete: 'family-name', placeholder: 'Your last name...' },
-      { minLength: 1, maxLength: 50 },
-    )
   };
 
   componentDidMount() {
@@ -31,7 +30,7 @@ class SignUp extends Component {
   inputChangedHandler = (inputId, e) => {
     this.setState({
       [inputId]: updateObject(this.state[inputId], {
-        value: inputId === 'password' ? e.target.value.trim() : e.target.value,
+        value: e.target.value,
         valid: checkValidity(e.target.value, this.state[inputId].validation),
         touched: true,
       }),
@@ -40,12 +39,11 @@ class SignUp extends Component {
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
-    if (!checkFormValidation(this.state)) return;
     const data = {};
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onSignUp(data);
+    this.props.onChangePassword(data, this.props.history);
   };
 
   render () {
@@ -53,8 +51,8 @@ class SignUp extends Component {
 
     return (
       <Form
-        headingText="Sign Up"
-        btnText="Join our community"
+        headingText="Change Password"
+        btnText="Change"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
       >
@@ -65,8 +63,8 @@ class SignUp extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onSignUp: (data) => dispatch(actions.signUp(data)),
+  onChangePassword: (data, history) => dispatch(actions.changePassword(data, history)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(ChangePassword);

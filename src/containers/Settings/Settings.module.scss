@@ -1,0 +1,55 @@
+@import '../../css/variables.scss';
+
+.Settings {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  & > *:not(:last-child) {
+    margin-bottom: 3.6rem;
+  }
+
+  .User {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .UserPhoto {
+    border-radius: 50%;
+    box-shadow: var(--shadow-2);
+    height: 15rem;
+    width: 15rem;
+  }
+
+  .UserName:link,
+  .UserName:visited {
+    color: #fff;
+    text-decoration: none;
+    margin-top: 1.2rem;
+    font-size: 1.8rem;
+  }
+
+  .Heading {
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .Buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ButtonLink {
+    margin: 0 1.2rem 2.4rem;
+  }
+
+  .Success {
+    color: var(--green);
+    font-size: 1.7rem;
+    text-align: center;
+  }
+}

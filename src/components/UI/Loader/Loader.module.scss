@@ -10,6 +10,18 @@
   display: block;
 }
 
+.Mini {
+  height: 2.4rem;
+  width: 2.4rem;
+
+  &::after {
+    border: 3px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    height: 2.4rem;
+    width: 2.4rem;
+  }
+}
+
 .Small {
   height: 4rem;
   width: 4rem;

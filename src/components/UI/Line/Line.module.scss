@@ -1,0 +1,15 @@
+@import '../../../css/variables.scss';
+
+.Line {
+  width: 95%;
+  max-width: 60rem;
+  height: 2px;
+}
+
+.Begin {
+  background-image: linear-gradient(to right, var(--gray-4), var(--gray-4-transparent));
+}
+
+.Middle {
+  background-image: linear-gradient(to right, var(--gray-4-transparent), var(--gray-4), var(--gray-4-transparent));
+}

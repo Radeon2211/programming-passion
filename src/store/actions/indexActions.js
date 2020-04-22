@@ -1,2 +1,14 @@
-export { signUp, signIn, signOut, deleteError } from './authActions';
-export { createPost } from './postActions';
+export {
+  signUp,
+  signIn,
+  signOut,
+  deleteError,
+  deleteSuccess,
+  changeEmail,
+  changeName,
+  changePassword,
+} from './authActions';
+
+export {
+  createPost,
+} from './postActions';

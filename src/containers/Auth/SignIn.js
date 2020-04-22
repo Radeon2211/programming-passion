@@ -9,7 +9,7 @@ class SignUp extends Component {
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
       null,
-      true
+      true,
     ),
     password: createStateInput('input', 'Password', '',
       { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },

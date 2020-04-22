@@ -1,3 +1,5 @@
+@import '../../../css/variables.scss';
+
 .SignedInLinks {
   display: flex;
 
@@ -14,6 +16,7 @@
 
   .UserPhoto {
     border-radius: 50%;
+    box-shadow: var(--shadow-2);
     height: 4.5rem;
     overflow: hidden;
     width: 4.5rem;
@@ -23,10 +26,11 @@
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 9px solid #fff;
+    box-shadow: var(--shadow-2);
     height: 0;
     margin-left: 1.2rem;
     transform: rotate(0);
-    transition: transform .4s;
+    transition: transform .3s;
     width: 0;
   }
 
