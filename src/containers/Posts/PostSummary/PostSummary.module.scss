@@ -1,0 +1,51 @@
+@import '../../../css/variables.scss';
+
+.PostSummary {
+  background-color: #fff;
+  border-radius: 1px;
+  box-shadow: var(--shadow-3);
+  display: flex;
+  padding: 1.5rem 2rem;
+
+  .Left {
+    flex: 1;
+  }
+
+  .Heading {
+    font-size: 2.1rem;
+    letter-spacing: 1px;
+    color: #000;
+    margin-bottom: 1.2rem;
+  }
+
+  .User {
+    margin-top: 1.2rem;
+  }
+
+  .Right {
+    border-left: 1px solid var(--gray-4);
+    display: flex;
+    flex-direction: column;
+    margin-left: 1.2rem;
+  }
+
+  .IconBox {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding-left: 1.2rem;
+  }
+
+  .Icon {
+    height: 2.4rem;
+    fill: var(--gray-4);
+    width: 2.4rem;
+  }
+
+  .IconCaption {
+    font-size: 1.5rem;
+    color: var(--gray-4);
+    margin-left: .7rem;
+  }
+}

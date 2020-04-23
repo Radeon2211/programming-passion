@@ -1,5 +1,3 @@
-@import '../../css/variables.scss';
-
 .Footer {
   margin: 3rem 2rem;
   text-align: center;
@@ -29,7 +27,7 @@
   }
 
   .SocialIcon {
-    fill: var(--gray-1);
+    fill: #fff;
     height: 3.2rem;
     margin: 0 1.2rem;
     vertical-align: middle;

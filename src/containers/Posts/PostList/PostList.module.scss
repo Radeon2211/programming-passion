@@ -1,0 +1,14 @@
+.PostList {
+  margin-top: 4.8rem;
+
+  & > *:not(:last-child) {
+    margin-bottom: 2.4rem;
+  }
+}
+
+.Link:link,
+.Link:visited {
+  color: #fff;
+  display: block;
+  text-decoration: none;
+}

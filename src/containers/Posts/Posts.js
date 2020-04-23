@@ -1,10 +1,26 @@
 import React from 'react';
 import classes from './Posts.module.scss';
-import { Link } from 'react-router-dom';
-import Button from '../../components/UI/Button/Button';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+import Line from '../../components/UI/Line/Line';
+import PostList from './PostList/PostList';
 
-const Posts = () => (
-  <h1 className={classes.Heading}>Posts</h1>
+const Posts = ({ posts }) => (
+  <div className={classes.Posts}>
+    <h1 className={classes.Heading}>Check out the latest posts</h1>
+    <Line type="Begin" />
+    <PostList posts={posts} />
+  </div>
 );
 
-export default Posts;
+const mapStateToProps = (state) => ({
+  posts: state.firestore.ordered.posts || [],
+});
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([
+    { collection: 'posts', orderBy: ['createdAt', 'desc'] },
+  ])
+)(Posts);

@@ -1,0 +1,31 @@
+@import '../../../css/variables.scss';
+
+.AuthorData {
+  display: flex;
+
+  .Photo {
+    border-radius: 50%;
+    box-shadow: var(--shadow-2);
+    height: 4.5rem;
+    object-fit: cover;
+    width: 4.5rem;
+  }
+
+  .Right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1.2rem;
+  }
+
+  .Name {
+    color: var(--theme);
+    font-size: 1.4rem;
+    margin-bottom: .3rem;
+  }
+
+  .Date {
+    color: var(--gray-4);
+    font-size: 1.2rem;
+  }
+}

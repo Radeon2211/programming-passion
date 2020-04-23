@@ -14,9 +14,8 @@ export const postFail = (error) => ({
 });
 
 export const createPost = ({ title, content }, history) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+  return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
-    const firebase = getFirebase();
     const firestore = getFirestore();
     try {
       const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL, createdPosts } } = getState().firebase;
