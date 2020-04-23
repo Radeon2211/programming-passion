@@ -1,33 +1,44 @@
 import * as actionTypes from './actionTypes';
 
-// export const authStart = () => ({
-//   type: actionTypes.AUTH_START,
-// });
+export const postStart = () => ({
+  type: actionTypes.POST_START,
+});
 
-// export const authSuccess = () => ({
-//   type: actionTypes.AUTH_SUCCESS,
-// });
+export const postSuccess = () => ({
+  type: actionTypes.POST_SUCCESS,
+});
 
-// export const authFail = (error) => ({
-//   type: actionTypes.AUTH_FAIL,
-//   error,
-// });
+export const postFail = (error) => ({
+  type: actionTypes.POST_FAIL,
+  error,
+});
 
-export const createPost = () => {
+export const createPost = ({ title, content }, history) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    // dispatch(authStart());
-    // const firebase = getFirebase();
-    // const firestore = getFirestore();
-    // try {
-    //   const { user: { uid } } = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    //   await firestore.collection('users').doc(uid).set({
-    //     firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
-    //     lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
-    //     likedPosts: [],
-    //   });
-    //   dispatch(authSuccess());
-    // } catch (error) {
-    //   dispatch(authFail(error));
-    // }
+    dispatch(postStart());
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    try {
+      const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL, createdPosts } } = getState().firebase;
+      const postDoc = await firestore.collection('posts').add({
+        authorUID,
+        authorFirstName: firstName,
+        authorLastName: lastName,
+        authorPhotoURL: photoURL,
+        title,
+        content,
+        createdAt: new Date(),
+        likesCount: 0,
+        comments: [],
+      });
+      createdPosts.push(postDoc.id);
+      await firestore.collection('users').doc(authorUID).update({
+        createdPosts,
+      });
+      dispatch(postSuccess());
+      history.push('/posts');
+    } catch (error) {
+      dispatch(postFail(error));
+    }
   };
 };

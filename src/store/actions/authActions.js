@@ -43,6 +43,8 @@ export const signUp = ({ email, password, firstName, lastName }) => {
       await firestore.collection('users').doc(uid).set({
         firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
         lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
+        photoURL: '',
+        createdPosts: [],
         likedPosts: [],
       });
       dispatch(authSuccess(null));
@@ -78,6 +80,16 @@ export const reauthenticateUser = async (email, password, firebase) => {
   await user.reauthenticateWithCredential(credentials);
 };
 
+export const updatePosts = async (firestore, getState, updatedProps) => {
+  const userUID = getState().firebase.auth.uid;
+  const posts = await firestore.collection('posts').where('authorUID', '==', userUID).get();
+  const batch = firestore.batch();
+  posts.forEach(({ ref }) => batch.update(ref, {
+    ...updatedProps,
+  }));
+  await batch.commit();
+};
+
 export const changeName = ({ newFirstName, newLastName }, history) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(authStart());
@@ -87,11 +99,18 @@ export const changeName = ({ newFirstName, newLastName }, history) => {
       if (!isNameValid(newFirstName, newLastName)) {
         throw new Error('First and last name should have from 1 to 50 characters');
       }
-      const authUID = firebase.auth().currentUser.uid;
-      await firestore.collection('users').doc(authUID).update({
-        firstName: `${newFirstName.slice(0, 1).toUpperCase()}${newFirstName.slice(1)}`,
-        lastName: `${newLastName.slice(0, 1).toUpperCase()}${newLastName.slice(1)}`,
+      const userUID = firebase.auth().currentUser.uid;
+      const firstName = `${newFirstName.slice(0, 1).toUpperCase()}${newFirstName.slice(1)}`;
+      const lastName = `${newLastName.slice(0, 1).toUpperCase()}${newLastName.slice(1)}`;
+      await firestore.collection('users').doc(userUID).update({
+        firstName,
+        lastName,
       });
+      const propsToUpdate = {
+        authorFirstName: firstName,
+        authorLastName: lastName,
+      };
+      await updatePosts(firestore, getState, propsToUpdate);
       dispatch(authSuccess('Name has been changed successfully!'));
       history.push('/settings');
     } catch (error) {
@@ -110,6 +129,7 @@ export const changeEmail = ({ oldEmail, newEmail, password }, history) => {
       await user.updateEmail(newEmail);
       dispatch(authSuccess('Email has been changed successfully!'));
       history.push('/settings');
+      window.location.reload();
     } catch (error) {
       dispatch(authFail(error));
     }
@@ -126,6 +146,44 @@ export const changePassword = ({ email, oldPassword, newPassword }, history) => 
       await user.updatePassword(newPassword);
       dispatch(authSuccess('Password has been changed successfully!'));
       history.push('/settings');
+    } catch (error) {
+      dispatch(authFail(error));
+    }
+  };
+};
+
+export const changePhoto = ({ newPhotoURL }, history) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(authStart());
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    try {
+      const userUID = firebase.auth().currentUser.uid;
+      await firestore.collection('users').doc(userUID).update({
+        photoURL: newPhotoURL,
+      });
+      const propsToUpdate = {
+        authorPhotoURL: newPhotoURL,
+      };
+      await updatePosts(firestore, getState, propsToUpdate);
+      dispatch(authSuccess('Photo has been changed successfully!'));
+      history.push('/settings');
+    } catch (error) {
+      dispatch(authFail(error));
+    }
+  };
+};
+
+export const deleteAccount = ({ email, password }, history) => {
+  return async (dispatch, getState, { getFirebase }) => {
+    dispatch(authStart());
+    const firebase = getFirebase();
+    try {
+      const user = firebase.auth().currentUser;
+      await reauthenticateUser(email, password, firebase);
+      await user.delete();
+      dispatch(authSuccess('Your account has been deleted successfully!'));
+      history.push('/');
     } catch (error) {
       dispatch(authFail(error));
     }

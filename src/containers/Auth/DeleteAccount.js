@@ -4,17 +4,23 @@ import { updateObject, createInputElements, createStateInput, checkValidity, che
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class SignUp extends Component {
+class DeleteAccount extends Component {
   state = {
-    title: createStateInput('input', 'Title', '',
-      { type: 'text', id: 'title', autoComplete: 'off', placeholder: 'Post title...' },
-      { minLength: 1, maxLength: 150 }
+    email: createStateInput('input', 'Email', '',
+      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
+      null,
+      true,
     ),
-    content: createStateInput('textarea', 'Content', '',
-      { id: 'content', placeholder: 'Share your thoughts...' },
-      { minLength: 1, maxLength: 1200 }
+    password: createStateInput('input', 'Password', '',
+      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
+      null,
+      true,
     ),
   };
+
+  componentDidMount() {
+    this.props.onDeleteError();
+  }
 
   inputChangedHandler = (inputId, e) => {
     this.setState({
@@ -32,7 +38,7 @@ class SignUp extends Component {
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onCreatePost(data, this.props.history);
+    this.props.onDeleteAccount(data, this.props.history);
   };
 
   render () {
@@ -40,11 +46,10 @@ class SignUp extends Component {
 
     return (
       <Form
-        headingText="Create Post"
-        btnText="Create"
+        headingText="Delete Account"
+        btnText="Delete"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
-        isPostForm={true}
       >
         {inputs}
       </Form>
@@ -53,7 +58,8 @@ class SignUp extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onCreatePost: (data, history) => dispatch(actions.createPost(data, history)),
+  onDeleteAccount: (data, history) => dispatch(actions.deleteAccount(data, history)),
+  onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(DeleteAccount);

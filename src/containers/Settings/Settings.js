@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import classes from './Settings.module.scss';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,10 +8,15 @@ import UserPhoto from '../../images/no-user.jpg';
 import Line from '../../components/UI/Line/Line';
 import Loader from '../../components/UI/Loader/Loader';
 
-const Settings = ({ success, firstName, lastName, photoURL, onDeleteSuccess }) => {
-  let name = <Loader size="Mini" />;
-  if (firstName && lastName) {
-    name = `${firstName} ${lastName}`;
+const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSuccess }) => {
+  let userCreds = <Loader size="Small" />;
+  if (firstName && lastName && email) {
+    userCreds = (
+      <Fragment>
+        <Link to="/change-name" className={classes.UserLink}>{`${firstName} ${lastName}`}</Link>
+        <Link to="/change-email" className={classes.UserLink}>{email}</Link>
+      </Fragment>
+    );
   }
 
   if (success) {
@@ -21,10 +26,10 @@ const Settings = ({ success, firstName, lastName, photoURL, onDeleteSuccess }) =
   return (
     <div className={classes.Settings}>
       <div className={classes.User}>
-        <Link to="/change-photo">
+        <Link to="/change-photo" className={classes.UserPhotoLink}>
           <img src={photoURL || UserPhoto} alt="You" className={classes.UserPhoto} />
         </Link>
-        <Link to="/change-name" className={classes.UserName}>{name}</Link>
+        {userCreds}
       </div>
       <Line type="Middle" />
       <h3 className={classes.Heading}>What would you like to do?</h3>
@@ -54,7 +59,8 @@ const mapStateToProps = (state) => ({
   success: state.auth.success,
   firstName: state.firebase.profile.firstName,
   lastName: state.firebase.profile.lastName,
-  photoURL: state.firebase.auth.photoURL,
+  email: state.firebase.auth.email,
+  photoURL: state.firebase.profile.photoURL,
 });
 
 const mapDispatchToProps = (dispatch) => ({

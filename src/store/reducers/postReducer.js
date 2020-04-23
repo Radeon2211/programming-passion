@@ -6,25 +6,25 @@ const initialState = {
   error: null,
 };
 
-// const authStart = (state) => {
-//   return updateObject(state, { loading: true });
-// };
-
-// const authSuccess = (state) => {
-//   return updateObject(state, { loading: false, error: null });
-// };
-
-// const authFail = (state, action) => {
-//   return updateObject(state, { loading: false, error: action.error.message });
-// };
-
-const authReducer = (state = initialState, action) => {
-  // switch (action.type) {
-  //   case (actionTypes.AUTH_START): return authStart(state, action);
-  //   case (actionTypes.AUTH_SUCCESS): return authSuccess(state, action);
-  //   case (actionTypes.AUTH_FAIL): return authFail(state, action);
-  //   default: return state;
-  // }
+const postStart = (state) => {
+  return updateObject(state, { loading: true });
 };
 
-export default authReducer;
+const postSuccess = (state) => {
+  return updateObject(state, { loading: false, error: null });
+};
+
+const postFail = (state, action) => {
+  return updateObject(state, { loading: false, error: action.error.message });
+};
+
+const postReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case (actionTypes.POST_START): return postStart(state, action);
+    case (actionTypes.POST_SUCCESS): return postSuccess(state, action);
+    case (actionTypes.POST_FAIL): return postFail(state, action);
+    default: return state;
+  }
+};
+
+export default postReducer;

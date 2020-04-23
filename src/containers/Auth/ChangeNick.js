@@ -4,7 +4,7 @@ import { updateObject, createInputElements, createStateInput, checkValidity, che
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class ChangeEmail extends Component {
+class ChangeNick extends Component {
   state = {
     newFirstName: createStateInput('input', 'New first name', '',
       { type: 'text', id: 'newFirstName', autoComplete: 'given-name', placeholder: 'Your new first name...' },
@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch) => ({
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(ChangeEmail);
+export default connect(null, mapDispatchToProps)(ChangeNick);

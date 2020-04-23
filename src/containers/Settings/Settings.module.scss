@@ -16,19 +16,25 @@
     flex-direction: column;
   }
 
+  .UserPhotoLink {
+    margin-bottom: 1.2rem;
+  }
+
   .UserPhoto {
     border-radius: 50%;
     box-shadow: var(--shadow-2);
     height: 15rem;
+    object-fit: cover;
     width: 15rem;
   }
 
-  .UserName:link,
-  .UserName:visited {
+  .UserLink:link,
+  .UserLink:visited {
     color: #fff;
     text-decoration: none;
-    margin-top: 1.2rem;
-    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.9rem;
+    text-align: center;
   }
 
   .Heading {

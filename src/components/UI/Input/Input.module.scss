@@ -25,6 +25,14 @@
     }
   }
 
+  .Textarea {
+    box-sizing: initial;
+    display: block;
+    overflow: hidden;
+    width: calc(100% - 2rem);
+    resize: none;
+  }
+
   &.Valid .Input {
     border-bottom: 3px solid var(--green);
   }

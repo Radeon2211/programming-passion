@@ -9,6 +9,14 @@ const Input = ({ kind, label, value, config, validation, valid, touched, changed
   }
   const inputWrapperClasses = [classes.InputWrapper, validClass];
 
+  const autoSize = (e) => {
+    e.persist();
+    setTimeout(() => {
+      e.target.style.cssText = 'height: auto; padding: 0;';
+      e.target.style.cssText = `height: ${e.target.scrollHeight}px; padding: .9rem 1rem;`;
+    }, 0);
+  };
+
   switch (kind) {
     case ('input'):
       input = (
@@ -21,12 +29,14 @@ const Input = ({ kind, label, value, config, validation, valid, touched, changed
       );
       break;
     case ('textarea'):
+      const textareaClasses = [classes.Input, classes.Textarea];
       input = (
         <textarea
-          className={classes.Input}
+          className={textareaClasses.join(' ')}
           {...config}
           value={value}
           onChange={changed}
+          onKeyDown={autoSize}
         />
       );
       break;

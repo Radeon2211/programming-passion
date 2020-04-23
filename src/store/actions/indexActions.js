@@ -7,6 +7,8 @@ export {
   changeEmail,
   changeName,
   changePassword,
+  changePhoto,
+  deleteAccount,
 } from './authActions';
 
 export {

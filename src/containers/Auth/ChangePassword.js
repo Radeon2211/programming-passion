@@ -30,7 +30,7 @@ class ChangePassword extends Component {
   inputChangedHandler = (inputId, e) => {
     this.setState({
       [inputId]: updateObject(this.state[inputId], {
-        value: e.target.value,
+        value: inputId === 'newPassword' ? e.target.value.trim() : e.target.value,
         valid: checkValidity(e.target.value, this.state[inputId].validation),
         touched: true,
       }),

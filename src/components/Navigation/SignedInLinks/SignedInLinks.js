@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classes from './SignedInLinks.module.scss';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from '../../UI/Button/Button';
 import Dropdown from './Dropdown/Dropdown';
@@ -33,7 +34,7 @@ class SignedInLinks extends Component {
           </Button>
         </Link>
         <div className={classes.User} id="user" onClick={this.toggleDropdownHandler}>
-          <img src={noUser} alt="You" className={classes.UserPhoto} />
+          <img src={this.props.photoURL || noUser} alt="You" className={classes.UserPhoto} />
           <div className={arrowClasses.join(' ')}></div>
           <Dropdown
             visible={this.state.dropdownIsVisible}
@@ -45,4 +46,8 @@ class SignedInLinks extends Component {
   }
 }
 
-export default SignedInLinks;
+const mapStateToProps = (state) => ({
+  photoURL: state.firebase.profile.photoURL,
+});
+
+export default connect(mapStateToProps)(SignedInLinks);

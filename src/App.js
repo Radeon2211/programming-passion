@@ -13,6 +13,8 @@ import Settings from './containers/Settings/Settings';
 import ChangeName from './containers/Auth/ChangeNick';
 import ChangeEmail from './containers/Auth/ChangeEmail';
 import ChangePassword from './containers/Auth/ChangePassword';
+import ChangePhoto from './containers/Auth/ChangePhoto';
+import DeleteAccount from './containers/Auth/DeleteAccount';
 import Footer from './components/Footer/Footer';
 
 class App extends Component {
@@ -36,6 +38,8 @@ class App extends Component {
           <Route path="/change-name" component={ChangeName} />
           <Route path="/change-email" component={ChangeEmail} />
           <Route path="/change-password" component={ChangePassword} />
+          <Route path="/change-photo" component={ChangePhoto} />
+          <Route path="/delete-account" component={DeleteAccount} />
           <Route path="/signout" component={SignOut} />
           <Redirect to="/posts" />
         </Switch>

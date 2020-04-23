@@ -43,6 +43,10 @@ export const checkValidity = (value, rules) => {
     const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
     steps.push(pattern.test(value));
   }
+  if (rules.isPhoto) {
+    const pattern = /\.(jpeg|jpg|gif|png)$/i;
+    steps.push(pattern.test(value));
+  }
 
   return steps.every((step) => step);
 };

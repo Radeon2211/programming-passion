@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 
-const Form = ({ headingText, btnText, submitted, isValid, children, loading, error }) => {
+const Form = ({ headingText, btnText, isValid, submitted, isPostForm, children, authLoading, postLoading, authError, postError }) => {
+  const loading = isPostForm ? postLoading : authLoading;
   const loader = loading ? <Loader size="Small" /> : null;
+  const error = isPostForm ? postError : authError;
 
   return (
     <div className={classes.Container}>
@@ -30,8 +32,10 @@ const Form = ({ headingText, btnText, submitted, isValid, children, loading, err
 }
 
 const mapStateToProps = (state) => ({
-  loading: state.auth.loading,
-  error: state.auth.error,
+  authLoading: state.auth.loading,
+  postLoading: state.post.loading,
+  authError: state.auth.error,
+  postError: state.post.error,
 });
 
 export default connect(mapStateToProps)(Form);
