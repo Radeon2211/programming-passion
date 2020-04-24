@@ -1,7 +1,7 @@
 @import '../../../css/variables.scss';
 
 .PostSummary {
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, .1);
   border-radius: 1px;
   box-shadow: var(--shadow-3);
   display: flex;
@@ -14,7 +14,6 @@
   .Heading {
     font-size: 2.1rem;
     letter-spacing: 1px;
-    color: #000;
     margin-bottom: 1.2rem;
   }
 
@@ -38,14 +37,19 @@
   }
 
   .Icon {
-    height: 2.4rem;
-    fill: var(--gray-4);
-    width: 2.4rem;
+    height: 1.9rem;
+    fill: #fff;
+    width: 1.9rem;
   }
 
   .IconCaption {
-    font-size: 1.5rem;
-    color: var(--gray-4);
-    margin-left: .7rem;
+    font-size: 1.4rem;
+    margin-left: .6rem;
+  }
+}
+
+@media only screen and (max-width: 37.5em) {
+  .PostSummary {
+    padding: 1.2rem;
   }
 }

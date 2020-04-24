@@ -9,7 +9,7 @@ import PostList from './PostList/PostList';
 const Posts = ({ posts }) => (
   <div className={classes.Posts}>
     <h1 className={classes.Heading}>Check out the latest posts</h1>
-    <Line type="Begin" />
+    <Line type="Begin" size="Size-2" />
     <PostList posts={posts} />
   </div>
 );

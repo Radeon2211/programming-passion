@@ -31,10 +31,10 @@ const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSucce
         </Link>
         {userCreds}
       </div>
-      <Line type="Middle" />
+      <Line type="Middle" size="Size-2" />
       <h3 className={classes.Heading}>What would you like to do?</h3>
       <div className={classes.Buttons}>
-        <Link to={`/change-name`} className={classes.ButtonLink}>
+        <Link to={"/change-name"} className={classes.ButtonLink}>
           <Button size="Small" fill="Empty">Change name</Button>
         </Link>
         <Link to="/change-email" className={classes.ButtonLink}>

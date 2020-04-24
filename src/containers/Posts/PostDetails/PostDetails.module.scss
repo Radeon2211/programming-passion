@@ -1,0 +1,70 @@
+@import '../../../css/variables.scss';
+
+.PostDetails {
+  background-color: rgba(0, 0, 0, .1);
+  box-shadow: var(--shadow-3);
+  max-width: 80rem;
+  padding: 2rem;
+  width: 100%;
+
+  .Heading {
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 1.2rem;
+  }
+
+  .Author {
+    margin-bottom: 1.2rem;
+  }
+
+  .Content {
+    font-size: 1.9rem;
+    margin: 3.6rem 0;
+  }
+
+  .Likes {
+    align-items: center;
+    display: flex;
+  }
+
+  .LikeIconBox {
+    border: 1px solid var(--gray-4);
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 1rem 1rem .8rem;
+    transition: all .12s;
+
+    &:hover {
+      box-shadow: var(--shadow-3);
+    }
+  }
+
+  .Likes.Liked .LikeIconBox {
+    border: 1px solid var(--green);
+  }
+
+  .LikeIcon {
+    fill: var(--gray-3);
+    height: 2.4rem;
+    width: 2.4rem;
+    transition: all .12s;
+  }
+
+  .LikeIconBox:hover .LikeIcon {
+    filter: drop-shadow(var(--shadow-2));
+  }
+
+  .Likes.Liked .LikeIcon {
+    fill: var(--green);
+  }
+
+  .LikeIconCaption {
+    font-size: 1.6rem;
+    margin-left: 1.2rem;
+    transition: color .12s;
+  }
+
+  .Likes.Liked .LikeIconCaption {
+    color: var(--green);
+  }
+}

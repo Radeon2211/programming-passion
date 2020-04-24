@@ -9,6 +9,7 @@ import SignOut from './containers/Auth/SignOut';
 import Home from './containers/Home/Home';
 import CreatePost from './containers/CreatePost/CreatePost';
 import Posts from './containers/Posts/Posts';
+import PostDetails from './containers/Posts/PostDetails/PostDetails';
 import Settings from './containers/Settings/Settings';
 import ChangeName from './containers/Auth/ChangeNick';
 import ChangeEmail from './containers/Auth/ChangeEmail';
@@ -33,6 +34,7 @@ class App extends Component {
       routes= (
         <Switch>
           <Route path="/create" component={CreatePost} />
+          <Route path="/posts/:id" component={PostDetails} />
           <Route path="/posts" component={Posts} />
           <Route path="/settings" component={Settings} />
           <Route path="/change-name" component={ChangeName} />

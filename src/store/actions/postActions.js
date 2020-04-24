@@ -28,7 +28,7 @@ export const createPost = ({ title, content }, history) => {
         content,
         createdAt: new Date(),
         likesCount: 0,
-        comments: [],
+        commentsCount: 0,
       });
       createdPosts.push(postDoc.id);
       await firestore.collection('users').doc(authorUID).update({
@@ -36,6 +36,48 @@ export const createPost = ({ title, content }, history) => {
       });
       dispatch(postSuccess());
       history.push('/posts');
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const togglePostLiking = (postID, type) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    try {
+      const userUID = firebase.auth().currentUser.uid;
+      if (type === 'add') {
+        await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
+          'likedPosts': firestore.FieldValue.arrayUnion(postID),
+        });
+        await firestore.collection('posts').doc(postID).update({
+          likesCount: firestore.FieldValue.increment(1),
+        });
+      } else {
+        await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
+          'likedPosts': firestore.FieldValue.arrayRemove(postID),
+        });
+        await firestore.collection('posts').doc(postID).update({
+          likesCount: firestore.FieldValue.increment(-1),
+        });
+      }
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const checkPostLiking = (postID) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    try {
+      const userUID = firebase.auth().currentUser.uid;
+      const likedPosts = await firestore.collection('users').doc(userUID).collection('likedPosts').where('likedPosts', 'array-contains', postID).get();
+      if (likedPosts.docs.length > 0) return true;
+      return false;
     } catch (error) {
       dispatch(postFail(error));
     }

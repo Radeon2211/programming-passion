@@ -5,12 +5,12 @@ import AuthorData from '../../../components/UI/AuthorData/AuthorData';
 import sprite from '../../../images/sprite.svg';
 
 const PostSummary = ({ post }) => {
-  const { authorFirstName, authorLastName, authorPhotoURL, title, likesCount, createdAt, comments } = post;
+  const { authorFirstName, authorLastName, authorPhotoURL, title, likesCount, commentsCount, createdAt } = post;
   return (
     <div className={classes.PostSummary}>
       <div className={classes.Left}>
         <h3 className={classes.Heading}>{title}</h3>
-        <Line type="Begin" />
+        <Line type="Begin" size="Size-1" />
         <div className={classes.User}>
           <AuthorData
             firstName={authorFirstName}
@@ -31,7 +31,7 @@ const PostSummary = ({ post }) => {
           <svg className={classes.Icon}>
             <use href={`${sprite}#icon-bubble`}></use>
           </svg>
-          <span className={classes.IconCaption}>{comments.length}</span>
+          <span className={classes.IconCaption}>{commentsCount}</span>
         </div>
       </div>
     </div>

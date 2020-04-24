@@ -45,6 +45,8 @@ export const signUp = ({ email, password, firstName, lastName }) => {
         lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
         photoURL: '',
         createdPosts: [],
+      });
+      await firestore.collection('users').doc(uid).collection('likedPosts').doc('likedPosts').set({
         likedPosts: [],
       });
       dispatch(authSuccess(null));
@@ -80,11 +82,15 @@ export const reauthenticateUser = async (email, password, firebase) => {
   await user.reauthenticateWithCredential(credentials);
 };
 
-export const updatePosts = async (firestore, getState, updatedProps) => {
+export const updateAuthorData = async (firestore, getState, updatedProps) => {
   const userUID = getState().firebase.auth.uid;
   const posts = await firestore.collection('posts').where('authorUID', '==', userUID).get();
+  const comments = await firestore.collection('comments').where('authorUID', '==', userUID).get();
   const batch = firestore.batch();
   posts.forEach(({ ref }) => batch.update(ref, {
+    ...updatedProps,
+  }));
+  comments.forEach(({ ref }) => batch.update(ref, {
     ...updatedProps,
   }));
   await batch.commit();
@@ -110,7 +116,7 @@ export const changeName = ({ newFirstName, newLastName }, history) => {
         authorFirstName: firstName,
         authorLastName: lastName,
       };
-      await updatePosts(firestore, getState, propsToUpdate);
+      await updateAuthorData(firestore, getState, propsToUpdate);
       dispatch(authSuccess('Name has been changed successfully!'));
       history.push('/settings');
     } catch (error) {
@@ -165,7 +171,7 @@ export const changePhoto = ({ newPhotoURL }, history) => {
       const propsToUpdate = {
         authorPhotoURL: newPhotoURL,
       };
-      await updatePosts(firestore, getState, propsToUpdate);
+      await updateAuthorData(firestore, getState, propsToUpdate);
       dispatch(authSuccess('Photo has been changed successfully!'));
       history.push('/settings');
     } catch (error) {
