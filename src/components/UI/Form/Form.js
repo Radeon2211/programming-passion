@@ -8,10 +8,18 @@ const Form = ({ headingText, btnText, isValid, submitted, isPostForm, children, 
   const loading = isPostForm ? postLoading : authLoading;
   const loader = loading ? <Loader size="Small" /> : null;
   const error = isPostForm ? postError : authError;
+  let heading = null;
+  if (headingText) {
+    heading = <h3 className={classes.Heading}>{headingText}</h3>
+  }
+  let errorNode = null;
+  if (error) {
+    errorNode = <span className={classes.Error}>{error}</span>;
+  }
 
   return (
     <div className={classes.Container}>
-      <h3 className={classes.Heading}>{headingText}</h3>
+      {heading}
       <form className={classes.Form} onSubmit={submitted}>
         {children}
         <div className={classes.BtnAndLoader}>
@@ -26,7 +34,7 @@ const Form = ({ headingText, btnText, isValid, submitted, isPostForm, children, 
           {loader}
         </div>
       </form>
-      <span className={classes.Error}>{error}</span>
+      {errorNode}
     </div>
   );
 }

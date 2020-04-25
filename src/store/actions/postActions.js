@@ -18,8 +18,8 @@ export const createPost = ({ title, content }, history) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
-      const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL, createdPosts } } = getState().firebase;
-      const postDoc = await firestore.collection('posts').add({
+      const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
+      await firestore.collection('posts').add({
         authorUID,
         authorFirstName: firstName,
         authorLastName: lastName,
@@ -29,10 +29,6 @@ export const createPost = ({ title, content }, history) => {
         createdAt: new Date(),
         likesCount: 0,
         commentsCount: 0,
-      });
-      createdPosts.push(postDoc.id);
-      await firestore.collection('users').doc(authorUID).update({
-        createdPosts,
       });
       dispatch(postSuccess());
       history.push('/posts');
@@ -78,6 +74,31 @@ export const checkPostLiking = (postID) => {
       const likedPosts = await firestore.collection('users').doc(userUID).collection('likedPosts').where('likedPosts', 'array-contains', postID).get();
       if (likedPosts.docs.length > 0) return true;
       return false;
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const addComment = (content, postID) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    dispatch(postStart());
+    const firestore = getFirestore();
+    try {
+      const { auth: { uid: userUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
+      await firestore.collection('comments').add({
+        authorFirstName: firstName,
+        authorLastName: lastName,
+        authorPhotoURL: photoURL,
+        authorUID: userUID,
+        postID,
+        content,
+        createdAt: new Date(),
+      });
+      await firestore.collection('posts').doc(postID).update({
+        commentsCount: firestore.FieldValue.increment(1),
+      });
+      dispatch(postSuccess());
     } catch (error) {
       dispatch(postFail(error));
     }

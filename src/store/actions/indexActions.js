@@ -15,4 +15,5 @@ export {
   createPost,
   togglePostLiking,
   checkPostLiking,
+  addComment,
 } from './postActions';

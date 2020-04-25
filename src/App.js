@@ -24,6 +24,8 @@ class App extends Component {
       <Switch>
         <Route path="/signin" component={SignIn} />
         <Route path="/signup" component={SignUp} />
+        <Route path="/posts/:id" component={PostDetails} />
+        <Route path="/posts" component={Posts} />
         <Route path="/signout" component={SignOut} />
         <Route path="/" component={Home} />
         <Redirect to="/" />

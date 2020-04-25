@@ -4,13 +4,14 @@
   background-color: rgba(0, 0, 0, .1);
   box-shadow: var(--shadow-3);
   max-width: 80rem;
-  padding: 2rem;
+  padding: 3rem 2rem;
   width: 100%;
 
   .Heading {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     letter-spacing: 1px;
     margin-bottom: 1.2rem;
+    word-break: break-all;
   }
 
   .Author {
@@ -18,20 +19,22 @@
   }
 
   .Content {
-    font-size: 1.9rem;
-    margin: 3.6rem 0;
+    font-size: 1.8rem;
+    margin: 4.8rem 0;
+    text-align: justify;
   }
 
   .Likes {
     align-items: center;
     display: flex;
+    margin-bottom: 2.4rem;
   }
 
   .LikeIconBox {
     border: 1px solid var(--gray-4);
     border-radius: 50%;
     cursor: pointer;
-    padding: 1rem 1rem .8rem;
+    padding: .9rem .9rem .7rem;
     transition: all .12s;
 
     &:hover {
@@ -44,10 +47,10 @@
   }
 
   .LikeIcon {
-    fill: var(--gray-3);
+    fill: #fff;
     height: 2.4rem;
-    width: 2.4rem;
     transition: all .12s;
+    width: 2.4rem;
   }
 
   .LikeIconBox:hover .LikeIcon {
@@ -66,5 +69,33 @@
 
   .Likes.Liked .LikeIconCaption {
     color: var(--green);
+  }
+
+  .UnauthInfo {
+    align-items: center;
+    display: flex;
+    margin: 2.4rem 0;
+  }
+
+  .LockIcon {
+    height: 2rem;
+    fill: #fff;
+    width: 2rem;
+  }
+
+  .UnauthCaption {
+    font-size: 1.4rem;
+    margin-left: .3rem;
+  }
+
+  .UnauthCaptionLink:link,
+  .UnauthCaptionLink:visited {
+    color: var(--green);
+    text-decoration: none;
+    transition: color .12s;
+
+    &:hover {
+      color: var(--green-dark-1);
+    }
   }
 }

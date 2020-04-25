@@ -12,9 +12,10 @@
   }
 
   .Heading {
-    font-size: 2.1rem;
+    font-size: 2rem;
     letter-spacing: 1px;
     margin-bottom: 1.2rem;
+    word-break: break-all;
   }
 
   .User {
@@ -22,18 +23,18 @@
   }
 
   .Right {
-    border-left: 1px solid var(--gray-4);
     display: flex;
     flex-direction: column;
+    justify-content: center;
     margin-left: 1.2rem;
   }
 
   .IconBox {
     align-items: center;
+    border-left: 1px solid var(--gray-4);
     display: flex;
-    flex: 1;
     justify-content: center;
-    padding-left: 1.2rem;
+    padding: 1.2rem 0 1.2rem 1.2rem;
   }
 
   .Icon {

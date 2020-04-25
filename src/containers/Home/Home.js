@@ -23,6 +23,17 @@ const Home = () => (
         <Link to="/signin" className={classes.LoginLink}>Login</Link>
       </span>
     </div>
+    <div className={classes.IncentiveBox}>
+      <span className={classes.IncentiveCaption}>You can also</span>
+      <Link to="/posts">
+        <Button
+          size="Small"
+          fill="Filled"
+        >
+          See our latest posts
+        </Button>
+      </Link>
+    </div>
   </div>
 );
 

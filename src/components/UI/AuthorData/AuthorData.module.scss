@@ -6,9 +6,7 @@
   .Photo {
     border-radius: 50%;
     box-shadow: var(--shadow-2);
-    height: 4.5rem;
     object-fit: cover;
-    width: 4.5rem;
   }
 
   .Right {
@@ -20,12 +18,41 @@
 
   .Name {
     color: var(--gray-3);
+  }
+
+  .Date {
+    color: var(--gray-4);
+  }
+}
+
+.Small {
+  .Photo {
+    height: 4.5rem;
+    width: 4.5rem;
+  }
+
+  .Name {
     font-size: 1.4rem;
     margin-bottom: .3rem;
   }
 
   .Date {
-    color: var(--gray-4);
     font-size: 1.2rem;
+  }
+}
+
+.Big {
+  .Photo {
+    height: 5.5rem;
+    width: 5.5rem;
+  }
+
+  .Name {
+    font-size: 1.7rem;
+    margin-bottom: .4rem;
+  }
+
+  .Date {
+    font-size: 1.4rem;
   }
 }

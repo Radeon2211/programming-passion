@@ -13,6 +13,7 @@ const PostSummary = ({ post }) => {
         <Line type="Begin" size="Size-1" />
         <div className={classes.User}>
           <AuthorData
+            size="Small"
             firstName={authorFirstName}
             lastName={authorLastName}
             photoURL={authorPhotoURL}

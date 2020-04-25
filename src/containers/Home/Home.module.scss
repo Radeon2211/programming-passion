@@ -3,9 +3,10 @@
 .Home {
   align-self: stretch;
   display: grid;
-  grid-template-rows: 1fr repeat(2, max-content) repeat(2, 1fr);
+  grid-template-rows: 1fr repeat(2, max-content) repeat(3, 1fr);
   margin: 0 auto;
   max-width: 100rem;
+  max-height: 100vh;
   row-gap: 4rem;
 
   .Heading {
@@ -34,7 +35,7 @@
   }
 
   .LoginLink:link,
-  .LoginLink:visited, {
+  .LoginLink:visited {
     color: var(--green);
     margin-left: .7rem;
     text-decoration: none;
@@ -43,5 +44,16 @@
     &:hover {
       color: var(--green-dark-1);
     }
+  }
+
+  .IncentiveBox {
+    grid-row: 4 / 5;
+    text-align: center;
+  }
+
+  .IncentiveCaption {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
   }
 }

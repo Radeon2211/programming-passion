@@ -44,7 +44,6 @@ export const signUp = ({ email, password, firstName, lastName }) => {
         firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
         lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
         photoURL: '',
-        createdPosts: [],
       });
       await firestore.collection('users').doc(uid).collection('likedPosts').doc('likedPosts').set({
         likedPosts: [],
@@ -118,7 +117,7 @@ export const changeName = ({ newFirstName, newLastName }, history) => {
       };
       await updateAuthorData(firestore, getState, propsToUpdate);
       dispatch(authSuccess('Name has been changed successfully!'));
-      history.push('/settings');
+      history.goBack();
     } catch (error) {
       dispatch(authFail(error));
     }
@@ -134,7 +133,7 @@ export const changeEmail = ({ oldEmail, newEmail, password }, history) => {
       await reauthenticateUser(oldEmail, password, firebase);
       await user.updateEmail(newEmail);
       dispatch(authSuccess('Email has been changed successfully!'));
-      history.push('/settings');
+      history.goBack();
       window.location.reload();
     } catch (error) {
       dispatch(authFail(error));
@@ -151,7 +150,7 @@ export const changePassword = ({ email, oldPassword, newPassword }, history) => 
       await reauthenticateUser(email, oldPassword, firebase);
       await user.updatePassword(newPassword);
       dispatch(authSuccess('Password has been changed successfully!'));
-      history.push('/settings');
+      history.goBack();
     } catch (error) {
       dispatch(authFail(error));
     }
@@ -173,7 +172,7 @@ export const changePhoto = ({ newPhotoURL }, history) => {
       };
       await updateAuthorData(firestore, getState, propsToUpdate);
       dispatch(authSuccess('Photo has been changed successfully!'));
-      history.push('/settings');
+      history.goBack();
     } catch (error) {
       dispatch(authFail(error));
     }

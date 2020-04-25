@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
 class SignOut extends Component {
   componentDidMount() {
     this.props.onSignOut();
+    this.props.history.goBack();
   }
 
   render () {
     return (
-      <Redirect to="/" />
+      <Fragment />
     );
   }
 }
