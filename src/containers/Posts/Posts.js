@@ -15,12 +15,12 @@ const Posts = ({ posts }) => (
 );
 
 const mapStateToProps = (state) => ({
-  posts: state.firestore.ordered.posts || [],
+  posts: state.firestore.ordered.allPosts || [],
 });
 
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([
-    { collection: 'posts', orderBy: ['createdAt', 'desc'] },
+    { collection: 'posts', orderBy: ['createdAt', 'desc'], storeAs: 'allPosts' },
   ])
 )(Posts);

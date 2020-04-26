@@ -9,8 +9,9 @@ import SignOut from './containers/Auth/SignOut';
 import Home from './containers/Home/Home';
 import CreatePost from './containers/CreatePost/CreatePost';
 import Posts from './containers/Posts/Posts';
-import PostDetails from './containers/Posts/PostDetails/PostDetails';
+import PostDetails from './containers/PostDetails/PostDetails';
 import Settings from './containers/Settings/Settings';
+import MyPosts from './containers/MyPosts/MyPosts';
 import ChangeName from './containers/Auth/ChangeNick';
 import ChangeEmail from './containers/Auth/ChangeEmail';
 import ChangePassword from './containers/Auth/ChangePassword';
@@ -39,6 +40,7 @@ class App extends Component {
           <Route path="/posts/:id" component={PostDetails} />
           <Route path="/posts" component={Posts} />
           <Route path="/settings" component={Settings} />
+          <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
           <Route path="/change-name" component={ChangeName} />
           <Route path="/change-email" component={ChangeEmail} />
           <Route path="/change-password" component={ChangePassword} />

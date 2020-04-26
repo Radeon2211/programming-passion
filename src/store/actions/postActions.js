@@ -38,6 +38,19 @@ export const createPost = ({ title, content }, history) => {
   };
 };
 
+export const deletePost = (postID) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    dispatch(postStart());
+    const firestore = getFirestore();
+    try {
+      await firestore.collection('posts').doc(postID).delete();
+      dispatch(postSuccess());
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
 export const togglePostLiking = (postID, type) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -80,7 +93,7 @@ export const checkPostLiking = (postID) => {
   };
 };
 
-export const addComment = (content, postID) => {
+export const addComment = (content, postID, postAuthorUID) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
@@ -92,11 +105,28 @@ export const addComment = (content, postID) => {
         authorPhotoURL: photoURL,
         authorUID: userUID,
         postID,
+        postAuthorUID,
         content,
         createdAt: new Date(),
       });
       await firestore.collection('posts').doc(postID).update({
         commentsCount: firestore.FieldValue.increment(1),
+      });
+      dispatch(postSuccess());
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const deleteComment = (commentID, postID) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    dispatch(postStart());
+    const firestore = getFirestore();
+    try {
+      await firestore.collection('comments').doc(commentID).delete();
+      await firestore.collection('posts').doc(postID).update({
+        commentsCount: firestore.FieldValue.increment(-1),
       });
       dispatch(postSuccess());
     } catch (error) {

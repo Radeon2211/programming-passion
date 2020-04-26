@@ -11,12 +11,7 @@ const Home = () => (
     </h1>
     <div className={classes.ButtonBox}>
       <Link to="/signup">
-        <Button
-          size="Big"
-          fill="Filled"
-        >
-          Join for free
-        </Button>
+        <Button size="Big" fill="Filled" color="Green">Join for free</Button>
       </Link>
       <span className={classes.LoginCaption}>
         Already have an account?
@@ -26,12 +21,7 @@ const Home = () => (
     <div className={classes.IncentiveBox}>
       <span className={classes.IncentiveCaption}>You can also</span>
       <Link to="/posts">
-        <Button
-          size="Small"
-          fill="Filled"
-        >
-          See our latest posts
-        </Button>
+        <Button size="Small" fill="Filled" color="Green">See our latest posts</Button>
       </Link>
     </div>
   </div>

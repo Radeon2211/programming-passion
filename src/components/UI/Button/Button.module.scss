@@ -1,7 +1,6 @@
 @import '../../../css/variables';
 
 .Button {
-  border: 1px solid var(--green);
   border-radius: 1px;
   box-shadow: var(--shadow-2);
   cursor: pointer;
@@ -10,27 +9,7 @@
   transition: all .12s;
 
   &:hover {
-    border: 1px solid var(--green-dark-1);
     box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
-  }
-}
-
-.Empty {
-  background-color: transparent;
-  color: var(--green);
-
-  &:hover {
-    background-color: rgba(0, 0, 0, .03);
-    color: var(--green-dark-1);
-  }
-}
-
-.Filled {
-  background-color: var(--green);
-  color: #fff;
-
-  &:hover {
-    background-color: var(--green-dark-1);
   }
 }
 
@@ -44,7 +23,68 @@
   padding: 1.5rem 3.6rem;
 }
 
-.Disabled {
+.Empty {
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, .03);
+  }
+}
+
+.Filled {
+  color: #fff;
+}
+
+.Green {
+  border: 1px solid var(--green);
+
+  &:hover {
+    border: 1px solid var(--green-dark-1);
+  }
+}
+
+.Filled.Green {
+  background-color: var(--green);
+
+  &:hover {
+    background-color: var(--green-dark-1);
+  }
+}
+
+.Empty.Green {
+  color: var(--green);
+
+  &:hover {
+    border: 1px solid var(--green-dark-1);
+  }
+}
+
+.Red {
+  border: 1px solid var(--red);
+
+  &:hover {
+    border: 1px solid var(--green-red-1);
+  }
+}
+
+.Filled.Red {
+  background-color: var(--red);
+
+  &:hover {
+    background-color: var(--red-dark-1);
+    border: 1px solid var(--red-dark-1);
+  }
+}
+
+.Empty.Red {
+  color: var(--red);
+
+  &:hover {
+    border: 1px solid var(--red-dark-1);
+  }
+}
+
+.Green.Disabled {
   background-color: var(--green-dark-2);
   border: 1px solid var(--green-dark-2);
   cursor: not-allowed;

@@ -1,13 +1,16 @@
 import React from 'react';
 import Comment from '../Comment/Comment';
-import Line from '../../../../../components/UI/Line/Line';
+import Line from '../../../../components/UI/Line/Line';
 import classes from './CommentList.module.scss';
 
-const CommentList = ({ comments }) => {
+const CommentList = ({ comments, commentHandlingData }) => {
   const commentList = comments.map((comment) => (
     <React.Fragment key={comment.id}>
       <Line type="Begin" size="Size-1" />
-      <Comment comment={comment} />
+      <Comment
+        comment={comment}
+        commentHandlingData={commentHandlingData}
+      />
     </React.Fragment>
   ));
 

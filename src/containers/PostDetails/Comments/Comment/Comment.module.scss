@@ -1,0 +1,24 @@
+@import '../../../../css/variables.scss';
+
+.Comment {
+  margin: 2.4rem 0;
+
+  .AuthorDataAndDelete {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .DeleteIcon {
+    cursor: pointer;
+    height: 2.1rem;
+    fill: var(--red);
+    width: 2.1rem;
+  }
+
+  .Content {
+    font-size: 1.6rem;
+    margin-top: 1.2rem;
+    text-align: justify;
+  }
+}

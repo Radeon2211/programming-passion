@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../../shared/utility';
+import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../shared/utility';
 import { connect } from 'react-redux';
-import * as actions from '../../../../../store/actions/indexActions';
-import Form from '../../../../../components/UI/Form/Form';
+import * as actions from '../../../../store/actions/indexActions';
+import Form from '../../../../components/UI/Form/Form';
 
 class AddComment extends Component {
   state = {
@@ -26,7 +26,7 @@ class AddComment extends Component {
   formSubmittedHandler = (e) => {
     e.preventDefault();
     const content = this.state.content.value.trim();
-    this.props.onAddComment(content, this.props.postID);
+    this.props.onAddComment(content, this.props.postID, this.props.postAuthorUID);
   };
 
   render () {
@@ -45,7 +45,7 @@ class AddComment extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddComment: (content, postID) => dispatch(actions.addComment(content, postID)),
+  onAddComment: (content, postID, postAuthorUID) => dispatch(actions.addComment(content, postID, postAuthorUID)),
 });
 
 export default connect(null, mapDispatchToProps)(AddComment);

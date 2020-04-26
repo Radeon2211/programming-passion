@@ -26,12 +26,7 @@ class SignedInLinks extends Component {
     return (
       <nav className={classes.SignedInLinks}>
         <Link to="/create">
-          <Button
-            size="Small"
-            fill="Filled"
-          >
-            Create post
-          </Button>
+          <Button size="Small" fill="Filled" color="Green">Create post</Button>
         </Link>
         <div className={classes.User} id="user" onClick={this.toggleDropdownHandler}>
           <img src={this.props.photoURL || noUser} alt="You" className={classes.UserPhoto} />

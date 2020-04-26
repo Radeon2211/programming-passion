@@ -4,21 +4,23 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
-import * as actions from '../../../store/actions/indexActions';
-import Line from '../../../components/UI/Line/Line';
-import Loader from '../../../components/UI/Loader/Loader';
-import AuthorData from '../../../components/UI/AuthorData/AuthorData';
-import sprite from '../../../images/sprite.svg';
+import * as actions from '../../store/actions/indexActions';
+import Line from '../../components/UI/Line/Line';
+import Loader from '../../components/UI/Loader/Loader';
+import AuthorData from '../../components/UI/AuthorData/AuthorData';
+import sprite from '../../images/sprite.svg';
 import Comments from './Comments/Comments';
+import Modal from '../../components/UI/Modal/Modal';
 
 class PostDetails extends Component {
   state = {
     isLikingPossible: true,
     isLiked: false,
-    timeout: null,
+    commentIdToDelete: null,
+    isModalVisible: false,
   };
 
-  timeout = null;
+  likingTimeout = null;
 
   async componentDidMount() {
     const isLiked = await this.props.onCheckPostLiking(this.props.match.params.id);
@@ -26,8 +28,28 @@ class PostDetails extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeout);
+    clearTimeout(this.likingTimeout);
   }
+
+  startDeletingCommentHandler = (commentID) => {
+    this.setState({
+      commentIdToDelete: commentID,
+      isModalVisible: true,
+    });
+  };
+
+  cancelDeletingCommentHandler = () => {
+    this.setState({
+      commentIdToDelete: null,
+      isModalVisible: false,
+    });
+  };
+
+  deleteCommentHandler = () => {
+    this.setState({ isModalVisible: false });
+    if (!this.state.commentIdToDelete) return;
+    this.props.onDeleteComment(this.state.commentIdToDelete, this.props.match.params.id);
+  };
 
   togglePostLiking = () => {
     if (!this.state.isLikingPossible || !this.props.authUID) return;
@@ -39,12 +61,18 @@ class PostDetails extends Component {
       this.setState({ isLiked: true });
     }
     this.setState({ isLikingPossible: false });
-    this.timeout = setTimeout(() => {
+    this.likingTimeout = setTimeout(() => {
       this.setState({ isLikingPossible: true });
     }, 2000);
   };
 
   render () {
+    const commentHandlingData = {
+      authUID: this.props.authUID,
+      postAuthorUID: this.props.post ? this.props.post.authorUID : null,
+      deleteStarted: this.startDeletingCommentHandler,
+    };
+
     let postDetails = <Loader size="Small" />;
     let unauthInfo = null;
 
@@ -71,35 +99,44 @@ class PostDetails extends Component {
       }
 
       postDetails = (
-        <div className={classes.PostDetails}>
-          <h3 className={classes.Heading}>{title}</h3>
-          <div className={classes.Author}>
-            <AuthorData
-              size="Big"
-              firstName={authorFirstName}
-              lastName={authorLastName}
-              photoURL={authorPhotoURL}
-              createdAt={createdAt}
+        <Fragment>
+          <Modal
+            headingText="Deleting comment"
+            captionText="The operation is irreversible"
+            isVisible={this.state.isModalVisible}
+            canceled={this.cancelDeletingCommentHandler}
+            deleted={this.deleteCommentHandler}
+          />
+          <div className={classes.PostDetails}>
+            <h3 className={classes.Heading}>{title}</h3>
+            <div className={classes.Author}>
+              <AuthorData
+                size="Big"
+                firstName={authorFirstName}
+                lastName={authorLastName}
+                photoURL={authorPhotoURL}
+                createdAt={createdAt}
+              />
+            </div>
+            <Line type="Begin" size="Size-2" />
+            <p className={classes.Content}>{content}</p>
+            <div className={likesClasses.join(' ')}>
+              <div className={classes.LikeIconBox} onClick={this.togglePostLiking}>
+                <svg className={classes.LikeIcon}>
+                  <use href={`${sprite}#icon-heart`}></use>
+                </svg>
+              </div>
+              <span className={classes.LikeIconCaption}>{likesText}</span>
+            </div>
+            <Line type="Begin" size="Size-2" />
+            {unauthInfo}
+            <Comments
+              comments={this.props.comments}
+              postID={this.props.match.params.id}
+              commentHandlingData={commentHandlingData}
             />
           </div>
-          <Line type="Begin" size="Size-2" />
-          <p className={classes.Content}>{content}</p>
-          <div className={likesClasses.join(' ')}>
-            <div className={classes.LikeIconBox} onClick={this.togglePostLiking}>
-              <svg className={classes.LikeIcon}>
-                <use href={`${sprite}#icon-heart`}></use>
-              </svg>
-            </div>
-            <span className={classes.LikeIconCaption}>{likesText}</span>
-          </div>
-          <Line type="Begin" size="Size-2" />
-          {unauthInfo}
-          <Comments
-            comments={this.props.comments}
-            postID={this.props.match.params.id}
-            isAuth={this.props.authUID}
-          />
-        </div>
+        </Fragment>
       );
     }
 
@@ -122,6 +159,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   onTogglePostLiking: (postID, type) => dispatch(actions.togglePostLiking(postID, type)),
   onCheckPostLiking: (postID) => dispatch(actions.checkPostLiking(postID)),
+  onDeleteComment: (commentID, postID) => dispatch(actions.deleteComment(commentID, postID)),
 });
 
 export default compose(

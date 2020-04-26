@@ -13,7 +13,9 @@ export {
 
 export {
   createPost,
+  deletePost,
   togglePostLiking,
   checkPostLiking,
   addComment,
+  deleteComment,
 } from './postActions';

@@ -26,6 +26,7 @@ const Form = ({ headingText, btnText, isValid, submitted, isPostForm, children, 
           <Button
             size="Small"
             fill="Filled"
+            color="Green"
             type="submit"
             disabled={!isValid || loading}
           >

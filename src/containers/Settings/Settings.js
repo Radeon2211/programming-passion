@@ -35,21 +35,24 @@ const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSucce
       <h3 className={classes.Heading}>What would you like to do?</h3>
       <div className={classes.Buttons}>
         <Link to={"/change-name"} className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty">Change name</Button>
+          <Button size="Small" fill="Empty" color="Green">Change name</Button>
         </Link>
         <Link to="/change-email" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty">Change email</Button>
+          <Button size="Small" fill="Empty" color="Green">Change email</Button>
         </Link>
         <Link to="/change-password" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty">Change password</Button>
+          <Button size="Small" fill="Empty" color="Green">Change password</Button>
         </Link>
         <Link to="/change-photo" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty">Change photo</Button>
+          <Button size="Small" fill="Empty" color="Green">Change photo</Button>
         </Link>
         <Link to="/delete-account" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty">Delete account</Button>
+          <Button size="Small" fill="Empty" color="Red">Delete account</Button>
         </Link>
       </div>
+      <Link to="/my-posts">
+        <Button size="Small" fill="Filled" color="Green">View your posts</Button>
+      </Link>
       <span className={classes.Success}>{success}</span>
     </div>
   );
