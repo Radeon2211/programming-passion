@@ -35,6 +35,17 @@ class MyPosts extends Component {
   };
 
   render () {
+    let myPosts = <span className={classes.NoPostsInfo}>You didn't write any post yet</span>;
+    if (this.props.posts.length > 0) {
+      myPosts = (
+        <PostList
+          posts={this.props.posts}
+          deletable
+          deleteStarted={this.startDeletingPostHandler}
+        />
+      )
+    }
+
     return (
       <Fragment>
         <Modal
@@ -47,10 +58,7 @@ class MyPosts extends Component {
         <div className={classes.Posts}>
           <h1 className={classes.Heading}>See your posts</h1>
           <Line type="Begin" size="Size-2" />
-          <PostList
-            posts={this.props.posts}
-            deletable
-            deleteStarted={this.startDeletingPostHandler} />
+          {myPosts}
         </div>
       </Fragment>
     );

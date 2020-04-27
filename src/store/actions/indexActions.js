@@ -9,6 +9,7 @@ export {
   changePassword,
   changePhoto,
   deleteAccount,
+  addAdmin,
 } from './authActions';
 
 export {

@@ -26,9 +26,9 @@ export const createPost = ({ title, content }, history) => {
         authorPhotoURL: photoURL,
         title,
         content,
-        createdAt: new Date(),
         likesCount: 0,
         commentsCount: 0,
+        createdAt: new Date(),
       });
       dispatch(postSuccess());
       history.push('/posts');
@@ -61,15 +61,9 @@ export const togglePostLiking = (postID, type) => {
         await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
           'likedPosts': firestore.FieldValue.arrayUnion(postID),
         });
-        await firestore.collection('posts').doc(postID).update({
-          likesCount: firestore.FieldValue.increment(1),
-        });
       } else {
         await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
           'likedPosts': firestore.FieldValue.arrayRemove(postID),
-        });
-        await firestore.collection('posts').doc(postID).update({
-          likesCount: firestore.FieldValue.increment(-1),
         });
       }
     } catch (error) {
@@ -109,9 +103,6 @@ export const addComment = (content, postID, postAuthorUID) => {
         content,
         createdAt: new Date(),
       });
-      await firestore.collection('posts').doc(postID).update({
-        commentsCount: firestore.FieldValue.increment(1),
-      });
       dispatch(postSuccess());
     } catch (error) {
       dispatch(postFail(error));
@@ -119,15 +110,12 @@ export const addComment = (content, postID, postAuthorUID) => {
   };
 };
 
-export const deleteComment = (commentID, postID) => {
+export const deleteComment = (commentID) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
       await firestore.collection('comments').doc(commentID).delete();
-      await firestore.collection('posts').doc(postID).update({
-        commentsCount: firestore.FieldValue.increment(-1),
-      });
       dispatch(postSuccess());
     } catch (error) {
       dispatch(postFail(error));

@@ -53,6 +53,9 @@ const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSucce
       <Link to="/my-posts">
         <Button size="Small" fill="Filled" color="Green">View your posts</Button>
       </Link>
+      <Link to="/add-admin">
+        <Button size="Small" fill="Filled" color="Green">Add admin</Button>
+      </Link>
       <span className={classes.Success}>{success}</span>
     </div>
   );

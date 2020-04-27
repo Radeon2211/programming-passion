@@ -4,16 +4,11 @@ import { updateObject, createInputElements, createStateInput, checkValidity, che
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class ChangeNick extends Component {
+class AddAdmin extends Component {
   state = {
-    newFirstName: createStateInput('input', 'New first name', '',
-      { type: 'text', id: 'newFirstName', autoComplete: 'given-name', placeholder: 'Your new first name...' },
-      { minLength: 1, maxLength: 50 },
-      false,
-    ),
-    newLastName: createStateInput('input', 'New last name', '',
-      { type: 'text', id: 'newLastName', autoComplete: 'family-name', placeholder: 'Your new last name...' },
-      { minLength: 1, maxLength: 50 },
+    email: createStateInput('input', 'Email', '',
+      { type: 'email', id: 'email', autoComplete: 'email', placeholder: `Future admin's email` },
+      { isEmail: true },
       false,
     ),
   };
@@ -34,11 +29,8 @@ class ChangeNick extends Component {
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
-    const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
-    }
-    this.props.onChangeName(data, this.props.history);
+    const email = this.state.email.value.trim();
+    this.props.onAddAdmin(email);
   };
 
   render () {
@@ -46,8 +38,8 @@ class ChangeNick extends Component {
 
     return (
       <Form
-        headingText="Change Name"
-        btnText="Change"
+        headingText="Add Admin"
+        btnText="Add"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
       >
@@ -58,8 +50,8 @@ class ChangeNick extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onChangeName: (data, history) => dispatch(actions.changeName(data, history)),
+  onAddAdmin: (email) => dispatch(actions.addAdmin(email)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(ChangeNick);
+export default connect(null, mapDispatchToProps)(AddAdmin);

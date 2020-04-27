@@ -1,30 +1,40 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import Navbar from './components/Navigation/Navbar/Navbar';
 import Main from './components/UI/Main/Main';
-import SignIn from './containers/Auth/SignIn';
-import SignUp from './containers/Auth/SignUp';
-import SignOut from './containers/Auth/SignOut';
 import Home from './containers/Home/Home';
-import CreatePost from './containers/CreatePost/CreatePost';
+import SignOut from './containers/Auth/SignOut';
 import Posts from './containers/Posts/Posts';
 import PostDetails from './containers/PostDetails/PostDetails';
-import Settings from './containers/Settings/Settings';
 import MyPosts from './containers/MyPosts/MyPosts';
-import ChangeName from './containers/Auth/ChangeNick';
-import ChangeEmail from './containers/Auth/ChangeEmail';
-import ChangePassword from './containers/Auth/ChangePassword';
-import ChangePhoto from './containers/Auth/ChangePhoto';
-import DeleteAccount from './containers/Auth/DeleteAccount';
 import Footer from './components/Footer/Footer';
+import Loader from './components/UI/Loader/Loader';
+
+const SignIn = lazy(() => import('./containers/Auth/SignIn'));
+const SignUp = lazy(() => import('./containers/Auth/SignUp'));
+const CreatePost = lazy(() => import('./containers/CreatePost/CreatePost'));
+const Settings = lazy(() => import('./containers/Settings/Settings'));
+const ChangeName = lazy(() => import('./containers/Auth/ChangeName'));
+const ChangeEmail = lazy(() => import('./containers/Auth/ChangeEmail'));
+const ChangePassword = lazy(() => import('./containers/Auth/ChangePassword'));
+const ChangePhoto = lazy(() => import('./containers/Auth/ChangePhoto'));
+const DeleteAccount = lazy(() => import('./containers/Auth/DeleteAccount'));
+
+const WaitingComponent = (Component) => {
+  return (props) => (
+    <Suspense fallback={<div style={{ textAlign: 'center' }}><Loader size="Big" /></div>}>
+      <Component  {...props} />
+    </Suspense>
+  );
+};
 
 class App extends Component {
   render () {
     let routes = (
       <Switch>
-        <Route path="/signin" component={SignIn} />
-        <Route path="/signup" component={SignUp} />
+        <Route path="/signin" component={WaitingComponent(SignIn)} />
+        <Route path="/signup" component={WaitingComponent(SignUp)} />
         <Route path="/posts/:id" component={PostDetails} />
         <Route path="/posts" component={Posts} />
         <Route path="/signout" component={SignOut} />
@@ -36,16 +46,17 @@ class App extends Component {
     if (this.props.authUID) {
       routes= (
         <Switch>
-          <Route path="/create" component={CreatePost} />
           <Route path="/posts/:id" component={PostDetails} />
           <Route path="/posts" component={Posts} />
-          <Route path="/settings" component={Settings} />
+          <Route path="/create" component={WaitingComponent(CreatePost)} />
+          <Route path="/settings" component={WaitingComponent(Settings)} />
+          <Route path="/change-name" component={WaitingComponent(ChangeName)} />
+          <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
+          <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
+          <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
+          <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
           <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
-          <Route path="/change-name" component={ChangeName} />
-          <Route path="/change-email" component={ChangeEmail} />
-          <Route path="/change-password" component={ChangePassword} />
-          <Route path="/change-photo" component={ChangePhoto} />
-          <Route path="/delete-account" component={DeleteAccount} />
+          {/* <Route path="/add-admin" component={AddAdmin} /> */}
           <Route path="/signout" component={SignOut} />
           <Redirect to="/posts" />
         </Switch>

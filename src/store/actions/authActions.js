@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import mainFirebase from '../../config/fbConfig';
 
 export const isNameValid = (firstName, lastName) => {
   if (firstName.length < 1 || firstName.length > 50
@@ -189,6 +190,18 @@ export const deleteAccount = ({ email, password }, history) => {
       await user.delete();
       dispatch(authSuccess('Your account has been deleted successfully!'));
       history.push('/');
+    } catch (error) {
+      dispatch(authFail(error));
+    }
+  };
+};
+
+export const addAdmin = (email) => {
+  return async (dispatch, getState, { getFirebase }) => {
+    dispatch(authStart());
+    const firebase = getFirebase();
+    try {
+      dispatch(authSuccess());
     } catch (error) {
       dispatch(authFail(error));
     }

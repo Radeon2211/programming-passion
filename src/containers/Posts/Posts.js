@@ -6,13 +6,20 @@ import { compose } from 'redux';
 import Line from '../../components/UI/Line/Line';
 import PostList from './PostList/PostList';
 
-const Posts = ({ posts }) => (
-  <div className={classes.Posts}>
-    <h1 className={classes.Heading}>Check out the latest posts</h1>
-    <Line type="Begin" size="Size-2" />
-    <PostList posts={posts} />
-  </div>
-);
+const Posts = ({ posts }) => {
+  let postList = <span className={classes.NoPostsInfo}>It looks like there are no posts yet</span>;
+  if (posts.length > 0) {
+    postList = <PostList posts={posts} />;
+  }
+
+  return (
+    <div className={classes.Posts}>
+      <h1 className={classes.Heading}>Check out the latest posts</h1>
+      <Line type="Begin" size="Size-2" />
+      {postList}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
   posts: state.firestore.ordered.allPosts || [],
