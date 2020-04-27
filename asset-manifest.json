@@ -1,23 +1,29 @@
 {
   "files": {
-    "main.css": "/programming-passion/static/css/main.85b6a76e.chunk.css",
-    "main.js": "/programming-passion/static/js/main.4f14673f.chunk.js",
-    "main.js.map": "/programming-passion/static/js/main.4f14673f.chunk.js.map",
-    "runtime-main.js": "/programming-passion/static/js/runtime-main.33922841.js",
-    "runtime-main.js.map": "/programming-passion/static/js/runtime-main.33922841.js.map",
-    "static/js/2.8443427b.chunk.js": "/programming-passion/static/js/2.8443427b.chunk.js",
-    "static/js/2.8443427b.chunk.js.map": "/programming-passion/static/js/2.8443427b.chunk.js.map",
+    "main.css": "/programming-passion/static/css/main.8839c796.chunk.css",
+    "main.js": "/programming-passion/static/js/main.ac703954.chunk.js",
+    "runtime-main.js": "/programming-passion/static/js/runtime-main.053c384c.js",
+    "static/js/2.0ba41465.chunk.js": "/programming-passion/static/js/2.0ba41465.chunk.js",
+    "static/css/3.e95c9592.chunk.css": "/programming-passion/static/css/3.e95c9592.chunk.css",
+    "static/js/3.3d8ab8df.chunk.js": "/programming-passion/static/js/3.3d8ab8df.chunk.js",
+    "static/js/4.904f3741.chunk.js": "/programming-passion/static/js/4.904f3741.chunk.js",
+    "static/js/5.7b11c48d.chunk.js": "/programming-passion/static/js/5.7b11c48d.chunk.js",
+    "static/js/6.02f1ecb6.chunk.js": "/programming-passion/static/js/6.02f1ecb6.chunk.js",
+    "static/js/7.2245f084.chunk.js": "/programming-passion/static/js/7.2245f084.chunk.js",
+    "static/js/8.6d9e68d2.chunk.js": "/programming-passion/static/js/8.6d9e68d2.chunk.js",
+    "static/js/9.7cb5ca0d.chunk.js": "/programming-passion/static/js/9.7cb5ca0d.chunk.js",
+    "static/js/10.cbe53be6.chunk.js": "/programming-passion/static/js/10.cbe53be6.chunk.js",
+    "static/js/11.da2151b1.chunk.js": "/programming-passion/static/js/11.da2151b1.chunk.js",
     "index.html": "/programming-passion/index.html",
-    "precache-manifest.6678e0075a2826a677a1d7c538a7075e.js": "/programming-passion/precache-manifest.6678e0075a2826a677a1d7c538a7075e.js",
+    "precache-manifest.ff2aa603ece94a611ec4ac240ececdd5.js": "/programming-passion/precache-manifest.ff2aa603ece94a611ec4ac240ececdd5.js",
     "service-worker.js": "/programming-passion/service-worker.js",
-    "static/css/main.85b6a76e.chunk.css.map": "/programming-passion/static/css/main.85b6a76e.chunk.css.map",
-    "static/js/2.8443427b.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.8443427b.chunk.js.LICENSE.txt",
-    "static/media/sprite.svg": "/programming-passion/static/media/sprite.f7960ae7.svg"
+    "static/js/2.0ba41465.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.0ba41465.chunk.js.LICENSE.txt",
+    "static/media/sprite.svg": "/programming-passion/static/media/sprite.236c1c83.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.33922841.js",
-    "static/js/2.8443427b.chunk.js",
-    "static/css/main.85b6a76e.chunk.css",
-    "static/js/main.4f14673f.chunk.js"
+    "static/js/runtime-main.053c384c.js",
+    "static/js/2.0ba41465.chunk.js",
+    "static/css/main.8839c796.chunk.css",
+    "static/js/main.ac703954.chunk.js"
   ]
 }
