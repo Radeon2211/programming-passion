@@ -7,7 +7,7 @@ import Line from '../../components/UI/Line/Line';
 import PostList from './PostList/PostList';
 
 const Posts = ({ posts }) => {
-  let postList = <span className={classes.NoPostsInfo}>It looks like there are no posts yet</span>;
+  let postList = <span className={classes.NoPostsInfo}>It looks like there is no posts yet</span>;
   if (posts.length > 0) {
     postList = <PostList posts={posts} />;
   }

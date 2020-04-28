@@ -1,6 +1,9 @@
 import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
+import * as actions from './store/actions/indexActions';
+import Loader from './components/UI/Loader/Loader';
+
 import Navbar from './components/Navigation/Navbar/Navbar';
 import Main from './components/UI/Main/Main';
 import Home from './containers/Home/Home';
@@ -9,7 +12,6 @@ import Posts from './containers/Posts/Posts';
 import PostDetails from './containers/PostDetails/PostDetails';
 import MyPosts from './containers/MyPosts/MyPosts';
 import Footer from './components/Footer/Footer';
-import Loader from './components/UI/Loader/Loader';
 
 const SignIn = lazy(() => import('./containers/Auth/SignIn'));
 const SignUp = lazy(() => import('./containers/Auth/SignUp'));
@@ -20,6 +22,7 @@ const ChangeEmail = lazy(() => import('./containers/Auth/ChangeEmail'));
 const ChangePassword = lazy(() => import('./containers/Auth/ChangePassword'));
 const ChangePhoto = lazy(() => import('./containers/Auth/ChangePhoto'));
 const DeleteAccount = lazy(() => import('./containers/Auth/DeleteAccount'));
+const AddAdmin = lazy(() => import('./containers/Auth/AddAdmin'));
 
 const WaitingComponent = (Component) => {
   return (props) => (
@@ -44,7 +47,7 @@ class App extends Component {
     );
 
     if (this.props.authUID) {
-      routes= (
+      routes = (
         <Switch>
           <Route path="/posts/:id" component={PostDetails} />
           <Route path="/posts" component={Posts} />
@@ -56,8 +59,8 @@ class App extends Component {
           <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
           <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
           <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
-          {/* <Route path="/add-admin" component={AddAdmin} /> */}
           <Route path="/signout" component={SignOut} />
+          <Route path="/add-admin" component={WaitingComponent(AddAdmin)} />
           <Redirect to="/posts" />
         </Switch>
       );
@@ -79,4 +82,8 @@ const mapStateToProps = (state) => ({
   authUID: state.firebase.auth.uid,
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => ({
+  onIsAdmin: () => dispatch(actions.isAdmin()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

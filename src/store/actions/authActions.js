@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import mainFirebase from '../../config/fbConfig';
+import axios from 'axios';
 
 export const isNameValid = (firstName, lastName) => {
   if (firstName.length < 1 || firstName.length > 50
@@ -201,7 +201,31 @@ export const addAdmin = (email) => {
     dispatch(authStart());
     const firebase = getFirebase();
     try {
+      const userUID = firebase.auth().currentUser.uid;
+      const authToken = await firebase.auth().currentUser.getIdToken();
+      const { data } = await axios.post('https://us-central1-programming-passion.cloudfunctions.net/onAddAdmin',
+        { email, userUID },
+        { headers: { 'Authorization': `Bearer ${authToken}` } }
+      );
+      if (data.error) {
+        throw new Error(data.error);
+      }
       dispatch(authSuccess());
+    } catch (error) {
+      dispatch(authFail(error));
+    }
+  };
+};
+
+export const isAdmin = () => {
+  return async (dispatch, getState, { getFirebase } ) => {
+    const firebase = getFirebase();
+    try {
+      const currentUser = firebase.auth().currentUser;
+      if (!currentUser) return false;
+      const tokenResult = await currentUser.getIdTokenResult();
+      if (!tokenResult.claims.superAdmin) return false;
+      return true;
     } catch (error) {
       dispatch(authFail(error));
     }

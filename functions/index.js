@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const cors = require('cors')({ origin: true });
 
 admin.initializeApp(functions.config().firebase);
 
@@ -85,3 +86,39 @@ exports.onUpdateLikedPosts = functions.firestore.document('users/{userID}/likedP
     throw new functions.https.HttpsError('unknown', `There is a problem to update post's likes count`);
   }
 });
+
+exports.onAddAdmin = functions.https.onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      const requestedUID = req.body.userUID;
+      const authToken = validateHeader(req);
+      if (!authToken) {
+        return res.status(200).send({ error: 'You are not an admin and even not authenticated' });
+      }
+      const decodedUID = await decodeAuthToken(authToken);
+      const currentUser = await admin.auth().getUser(decodedUID);
+      if (!currentUser.customClaims) {
+        return res.status(200).send({ error: 'You are not an admin' });
+      }
+      if (!currentUser.customClaims.superAdmin || decodedUID !== requestedUID) {
+        return res.status(200).send({ error: 'You are not an admin' });
+      }
+      const newAdmin = await admin.auth().getUserByEmail(req.body.email);
+      await admin.auth().setCustomUserClaims(newAdmin.uid, { superAdmin: true });
+      return res.status(200).send(`${req.body.email} has been made an admin`);
+    } catch (error) {
+      return res.status(200).send({ error });
+    }
+  })
+});
+
+const validateHeader = (req) => {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    return req.headers.authorization.split('Bearer ')[1];
+  }
+};
+
+const decodeAuthToken = async (authToken) => {
+  const decodedToken = await admin.auth().verifyIdToken(authToken);
+  return decodedToken.uid;
+};
