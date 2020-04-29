@@ -4,16 +4,9 @@
   width: 100%;
   max-width: 80rem;
 
-  .Heading {
-    font-size: 3.2rem;
-    font-family: var(--font-heading);
-    letter-spacing: 1px;
-    margin-bottom: 1.2rem;
-  }
-
-  .NoPostsInfo {
-    font-size: 1.7rem;
-    margin-top: 4.8rem;
-    display: inline-block;
+  .NoPostsLink:link,
+  .NoPostsLink:visited {
+    text-decoration: none;
+    color: var(--green);
   }
 }

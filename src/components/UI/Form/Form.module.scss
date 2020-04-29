@@ -7,15 +7,8 @@
   justify-self: center;
   max-width: 100%;
   margin-top: 5rem;
-  padding: 3rem;
-  width: 60rem;
-
-  .Heading {
-    font-size: 2.5rem;
-    letter-spacing: 1px;
-    text-shadow: var(--shadow-3);
-    margin-bottom: 3rem;
-  }
+  padding: 2.4rem;
+  width: 65rem;
 
   .BtnAndLoader {
     display: flex;
@@ -26,6 +19,6 @@
     color: var(--red);
     display: inline-block;
     font-size: 1.5rem;
-    margin-top: 3rem;
+    margin-top: 2.4rem;
   }
 }

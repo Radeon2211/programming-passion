@@ -38,13 +38,16 @@ export const createPost = ({ title, content }, history) => {
   };
 };
 
-export const deletePost = (postID) => {
+export const deletePost = (postID, history) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
       await firestore.collection('posts').doc(postID).delete();
       dispatch(postSuccess());
+      if (history) {
+        history.replace('/posts');
+      }
     } catch (error) {
       dispatch(postFail(error));
     }

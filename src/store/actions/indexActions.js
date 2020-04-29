@@ -10,7 +10,9 @@ export {
   changePhoto,
   deleteAccount,
   addAdmin,
-  isAdmin,
+  removeAdmin,
+  updateAdminState,
+  setAutoRedirectPath,
 } from './authActions';
 
 export {

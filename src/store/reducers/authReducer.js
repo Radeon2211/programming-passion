@@ -5,6 +5,8 @@ const initialState = {
   loading: false,
   success: null,
   error: null,
+  isUserAdmin: false,
+  autoRedirectPath: '/',
 };
 
 const authStart = (state) => {
@@ -27,6 +29,18 @@ const deleteSuccess = (state) => {
   return updateObject(state, { success: null });
 };
 
+const onUserAdmin = (state) => {
+  return updateObject(state, { isUserAdmin: true });
+};
+
+const offUserAdmin = (state) => {
+  return updateObject(state, { isUserAdmin: false });
+};
+
+const setAutoRedirectPath = (state, action) => {
+  return updateObject(state, { autoRedirectPath: action.path });
+};
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case (actionTypes.AUTH_START): return authStart(state, action);
@@ -34,6 +48,9 @@ const authReducer = (state = initialState, action) => {
     case (actionTypes.AUTH_FAIL): return authFail(state, action);
     case (actionTypes.DELETE_AUTH_ERROR): return deleteError(state, action);
     case (actionTypes.DELETE_AUTH_SUCCESS): return deleteSuccess(state, action);
+    case (actionTypes.ON_USER_ADMIN): return onUserAdmin(state, action);
+    case (actionTypes.OFF_USER_ADMIN): return offUserAdmin(state, action);
+    case (actionTypes.SET_AUTO_REDIRECT_PATH): return setAutoRedirectPath(state, action);
     default: return state;
   }
 };

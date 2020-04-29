@@ -45,7 +45,7 @@ class SignUp extends Component {
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onSignUp(data);
+    this.props.onSignUp(data, this.props.history, this.props.autoRedirectPath);
   };
 
   render () {
@@ -64,9 +64,13 @@ class SignUp extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  autoRedirectPath: state.auth.autoRedirectPath,
+});
+
 const mapDispatchToProps = (dispatch) => ({
-  onSignUp: (data) => dispatch(actions.signUp(data)),
+  onSignUp: (data, history, redirectPath) => dispatch(actions.signUp(data, history, redirectPath)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

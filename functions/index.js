@@ -90,27 +90,51 @@ exports.onUpdateLikedPosts = functions.firestore.document('users/{userID}/likedP
 exports.onAddAdmin = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
-      const requestedUID = req.body.userUID;
-      const authToken = validateHeader(req);
-      if (!authToken) {
-        return res.status(200).send({ error: 'You are not an admin and even not authenticated' });
-      }
-      const decodedUID = await decodeAuthToken(authToken);
-      const currentUser = await admin.auth().getUser(decodedUID);
-      if (!currentUser.customClaims) {
-        return res.status(200).send({ error: 'You are not an admin' });
-      }
-      if (!currentUser.customClaims.superAdmin || decodedUID !== requestedUID) {
-        return res.status(200).send({ error: 'You are not an admin' });
+      const userValidation = await isUserAdmin(req);
+      if (userValidation.error) {
+        return res.status(200).send(userValidation.error);
       }
       const newAdmin = await admin.auth().getUserByEmail(req.body.email);
-      await admin.auth().setCustomUserClaims(newAdmin.uid, { superAdmin: true });
+      await admin.auth().setCustomUserClaims(newAdmin.uid, { admin: true });
       return res.status(200).send(`${req.body.email} has been made an admin`);
     } catch (error) {
       return res.status(200).send({ error });
     }
   })
 });
+
+exports.onRemoveAdmin = functions.https.onRequest((req, res) => {
+  cors(req, res, async () => {
+    try {
+      const userValidation = await isUserAdmin(req);
+      if (userValidation.error) {
+        return res.status(200).send(userValidation.error);
+      }
+      const adminToRemove = await admin.auth().getUserByEmail(req.body.email);
+      await admin.auth().setCustomUserClaims(adminToRemove.uid, { admin: false });
+      return res.status(200).send(`${req.body.email} is not an admin now`);
+    } catch (error) {
+      return res.status(200).send({ error });
+    }
+  })
+});
+
+const isUserAdmin = async (req) => {
+  const requestedUID = req.body.userUID;
+  const authToken = validateHeader(req);
+  if (!authToken) {
+    return { error: 'You are not an admin and even not authenticated' };
+  }
+  const decodedUID = await decodeAuthToken(authToken);
+  const currentUser = await admin.auth().getUser(decodedUID);
+  if (!currentUser.customClaims) {
+    return { error: 'You are not an admin' };
+  }
+  if (!currentUser.customClaims.admin || decodedUID !== requestedUID) {
+    return { error: 'You are not an admin' };
+  }
+  return { success: 'User is admin' };
+};
 
 const validateHeader = (req) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {

@@ -9,19 +9,6 @@
   max-height: 100vh;
   row-gap: 4rem;
 
-  .Heading {
-    font-family: var(--font-home-heading);
-    font-size: 5.2rem;
-    grid-row: 2 / 3;
-    letter-spacing: 1px;
-    text-align: center;
-    text-shadow: var(--shadow-3);
-
-    & > * {
-      display: block;
-    }
-  }
-
   .ButtonBox {
     align-items: center;
     display: flex;

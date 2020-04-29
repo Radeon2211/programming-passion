@@ -23,6 +23,7 @@ const ChangePassword = lazy(() => import('./containers/Auth/ChangePassword'));
 const ChangePhoto = lazy(() => import('./containers/Auth/ChangePhoto'));
 const DeleteAccount = lazy(() => import('./containers/Auth/DeleteAccount'));
 const AddAdmin = lazy(() => import('./containers/Auth/AddAdmin'));
+const RemoveAdmin = lazy(() => import('./containers/Auth/RemoveAdmin'));
 
 const WaitingComponent = (Component) => {
   return (props) => (
@@ -33,6 +34,10 @@ const WaitingComponent = (Component) => {
 };
 
 class App extends Component {
+  componentDidMount() {
+    this.props.onUpdateAdminState();
+  }
+
   render () {
     let routes = (
       <Switch>
@@ -47,23 +52,43 @@ class App extends Component {
     );
 
     if (this.props.authUID) {
-      routes = (
-        <Switch>
-          <Route path="/posts/:id" component={PostDetails} />
-          <Route path="/posts" component={Posts} />
-          <Route path="/create" component={WaitingComponent(CreatePost)} />
-          <Route path="/settings" component={WaitingComponent(Settings)} />
-          <Route path="/change-name" component={WaitingComponent(ChangeName)} />
-          <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
-          <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
-          <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
-          <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
-          <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
-          <Route path="/signout" component={SignOut} />
-          <Route path="/add-admin" component={WaitingComponent(AddAdmin)} />
-          <Redirect to="/posts" />
-        </Switch>
-      );
+      if (this.props.isUserAdmin) {
+        routes = (
+          <Switch>
+            <Route path="/posts/:id" component={PostDetails} />
+            <Route path="/posts" component={Posts} />
+            <Route path="/create" component={WaitingComponent(CreatePost)} />
+            <Route path="/settings" component={WaitingComponent(Settings)} />
+            <Route path="/change-name" component={WaitingComponent(ChangeName)} />
+            <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
+            <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
+            <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
+            <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
+            <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
+            <Route path="/add-admin" component={WaitingComponent(AddAdmin)} />
+            <Route path="/remove-admin" component={WaitingComponent(RemoveAdmin)} />
+            <Route path="/signout" component={SignOut} />
+            <Redirect to="/posts" />
+          </Switch>
+        );
+      } else {
+        routes = (
+          <Switch>
+            <Route path="/posts/:id" component={PostDetails} />
+            <Route path="/posts" component={Posts} />
+            <Route path="/create" component={WaitingComponent(CreatePost)} />
+            <Route path="/settings" component={WaitingComponent(Settings)} />
+            <Route path="/change-name" component={WaitingComponent(ChangeName)} />
+            <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
+            <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
+            <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
+            <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
+            <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
+            <Route path="/signout" component={SignOut} />
+            <Redirect to="/posts" />
+          </Switch>
+        );
+      }
     }
 
     return (
@@ -80,10 +105,11 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   authUID: state.firebase.auth.uid,
+  isUserAdmin: state.auth.isUserAdmin,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onIsAdmin: () => dispatch(actions.isAdmin()),
+  onUpdateAdminState: () => dispatch(actions.updateAdminState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

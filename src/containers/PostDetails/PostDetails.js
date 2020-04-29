@@ -11,13 +11,16 @@ import AuthorData from '../../components/UI/AuthorData/AuthorData';
 import sprite from '../../images/sprite.svg';
 import Comments from './Comments/Comments';
 import Modal from '../../components/UI/Modal/Modal';
+import RenderIfIsAdmin from '../../components/RenderIfsAdmin/RenderIfIsAdmin';
+import Heading from '../../components/UI/Heading/Heading';
 
 class PostDetails extends Component {
   state = {
     isLikingPossible: true,
     isLiked: false,
     commentIdToDelete: null,
-    isModalVisible: false,
+    isCommentModalVisible: false,
+    isPostModalVisible: false,
   };
 
   likingTimeout = null;
@@ -34,21 +37,40 @@ class PostDetails extends Component {
   startDeletingCommentHandler = (commentID) => {
     this.setState({
       commentIdToDelete: commentID,
-      isModalVisible: true,
-    });
-  };
-
-  cancelDeletingCommentHandler = () => {
-    this.setState({
-      commentIdToDelete: null,
-      isModalVisible: false,
+      isCommentModalVisible: true,
     });
   };
 
   deleteCommentHandler = () => {
-    this.setState({ isModalVisible: false });
+    this.setState({
+      isCommentModalVisible: false,
+      isPostModalVisible: false,
+    });
     if (!this.state.commentIdToDelete) return;
-    this.props.onDeleteComment(this.state.commentIdToDelete, this.props.match.params.id);
+    this.props.onDeleteComment(this.state.commentIdToDelete);
+  };
+
+  startDeletingPostHandler = () => {
+    this.setState({
+      isPostModalVisible: true,
+    });
+  };
+
+  deletePostHandler = () => {
+    this.setState({
+      isCommentModalVisible: false,
+      isPostModalVisible: false,
+    });
+    if (!this.props.match.params.id) return;
+    this.props.onDeletePost(this.props.match.params.id, this.props.history);
+  };
+
+  cancelDeletingHandler = () => {
+    this.setState({
+      commentIdToDelete: null,
+      isPostModalVisible: false,
+      isCommentModalVisible: false,
+    });
   };
 
   togglePostLiking = () => {
@@ -76,6 +98,10 @@ class PostDetails extends Component {
     let postDetails = <Loader size="Small" />;
     let unauthInfo = null;
 
+    if (this.props.post === undefined) {
+      postDetails = <span className={classes.NoPostInfo}>This post does not exists</span>
+    }
+
     if (this.props.post) {
       const { authorFirstName, authorLastName, authorPhotoURL, title, content, likesCount, createdAt } = this.props.post;
       const likesClasses = [classes.Likes];
@@ -90,7 +116,15 @@ class PostDetails extends Component {
                 <use href={`${sprite}#icon-lock`}></use>
               </svg>
               <span className={classes.UnauthCaption}>
-                <Link to="/signin" className={classes.UnauthCaptionLink}>Login</Link> to like and comment posts
+                <Link
+                  to="/signin"
+                  className={classes.UnauthCaptionLink}
+                  onClick={this.props.onSetAutoRedirectPath.bind(this, `/posts/${this.props.match.params.id}`)}
+                >Login</Link> or <Link
+                  to="/signup"
+                  className={classes.UnauthCaptionLink}
+                  onClick={this.props.onSetAutoRedirectPath.bind(this, `/posts/${this.props.match.params.id}`)}
+                >sign up</Link> to like and comment posts
               </span>
             </div>
             <Line type="Begin" size="Size-2" />
@@ -103,12 +137,19 @@ class PostDetails extends Component {
           <Modal
             headingText="Deleting comment"
             captionText="The operation is irreversible"
-            isVisible={this.state.isModalVisible}
-            canceled={this.cancelDeletingCommentHandler}
+            isVisible={this.state.isCommentModalVisible}
+            canceled={this.cancelDeletingHandler}
             deleted={this.deleteCommentHandler}
           />
+          <Modal
+            headingText="Deleting post"
+            captionText="The operation is irreversible"
+            isVisible={this.state.isPostModalVisible}
+            canceled={this.cancelDeletingHandler}
+            deleted={this.deletePostHandler}
+          />
           <div className={classes.PostDetails}>
-            <h3 className={classes.Heading}>{title}</h3>
+            <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">{title}</Heading>
             <div className={classes.Author}>
               <AuthorData
                 size="Big"
@@ -135,6 +176,14 @@ class PostDetails extends Component {
               postID={this.props.match.params.id}
               commentHandlingData={commentHandlingData}
             />
+            <RenderIfIsAdmin>
+              <div className={classes.DeletePostSection}>
+                <Line type="Begin" size="Size-2" />
+                <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
+                  <use href={`${sprite}#icon-bin`}></use>
+                </svg>
+              </div>
+            </RenderIfIsAdmin>
           </div>
         </Fragment>
       );
@@ -148,18 +197,18 @@ class PostDetails extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    post: state.firestore.data.post || null,
-    comments: state.firestore.ordered.comments || [],
-    authUID: state.firebase.auth.uid,
-  };
-};
+const mapStateToProps = (state) => ({
+  post: state.firestore.data.post || undefined,
+  comments: state.firestore.ordered.comments || [],
+  authUID: state.firebase.auth.uid,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onTogglePostLiking: (postID, type) => dispatch(actions.togglePostLiking(postID, type)),
   onCheckPostLiking: (postID) => dispatch(actions.checkPostLiking(postID)),
-  onDeleteComment: (commentID, postID) => dispatch(actions.deleteComment(commentID, postID)),
+  onDeleteComment: (commentID) => dispatch(actions.deleteComment(commentID)),
+  onDeletePost: (postID, history) => dispatch(actions.deletePost(postID, history)),
+  onSetAutoRedirectPath: (path) => dispatch(actions.setAutoRedirectPath(path)),
 });
 
 export default compose(

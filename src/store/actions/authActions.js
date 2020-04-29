@@ -31,7 +31,20 @@ export const deleteSuccess = () => ({
   type: actionTypes.DELETE_AUTH_SUCCESS,
 });
 
-export const signUp = ({ email, password, firstName, lastName }) => {
+export const onUserAdmin = () => ({
+  type: actionTypes.ON_USER_ADMIN,
+});
+
+export const offUserAdmin = () => ({
+  type: actionTypes.OFF_USER_ADMIN,
+});
+
+export const setAutoRedirectPath = (path) => ({
+  type: actionTypes.SET_AUTO_REDIRECT_PATH,
+  path,
+});
+
+export const signUp = ({ email, password, firstName, lastName }, history, redirectPath) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(authStart());
     const firebase = getFirebase();
@@ -50,19 +63,21 @@ export const signUp = ({ email, password, firstName, lastName }) => {
         likedPosts: [],
       });
       dispatch(authSuccess(null));
+      history.push(redirectPath);
     } catch (error) {
       dispatch(authFail(error));
     }
   };
 };
 
-export const signIn = ({ email, password }) => {
+export const signIn = ({ email, password }, history, redirectPath) => {
   return async (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
       dispatch(authSuccess(null));
+      history.push(redirectPath);
     } catch (error) {
       dispatch(authFail(error));
     }
@@ -134,7 +149,7 @@ export const changeEmail = ({ oldEmail, newEmail, password }, history) => {
       await reauthenticateUser(oldEmail, password, firebase);
       await user.updateEmail(newEmail);
       dispatch(authSuccess('Email has been changed successfully!'));
-      history.goBack();
+      history.push('/settings');
       window.location.reload();
     } catch (error) {
       dispatch(authFail(error));
@@ -210,24 +225,48 @@ export const addAdmin = (email) => {
       if (data.error) {
         throw new Error(data.error);
       }
-      dispatch(authSuccess());
+      dispatch(authSuccess('Admin has been added successfully'));
     } catch (error) {
       dispatch(authFail(error));
     }
   };
 };
 
-export const isAdmin = () => {
-  return async (dispatch, getState, { getFirebase } ) => {
+export const removeAdmin = (email) => {
+  return async (dispatch, getState, { getFirebase }) => {
+    dispatch(authStart());
     const firebase = getFirebase();
     try {
-      const currentUser = firebase.auth().currentUser;
-      if (!currentUser) return false;
-      const tokenResult = await currentUser.getIdTokenResult();
-      if (!tokenResult.claims.superAdmin) return false;
-      return true;
+      const userUID = firebase.auth().currentUser.uid;
+      const authToken = await firebase.auth().currentUser.getIdToken();
+      const { data } = await axios.post('https://us-central1-programming-passion.cloudfunctions.net/onRemoveAdmin',
+        { email, userUID },
+        { headers: { 'Authorization': `Bearer ${authToken}` } }
+      );
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      dispatch(authSuccess('Admin has been removed successfully'));
     } catch (error) {
       dispatch(authFail(error));
     }
+  };
+};
+
+export const updateAdminState = () => {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) {
+        dispatch(offUserAdmin());
+        return;
+      }
+      const tokenResult = await user.getIdTokenResult();
+      if (!tokenResult.claims.admin) {
+        dispatch(offUserAdmin());
+        return;
+      }
+      dispatch(onUserAdmin());
+    });
   };
 };

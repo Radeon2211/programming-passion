@@ -4,17 +4,12 @@ import { updateObject, createInputElements, createStateInput, checkValidity, che
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class SignUp extends Component {
+class RemoveAdmin extends Component {
   state = {
     email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      null,
-      true,
-    ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
-      null,
-      true,
+      { type: 'email', id: 'email', autoComplete: 'email', placeholder: `Email of admin to remove` },
+      { isEmail: true },
+      false,
     ),
   };
 
@@ -34,11 +29,8 @@ class SignUp extends Component {
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
-    const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
-    }
-    this.props.onSignIn(data, this.props.history, this.props.autoRedirectPath);
+    const email = this.state.email.value.trim();
+    this.props.onRemoveAdmin(email);
   };
 
   render () {
@@ -46,8 +38,8 @@ class SignUp extends Component {
 
     return (
       <Form
-        headingText="Sign In"
-        btnText="Login"
+        headingText="Remove Admin"
+        btnText="Remove"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
       >
@@ -57,13 +49,9 @@ class SignUp extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  autoRedirectPath: state.auth.autoRedirectPath,
-});
-
 const mapDispatchToProps = (dispatch) => ({
-  onSignIn: (data, history, redirectPath) => dispatch(actions.signIn(data, history, redirectPath)),
+  onRemoveAdmin: (email) => dispatch(actions.removeAdmin(email)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(RemoveAdmin);

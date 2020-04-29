@@ -13,15 +13,6 @@
   width: 100%;
   z-index: var(--z-index-3);
 
-  .Heading {
-    font-size: 3.5rem;
-    font-family: var(--font-logo);
-    font-weight: 400;
-    letter-spacing: 2px;
-    line-height: 1;
-    text-shadow: var(--shadow-3);
-  }
-
   .Logo {
     height: 4.6rem;
     display: none;
@@ -38,7 +29,7 @@
 @media only screen and (max-width: 900px) {
   .Navbar {
 
-    .Heading {
+    .HeadingText {
       display: none;
     }
 

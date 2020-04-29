@@ -1,28 +1,15 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../store/actions/indexActions';
 
-class RenderIfIsAdmin extends Component {
-  state = {
-    isUserAdmin: false,
-  };
+const RenderIfIsAdmin = ({ isUserAdmin, children }) => {
+  const content = isUserAdmin
+  ? children
+  : null;
 
-  async componentDidUpdate() {
-    const isUserAdmin = await this.props.onIsAdmin();
-    this.setState({ isUserAdmin });
-  }
+  return content;
+};
 
-  render () {
-    const content = this.state.isUserAdmin
-      ? this.props.children
-      : null;
-
-    return content;
-  }
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  onIsAdmin: () => dispatch(actions.isAdmin()),
+const mapStateToProps = (state) => ({
+  isUserAdmin: state.auth.isUserAdmin,
 });
 
-export default connect(null, mapDispatchToProps)(RenderIfIsAdmin);
+export default connect(mapStateToProps)(RenderIfIsAdmin);

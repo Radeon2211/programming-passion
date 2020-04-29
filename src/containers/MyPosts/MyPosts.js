@@ -3,10 +3,12 @@ import classes from '../Posts/Posts.module.scss';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import { Link } from 'react-router-dom';
 import * as actions from '../../store/actions/indexActions';
 import Line from '../../components/UI/Line/Line';
 import PostList from '../Posts/PostList/PostList';
 import Modal from '../../components/UI/Modal/Modal';
+import Heading from '../../components/UI/Heading/Heading';
 
 class MyPosts extends Component {
   state = {
@@ -35,7 +37,11 @@ class MyPosts extends Component {
   };
 
   render () {
-    let myPosts = <span className={classes.NoPostsInfo}>You didn't write any post yet</span>;
+    let myPosts = (
+      <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
+        You didn't write any post yet. <Link to="/create" className={classes.NoPostsLink}>Create one</Link>
+      </Heading>
+    );
     if (this.props.posts.length > 0) {
       myPosts = (
         <PostList
@@ -56,7 +62,7 @@ class MyPosts extends Component {
           deleted={this.deletePostHandler}
         />
         <div className={classes.Posts}>
-          <h1 className={classes.Heading}>See your posts</h1>
+          <Heading variant="H3" mgBottom="Mg-Bottom-Small">See your posts</Heading>
           <Line type="Begin" size="Size-2" />
           {myPosts}
         </div>

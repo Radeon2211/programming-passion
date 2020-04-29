@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Button from '../Button/Button';
 import classes from './Modal.module.scss';
+import Heading from '../../UI/Heading/Heading';
 
 const Modal = ({ headingText, captionText, isVisible, deleted, canceled }) => {
   const backdropClasses = [classes.Backdrop];
@@ -14,7 +15,7 @@ const Modal = ({ headingText, captionText, isVisible, deleted, canceled }) => {
     <Fragment>
       <div className={backdropClasses.join(' ')} onClick={canceled} id="backdrop"></div>
       <div className={popupClasses.join(' ')}>
-        <h4 className={classes.Heading}>{headingText}</h4>
+        <Heading variant="H4" color="Black">{headingText}</Heading>
         <span className={classes.Caption}><span className={classes.Note}>Note:</span> {captionText}</span>
         <div className={classes.Buttons}>
           <Button size="Small" fill="Filled" color="Green" clicked={canceled}>Cancel</Button>
