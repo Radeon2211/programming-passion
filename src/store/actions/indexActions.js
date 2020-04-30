@@ -22,4 +22,6 @@ export {
   checkPostLiking,
   addComment,
   deleteComment,
+  switchCanAddPost,
+  switchCanAddComment,
 } from './postActions';

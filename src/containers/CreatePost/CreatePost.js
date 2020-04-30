@@ -8,13 +8,18 @@ class SignUp extends Component {
   state = {
     title: createStateInput('input', 'Title', '',
       { type: 'text', id: 'title', autoComplete: 'off', placeholder: 'Post title...' },
-      { minLength: 1, maxLength: 150 }
+      { minLength: 1, maxLength: 200 },
     ),
     content: createStateInput('textarea', 'Content', '',
       { id: 'content', placeholder: 'Share your thoughts...' },
-      { minLength: 1, maxLength: 1200 }
+      { minLength: 1, maxLength: 1200 },
     ),
   };
+
+  componentDidMount() {
+    this.props.onDeleteError();
+  }
+
 
   inputChangedHandler = (inputId, e) => {
     this.setState({
@@ -32,7 +37,7 @@ class SignUp extends Component {
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onCreatePost(data, this.props.history);
+    this.props.onCreatePost(data, this.props.history, this.props.canAddPost);
   };
 
   render () {
@@ -44,7 +49,7 @@ class SignUp extends Component {
         btnText="Create"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
-        isPostForm={true}
+        isPostForm
       >
         {inputs}
       </Form>
@@ -52,8 +57,13 @@ class SignUp extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  onCreatePost: (data, history) => dispatch(actions.createPost(data, history)),
+const mapStateToProps = (state) => ({
+  canAddPost: state.post.canAddPost,
 });
 
-export default connect(null, mapDispatchToProps)(SignUp);
+const mapDispatchToProps = (dispatch) => ({
+  onCreatePost: (data, history, canAddPost) => dispatch(actions.createPost(data, history, canAddPost)),
+  onDeleteError: () => dispatch(actions.deleteError()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

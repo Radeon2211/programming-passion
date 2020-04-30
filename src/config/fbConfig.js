@@ -10,9 +10,11 @@ var firebaseConfig = {
   storageBucket: "programming-passion.appspot.com",
   messagingSenderId: "30593414768",
   appId: "1:30593414768:web:3d8e313ed9aa2d7768e6b5",
-  measurementId: "G-RGNY6VBHS1"
+  measurementId: "G-RGNY6VBHS1",
 };
 
 firebase.initializeApp(firebaseConfig);
+
+firebase.firestore().enablePersistence();
 
 export default firebase;

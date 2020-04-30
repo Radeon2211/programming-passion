@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import { createCustomError } from '../../shared/utility';
 import axios from 'axios';
 
 export const isNameValid = (firstName, lastName) => {
@@ -18,10 +19,13 @@ export const authSuccess = (success) => ({
   success,
 });
 
-export const authFail = (error) => ({
-  type: actionTypes.AUTH_FAIL,
-  error,
-});
+export const authFail = (error) => {
+  const customError = createCustomError(error);
+  return {
+    type: actionTypes.AUTH_FAIL,
+    error: customError,
+  }
+}
 
 export const deleteError = () => ({
   type: actionTypes.DELETE_AUTH_ERROR,
@@ -51,7 +55,7 @@ export const signUp = ({ email, password, firstName, lastName }, history, redire
     const firestore = getFirestore();
     try {
       if (!isNameValid(firstName, lastName)) {
-        throw new Error({ message: 'First and last name should be from 1 to 50 characters long' });
+        throw new Error('First and last name should be from 1 to 50 characters long');
       }
       const { user: { uid } } = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await firestore.collection('users').doc(uid).set({

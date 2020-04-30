@@ -9,7 +9,6 @@ class AddAdmin extends Component {
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: `Future admin's email` },
       { isEmail: true },
-      false,
     ),
   };
 

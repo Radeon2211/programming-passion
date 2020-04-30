@@ -14,7 +14,6 @@ class ChangeEmail extends Component {
     newEmail: createStateInput('input', 'New email', '',
       { type: 'email', id: 'newEmail', autoComplete: 'email', placeholder: 'Your new email...' },
       { isEmail: true },
-      false,
     ),
     password: createStateInput('input', 'Password', '',
       { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },

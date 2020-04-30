@@ -11,7 +11,7 @@ import Heading from '../../components/UI/Heading/Heading';
 const Posts = ({ posts }) => {
   let postList = (
     <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
-      It look like there is no posts yet. Maybe you want to <Link to="/create" className={classes.NoPostsLink}>create one</Link>
+      It look like there is no posts yet. Maybe you want to <Link to="/create" className={classes.NoPostsLink}>create one</Link>?
     </Heading>
   );
   if (posts.length > 0) {

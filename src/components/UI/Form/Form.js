@@ -5,7 +5,8 @@ import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import Heading from '../../UI/Heading/Heading';
 
-const Form = ({ headingText, btnText, isValid, submitted, isPostForm, size, children, authLoading, postLoading, authError, postError }) => {
+const Form = (props) => {
+  const { headingText, btnText, isValid, submitted, isPostForm, size, children, authLoading, postLoading, authError, postError } = props;
   const loading = isPostForm ? postLoading : authLoading;
   const loader = loading ? <Loader size="Small" /> : null;
   const error = isPostForm ? postError : authError;

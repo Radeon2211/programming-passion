@@ -19,7 +19,6 @@ class ChangePassword extends Component {
     newPassword: createStateInput('input', 'New password', '',
       { type: 'password', id: 'newPassword', autoComplete: 'new-password', placeholder: 'Type safe password...' },
       { minLength: 6 },
-      false,
     ),
   };
 

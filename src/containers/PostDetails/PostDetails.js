@@ -5,6 +5,7 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import * as actions from '../../store/actions/indexActions';
+import { actionTypes as firestoreActionTypes } from 'redux-firestore';
 import Line from '../../components/UI/Line/Line';
 import Loader from '../../components/UI/Loader/Loader';
 import AuthorData from '../../components/UI/AuthorData/AuthorData';
@@ -32,6 +33,10 @@ class PostDetails extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.likingTimeout);
+    this.props.dispatch({
+      type: firestoreActionTypes.CLEAR_DATA,
+      preserve: { ordered: true, data: ['allPosts', 'comments', 'userPosts'] },
+    });
   }
 
   startDeletingCommentHandler = (commentID) => {
@@ -95,10 +100,10 @@ class PostDetails extends Component {
       deleteStarted: this.startDeletingCommentHandler,
     };
 
-    let postDetails = <Loader size="Small" />;
     let unauthInfo = null;
 
-    if (this.props.post === undefined) {
+    let postDetails = <Loader size="Small" />;
+    if (this.props.post === null) {
       postDetails = <span className={classes.NoPostInfo}>This post does not exists</span>
     }
 
@@ -198,7 +203,7 @@ class PostDetails extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  post: state.firestore.data.post || undefined,
+  post: state.firestore.data.post === undefined ? undefined : state.firestore.data.post,
   comments: state.firestore.ordered.comments || [],
   authUID: state.firebase.auth.uid,
 });

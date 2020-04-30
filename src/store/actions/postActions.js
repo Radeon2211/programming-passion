@@ -13,11 +13,30 @@ export const postFail = (error) => ({
   error,
 });
 
-export const createPost = ({ title, content }, history) => {
+export const switchCanAddPost = (canAddPost) => ({
+  type: actionTypes.SWITCH_CAN_ADD_POST,
+  canAddPost,
+});
+
+export const switchCanAddComment = (canAddComment) => ({
+  type: actionTypes.SWITCH_CAN_ADD_COMMENT,
+  canAddComment,
+});
+
+export const createPost = ({ title, content }, history, canAddPost) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
+      if (!canAddPost) {
+        throw new Error('You have to wait 10 seconds after writing last post');
+      } else {
+        dispatch(switchCanAddPost(false));
+        setTimeout(() => {
+          dispatch(switchCanAddPost(true));
+          dispatch(postSuccess());
+        }, 10000);
+      }
       const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
       await firestore.collection('posts').add({
         authorUID,
@@ -80,8 +99,9 @@ export const checkPostLiking = (postID) => {
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      const userUID = firebase.auth().currentUser.uid;
-      const likedPosts = await firestore.collection('users').doc(userUID).collection('likedPosts').where('likedPosts', 'array-contains', postID).get();
+      const currentUser = firebase.auth().currentUser;
+      if (!currentUser) return false;
+      const likedPosts = await firestore.collection('users').doc(currentUser.uid).collection('likedPosts').where('likedPosts', 'array-contains', postID).get();
       if (likedPosts.docs.length > 0) return true;
       return false;
     } catch (error) {
@@ -90,11 +110,20 @@ export const checkPostLiking = (postID) => {
   };
 };
 
-export const addComment = (content, postID, postAuthorUID) => {
+export const addComment = (content, postID, postAuthorUID, canAddComment) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
+      if (!canAddComment) {
+        throw new Error('You have to wait 10 seconds after writing last comment');
+      } else {
+        dispatch(switchCanAddComment(false));
+        setTimeout(() => {
+          dispatch(switchCanAddComment(true));
+          dispatch(postSuccess());
+        }, 10000);
+      }
       const { auth: { uid: userUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
       await firestore.collection('comments').add({
         authorFirstName: firstName,
@@ -115,13 +144,7 @@ export const addComment = (content, postID, postAuthorUID) => {
 
 export const deleteComment = (commentID) => {
   return async (dispatch, getState, { getFirestore }) => {
-    dispatch(postStart());
     const firestore = getFirestore();
-    try {
-      await firestore.collection('comments').doc(commentID).delete();
-      dispatch(postSuccess());
-    } catch (error) {
-      dispatch(postFail(error));
-    }
+    await firestore.collection('comments').doc(commentID).delete();
   };
 };

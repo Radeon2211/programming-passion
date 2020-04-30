@@ -9,7 +9,6 @@ class RemoveAdmin extends Component {
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: `Email of admin to remove` },
       { isEmail: true },
-      false,
     ),
   };
 

@@ -21,7 +21,7 @@ const PostList = ({ posts, deletable, deleteStarted }) => {
     ));
   } else {
     postList = posts.map((post) => (
-      <Link to={`/posts/${post.id}`} key={post.id} className={classes.Link}>
+      <Link to={`/posts/${post.id}`} className={classes.Link} key={post.id}>
         <PostSummary
           post={post}
         />

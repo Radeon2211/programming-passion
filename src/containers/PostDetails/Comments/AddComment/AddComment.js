@@ -8,10 +8,15 @@ class AddComment extends Component {
   state = {
     content: createStateInput('textarea', 'Add comment', '',
       { id: 'content', autoComplete: 'off', placeholder: 'What do you think about this post...' },
-      { minLength: 1, maxLength: 250 },
+      { minLength: 1, maxLength: 400 },
       false,
     ),
   };
+
+  componentDidMount() {
+    this.props.onDeleteError();
+  }
+
 
   inputChangedHandler = (inputId, e) => {
     this.setState({
@@ -26,7 +31,7 @@ class AddComment extends Component {
   formSubmittedHandler = (e) => {
     e.preventDefault();
     const content = this.state.content.value.trim();
-    this.props.onAddComment(content, this.props.postID, this.props.postAuthorUID);
+    this.props.onAddComment(content, this.props.postID, this.props.postAuthorUID, this.props.canAddComment);
   };
 
   render () {
@@ -37,6 +42,7 @@ class AddComment extends Component {
         btnText="Add"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
+        isPostForm
       >
         {inputs}
       </Form>
@@ -44,8 +50,13 @@ class AddComment extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  onAddComment: (content, postID, postAuthorUID) => dispatch(actions.addComment(content, postID, postAuthorUID)),
+const mapStateToProps = (state) => ({
+  canAddComment: state.post.canAddComment,
 });
 
-export default connect(null, mapDispatchToProps)(AddComment);
+const mapDispatchToProps = (dispatch) => ({
+  onAddComment: (content, postID, postAuthorUID, canAddComment) => dispatch(actions.addComment(content, postID, postAuthorUID, canAddComment)),
+  onDeleteError: () => dispatch(actions.deleteError()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddComment);

@@ -54,3 +54,11 @@ export const checkValidity = (value, rules) => {
 export const checkFormValidation = (state) => (
   Object.values(state).every(({ valid }) => valid)
 );
+
+export const createCustomError = (error) => {
+  switch (error.code) {
+    case ('auth/wrong-password'): return 'You entered wrong password';
+    case ('auth/invalid-photo-url'): return 'You entered invalid photo URL';
+    default: return error.message;
+  }
+}

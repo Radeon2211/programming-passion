@@ -9,12 +9,10 @@ class ChangeName extends Component {
     newFirstName: createStateInput('input', 'New first name', '',
       { type: 'text', id: 'newFirstName', autoComplete: 'given-name', placeholder: 'Your new first name...' },
       { minLength: 1, maxLength: 50 },
-      false,
     ),
     newLastName: createStateInput('input', 'New last name', '',
       { type: 'text', id: 'newLastName', autoComplete: 'family-name', placeholder: 'Your new last name...' },
       { minLength: 1, maxLength: 50 },
-      false,
     ),
   };
 

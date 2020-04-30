@@ -18,7 +18,7 @@ const authSuccess = (state, action) => {
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { loading: false, error: action.error.message, success: null });
+  return updateObject(state, { loading: false, error: action.error, success: null });
 };
 
 const deleteError = (state) => {

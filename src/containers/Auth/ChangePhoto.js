@@ -9,7 +9,6 @@ class ChangePhoto extends Component {
     newPhotoURL: createStateInput('input', 'New photo URL', '',
       { type: 'text', id: 'newPhotoURL', autoComplete: 'photo', placeholder: 'Your new photo URL...' },
       { isPhoto: true },
-      false,
     ),
   };
 
