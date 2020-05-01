@@ -1,51 +1,133 @@
 import React, { Component } from 'react';
+import classes from './ChangePhoto.module.scss';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import { isValidFileType, calculateFileSize, isValidFileSize } from '../../shared/utility';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import Button from '../../components/UI/Button/Button';
 
 class ChangePhoto extends Component {
   state = {
-    newPhotoURL: createStateInput('input', 'New photo URL', '',
-      { type: 'text', id: 'newPhotoURL', autoComplete: 'photo', placeholder: 'Your new photo URL...' },
-      { isPhoto: true },
-    ),
+    photo: null,
+    photoPreview: null,
+    photoName: null,
+    photoSize: null,
+    error: null,
   };
 
   componentDidMount() {
     this.props.onDeleteError();
   }
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
-        touched: true,
-      }),
+  inputChangedHandler = async (e) => {
+    const files = e.target.files;
+    if (!files.length > 0) {
+      await this.setState({
+        photo: null,
+        photoPreview: null,
+        photoName: null,
+        photoSize: null,
+      });
+      return;
+    }
+
+    const file = files[0];
+    let fileName = file.name;
+    if (fileName.length > 25) {
+      fileName = `${fileName.slice(0, 20)}...${file.type.split('/')[1]}`;
+    }
+    await this.setState({
+      photoName: fileName,
+      photoSize: calculateFileSize(file.size),
     });
+
+    if (!isValidFileType(file.type)) {
+      await this.setState({
+        photo: null,
+        photoPreview: null,
+        error: 'File extension is not valid',
+      });
+      return;
+    } else {
+      await this.setState({
+        error: null,
+      });
+    }
+
+    if (!isValidFileSize(file.size)) {
+      await this.setState({
+        error: 'Maximum available size is 1MB',
+      });
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      this.setState({
+        photo: file,
+        photoPreview: reader.result,
+      });
+    };
   };
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
-    const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
-    }
-    this.props.onChangePhoto(data, this.props.history);
+    this.props.onChangePhoto(this.state.photo, this.props.history);
   };
 
   render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+    let preview = <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>;
+    let error = null;
+    let photo = null;
+
+    if (this.state.error) {
+      error = <span className={classes.Error}>{this.state.error}</span>;
+    }
+
+    if (this.state.photoPreview) {
+      photo = (
+        <div className={classes.PhotoBox}>
+          <img src={this.state.photoPreview} alt="Preview" className={classes.Photo} />
+        </div>
+      )
+    }
+
+    if (this.state.photo || this.state.error) {
+      preview = (
+        <div className={classes.Preview}>
+          <div className={classes.FileData}>
+            <span className={classes.FileDataRow}>
+              <span className={classes.FileDataCaption}>Name:</span> {this.state.photoName}
+            </span>
+            <span className={classes.FileDataRow}>
+              <span className={classes.FileDataCaption}>Size:</span> {this.state.photoSize}
+            </span>
+          </div>
+          {photo}
+        </div>
+      );
+    }
 
     return (
       <Form
-        headingText="Change photo"
+        headingText="Change Photo"
         btnText="Change"
-        isValid={checkFormValidation(this.state)}
+        isValid={this.state.photo && !this.state.error}
         submitted={this.formSubmittedHandler}
       >
-        {inputs}
+        <div className={classes.Content}>
+          <label htmlFor="photo" className={classes.Label}>
+            <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
+          </label>
+          {preview}
+          {error}
+          <input
+            type="file"
+            id="photo"
+            className={classes.Input}
+            onChange={this.inputChangedHandler}
+          />
+        </div>
       </Form>
     );
   }

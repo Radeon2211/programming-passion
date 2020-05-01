@@ -13,7 +13,7 @@ const Modal = ({ headingText, captionText, isVisible, deleted, canceled }) => {
 
   return (
     <Fragment>
-      <div className={backdropClasses.join(' ')} onClick={canceled} id="backdrop"></div>
+      <div className={backdropClasses.join(' ')} onClick={canceled}></div>
       <div className={popupClasses.join(' ')}>
         <Heading variant="H4" color="Black">{headingText}</Heading>
         <span className={classes.Caption}><span className={classes.Note}>Note:</span> {captionText}</span>

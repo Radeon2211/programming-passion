@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
-import { createCustomError } from '../../shared/utility';
+import { createCustomError, isValidFileType, isValidFileSize } from '../../shared/utility';
 import axios from 'axios';
+import { storage } from '../../config/fbConfig';
 
 export const isNameValid = (firstName, lastName) => {
   if (firstName.length < 1 || firstName.length > 50
@@ -177,22 +178,32 @@ export const changePassword = ({ email, oldPassword, newPassword }, history) => 
   };
 };
 
-export const changePhoto = ({ newPhotoURL }, history) => {
+export const changePhoto = (photo, history) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(authStart());
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
+      if (!isValidFileType(photo.type) || !isValidFileSize(photo.size)) {
+        throw new Error('Type is not valid or size is greater than 1MB');
+      }
+      let reload = true;
       const userUID = firebase.auth().currentUser.uid;
-      await firestore.collection('users').doc(userUID).update({
-        photoURL: newPhotoURL,
-      });
-      const propsToUpdate = {
-        authorPhotoURL: newPhotoURL,
-      };
-      await updateAuthorData(firestore, getState, propsToUpdate);
+      const storeSnapshot = await storage.child(`photos/${userUID}`).put(photo);
+      if (!getState().firebase.profile.photoURL) {
+        const photoURL = await storeSnapshot.ref.getDownloadURL();
+        await firestore.collection('users').doc(userUID).update({
+          photoURL,
+        });
+        const propsToUpdate = {
+          authorPhotoURL: photoURL,
+        };
+        await updateAuthorData(firestore, getState, propsToUpdate);
+        reload = false;
+      }
       dispatch(authSuccess('Photo has been changed successfully!'));
-      history.goBack();
+      history.push('/settings');
+      if (reload) window.location.reload();
     } catch (error) {
       dispatch(authFail(error));
     }

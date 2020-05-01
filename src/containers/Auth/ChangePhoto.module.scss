@@ -1,0 +1,69 @@
+@import '../../css/variables.scss';
+
+.Content {
+  margin-bottom: 2.4rem;
+
+  .Label {
+    cursor: pointer;
+    display: inline-block;
+
+    & > button {
+      pointer-events: none;
+    }
+  }
+
+  .Preview {
+    align-items: center;
+    display: flex;
+    font-size: 1.6rem;
+    margin-top: 2.4rem;
+  }
+
+  .FileDataRow {
+    display: block;
+    word-break: break-all;
+
+    &:not(:last-child) {
+      margin-bottom: 1.2rem;
+    }
+  }
+
+  .FileDataCaption {
+    font-weight: 700;
+  }
+
+  .Error {
+    color: var(--red);
+    display: inline-block;
+    font-size: 1.6rem;
+    margin-top: 2.4rem;
+  }
+
+  .PhotoBox {
+    border-left: 1px solid var(--gray-4);
+    margin-left: 2.4rem;
+    padding-left: 2.4rem;
+  }
+
+  .Photo {
+    border-radius: 50%;
+    height: 8rem;
+    object-fit: cover;
+    vertical-align: middle;
+    width: 8rem;
+  }
+
+  .Input {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Content {
+
+    .PhotoBox {
+      margin-left: 1.8rem;
+      padding-left: 1.8rem;
+    }
+  }
+}
