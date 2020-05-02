@@ -210,14 +210,14 @@ export const changePhoto = (photo, history) => {
   };
 };
 
-export const deletePhoto = (history) => {
+export const deletePhoto = (currentPhotoURL, history) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(authStart());
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      const userUID = firebase.auth().currentUser.uid;
-      if (getState().firebase.profile.photoURL) {
+      if (currentPhotoURL) {
+        const userUID = firebase.auth().currentUser.uid;
         await firestore.collection('users').doc(userUID).update({
           photoURL: '',
         });

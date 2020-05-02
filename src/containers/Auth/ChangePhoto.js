@@ -81,6 +81,7 @@ class ChangePhoto extends Component {
     let preview = <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>;
     let error = null;
     let photo = null;
+    let deletePhotoButton = null;
 
     if (this.state.error) {
       error = <span className={classes.Error}>{this.state.error}</span>;
@@ -110,6 +111,20 @@ class ChangePhoto extends Component {
       );
     }
 
+    if (this.props.currentPhotoURL) {
+      deletePhotoButton = (
+        <Button
+          size="Small"
+          fill="Empty"
+          color="Red"
+          type="button"
+          clicked={this.props.onDeletePhoto.bind(this, this.props.currentPhotoURL, this.props.history)}
+        >
+          Delete your photo
+        </Button>
+      );
+    }
+
     return (
       <div className={classes.ChangePhoto}>
         <Form
@@ -132,24 +147,20 @@ class ChangePhoto extends Component {
             />
           </div>
         </Form>
-        <Button
-          size="Small"
-          fill="Empty"
-          color="Red"
-          type="button"
-          clicked={this.props.onDeletePhoto.bind(this, this.props.history)}
-        >
-          Delete your photo
-        </Button>
+        {deletePhotoButton}
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => ({
+  currentPhotoURL: state.firebase.profile.photoURL,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   onChangePhoto: (data, history) => dispatch(actions.changePhoto(data, history)),
-  onDeletePhoto: (history) => dispatch(actions.deletePhoto(history)),
+  onDeletePhoto: (currentPhotoURL, history) => dispatch(actions.deletePhoto(currentPhotoURL, history)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(null, mapDispatchToProps)(ChangePhoto);
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePhoto);
