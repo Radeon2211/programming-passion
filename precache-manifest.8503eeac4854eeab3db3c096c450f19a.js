@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a36692bb46ecd4796602f87727b098a9",
+    "revision": "779b2d9e37b8a2a48386c347603fc7f6",
     "url": "/programming-passion/index.html"
   },
   {
-    "revision": "ce35cc3589d3c326b456",
+    "revision": "d3c51b1f3a2732769bbe",
     "url": "/programming-passion/static/css/3.632ab258.chunk.css"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/css/4.ad577f56.chunk.css"
   },
   {
-    "revision": "175f454479c3feb920fe",
+    "revision": "3804ec7bb9702b01ee2e",
     "url": "/programming-passion/static/css/main.068801a9.chunk.css"
   },
   {
@@ -40,8 +40,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/js/2.d30df36b.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ce35cc3589d3c326b456",
-    "url": "/programming-passion/static/js/3.201fb4c1.chunk.js"
+    "revision": "d3c51b1f3a2732769bbe",
+    "url": "/programming-passion/static/js/3.576965c3.chunk.js"
   },
   {
     "revision": "9729f0783bb9fc97b5b5",
@@ -68,12 +68,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/js/9.214a8429.chunk.js"
   },
   {
-    "revision": "175f454479c3feb920fe",
-    "url": "/programming-passion/static/js/main.b602134b.chunk.js"
+    "revision": "3804ec7bb9702b01ee2e",
+    "url": "/programming-passion/static/js/main.d473786e.chunk.js"
   },
   {
-    "revision": "adcb58947aa41a6e4357",
-    "url": "/programming-passion/static/js/runtime-main.02639e12.js"
+    "revision": "e222a66d022d024209d8",
+    "url": "/programming-passion/static/js/runtime-main.c861a3ca.js"
   },
   {
     "revision": "236c1c83ad215c9f6ec22a191b35b985",
