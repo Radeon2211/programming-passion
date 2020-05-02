@@ -210,6 +210,30 @@ export const changePhoto = (photo, history) => {
   };
 };
 
+export const deletePhoto = (history) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(authStart());
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    try {
+      const userUID = firebase.auth().currentUser.uid;
+      if (getState().firebase.profile.photoURL) {
+        await firestore.collection('users').doc(userUID).update({
+          photoURL: '',
+        });
+        const propsToUpdate = {
+          authorPhotoURL: '',
+        };
+        await updateAuthorData(firestore, getState, propsToUpdate);
+      }
+      dispatch(authSuccess('Photo has been deleted successfully!'));
+      history.goBack();
+    } catch (error) {
+      dispatch(authFail(error));
+    }
+  };
+};
+
 export const deleteAccount = ({ email, password }, history) => {
   return async (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());

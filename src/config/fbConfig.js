@@ -18,6 +18,6 @@ firebase.initializeApp(firebaseConfig);
 
 const storage = firebase.storage().ref();
 
-firebase.firestore().enablePersistence();
+firebase.firestore().enablePersistence({ synchronizeTabs: true });
 
 export { firebase as default, storage };

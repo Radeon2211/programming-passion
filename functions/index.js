@@ -2,7 +2,19 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors = require('cors')({ origin: true });
 
-admin.initializeApp(functions.config().firebase);
+const serviceAccount = require('./programming-passion-firebase-adminsdk-wgric-ea11a220d5.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'gs://programming-passion.appspot.com',
+    databaseURL: 'https://programming-passion.firebaseio.com',
+}, 'storage');
+
+admin.initializeApp(functions.config().firebase, 'functions');
+
+admin.initializeApp();
+
+const bucket = admin.storage().bucket();
 
 exports.onDeleteUser = functions.auth.user().onDelete(async (user) => {
   try {
@@ -18,9 +30,12 @@ exports.onDeleteUser = functions.auth.user().onDelete(async (user) => {
     }));
     await admin.firestore().collection('users').doc(user.uid).delete();
     await admin.firestore().collection('users').doc(user.uid).collection('likedPosts').doc('likedPosts').delete();
+    await bucket.deleteFiles({
+      prefix: `photos/${user.uid}`,
+    });
     return batch.commit();
   } catch (error) {
-    throw new functions.https.HttpsError('unknown', 'There is a problem to delete name or posts or comments under posts');
+    throw new functions.https.HttpsError('unknown', 'There is a problem to delete name or posts or comments under posts or photo');
   }
 });
 

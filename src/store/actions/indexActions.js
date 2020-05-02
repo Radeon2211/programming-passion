@@ -8,6 +8,7 @@ export {
   changeName,
   changePassword,
   changePhoto,
+  deletePhoto,
   deleteAccount,
   addAdmin,
   removeAdmin,

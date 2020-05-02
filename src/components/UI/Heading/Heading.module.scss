@@ -25,20 +25,24 @@
   font-size: 3.2rem;
   font-family: var(--font-heading);
   letter-spacing: 1px;
+  text-shadow: var(--shadow-3);
 }
 
 .H4 {
   font-size: 2.5rem;
   letter-spacing: 1px;
+  text-shadow: var(--shadow-3);
 }
 
 .H5 {
   font-size: 2rem;
   letter-spacing: 1px;
+  text-shadow: var(--shadow-2);
 }
 
 .H6 {
   font-size: 1.8rem;
+  text-shadow: var(--shadow-2);
 }
 
 .Title {

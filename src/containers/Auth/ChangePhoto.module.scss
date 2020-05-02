@@ -1,7 +1,17 @@
 @import '../../css/variables.scss';
 
-.Content {
-  margin-bottom: 2.4rem;
+.ChangePhoto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > *:not(:last-child) {
+    margin-bottom: 2.4rem;
+  }
+
+  .Content {
+    margin-bottom: 2.4rem;
+  }
 
   .Label {
     cursor: pointer;
@@ -9,6 +19,12 @@
 
     & > button {
       pointer-events: none;
+      transition: all .12s;
+    }
+
+    &:hover > button {
+      background-color: rgba(0, 0, 0, .03);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
     }
   }
 
@@ -47,6 +63,7 @@
 
   .Photo {
     border-radius: 50%;
+    box-shadow: var(--shadow-2);
     height: 8rem;
     object-fit: cover;
     vertical-align: middle;
@@ -59,7 +76,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .Content {
+  .ChangePhoto {
 
     .PhotoBox {
       margin-left: 1.8rem;

@@ -72,6 +72,8 @@ class ChangePhoto extends Component {
 
   formSubmittedHandler = (e) => {
     e.preventDefault();
+    if (!this.state.photo) return;
+    if (!isValidFileType(this.state.photo.type) || !isValidFileSize(this.state.photo.size)) return;
     this.props.onChangePhoto(this.state.photo, this.props.history);
   };
 
@@ -109,32 +111,44 @@ class ChangePhoto extends Component {
     }
 
     return (
-      <Form
-        headingText="Change Photo"
-        btnText="Change"
-        isValid={this.state.photo && !this.state.error}
-        submitted={this.formSubmittedHandler}
-      >
-        <div className={classes.Content}>
-          <label htmlFor="photo" className={classes.Label}>
-            <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
-          </label>
-          {preview}
-          {error}
-          <input
-            type="file"
-            id="photo"
-            className={classes.Input}
-            onChange={this.inputChangedHandler}
-          />
-        </div>
-      </Form>
+      <div className={classes.ChangePhoto}>
+        <Form
+          headingText="Change Photo"
+          btnText="Change"
+          isValid={this.state.photo && !this.state.error}
+          submitted={this.formSubmittedHandler}
+        >
+          <div className={classes.Content}>
+            <label htmlFor="photo" className={classes.Label}>
+              <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
+            </label>
+            {preview}
+            {error}
+            <input
+              type="file"
+              id="photo"
+              className={classes.Input}
+              onChange={this.inputChangedHandler}
+            />
+          </div>
+        </Form>
+        <Button
+          size="Small"
+          fill="Empty"
+          color="Red"
+          type="button"
+          clicked={this.props.onDeletePhoto.bind(this, this.props.history)}
+        >
+          Delete your photo
+        </Button>
+      </div>
     );
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   onChangePhoto: (data, history) => dispatch(actions.changePhoto(data, history)),
+  onDeletePhoto: (history) => dispatch(actions.deletePhoto(history)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
