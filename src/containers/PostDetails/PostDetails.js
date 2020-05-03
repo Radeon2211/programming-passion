@@ -100,12 +100,25 @@ class PostDetails extends Component {
       deleteStarted: this.startDeletingCommentHandler,
     };
 
-    let unauthInfo = null;
-
     let postDetails = <Loader size="Small" />;
     if (this.props.post === null) {
-      postDetails = <span className={classes.NoPostInfo}>This post does not exists</span>
+      postDetails = <Heading variant="H6">This post does not exists</Heading>
     }
+
+    let unauthInfo = null;
+
+    let postOptions = (
+      <RenderIfIsAdmin>
+        <div className={classes.PostOptions}>
+          <Line type="Begin" size="Size-2" />
+          <div className={classes.PostOptionsIcons}>
+            <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
+              <use href={`${sprite}#icon-bin`}></use>
+            </svg>
+          </div>
+        </div>
+      </RenderIfIsAdmin>
+    );
 
     if (this.props.post) {
       const { authorFirstName, authorLastName, authorPhotoURL, title, content, likesCount, createdAt } = this.props.post;
@@ -134,6 +147,24 @@ class PostDetails extends Component {
             </div>
             <Line type="Begin" size="Size-2" />
           </Fragment>
+        );
+      }
+
+      if (this.props.post.authorUID === this.props.authUID) {
+        postOptions = (
+          <div className={classes.PostOptions}>
+            <Line type="Begin" size="Size-2" />
+            <div className={classes.PostOptionsIcons}>
+              <Link to={`/edit-post/${this.props.match.params.id}`}>
+                <svg className={classes.EditPostIcon}>
+                  <use href={`${sprite}#icon-pencil`}></use>
+                </svg>
+              </Link>
+              <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
+                <use href={`${sprite}#icon-bin`}></use>
+              </svg>
+            </div>
+          </div>
         );
       }
 
@@ -181,14 +212,7 @@ class PostDetails extends Component {
               postID={this.props.match.params.id}
               commentHandlingData={commentHandlingData}
             />
-            <RenderIfIsAdmin>
-              <div className={classes.DeletePostSection}>
-                <Line type="Begin" size="Size-2" />
-                <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
-                  <use href={`${sprite}#icon-bin`}></use>
-                </svg>
-              </div>
-            </RenderIfIsAdmin>
+            {postOptions}
           </div>
         </Fragment>
       );

@@ -18,11 +18,13 @@ export {
 
 export {
   createPost,
+  editPost,
   deletePost,
   togglePostLiking,
   checkPostLiking,
   addComment,
+  editComment,
   deleteComment,
-  switchCanAddPost,
-  switchCanAddComment,
+  switchCanWritePost,
+  switchCanWriteComment,
 } from './postActions';

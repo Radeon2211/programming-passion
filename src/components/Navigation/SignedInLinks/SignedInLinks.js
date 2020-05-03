@@ -25,7 +25,7 @@ class SignedInLinks extends Component {
 
     return (
       <nav className={classes.SignedInLinks}>
-        <Link to="/create">
+        <Link to="/create-post">
           <Button size="Small" fill="Filled" color="Green">Create post</Button>
         </Link>
         <div className={classes.User} id="user" onClick={this.toggleDropdownHandler}>

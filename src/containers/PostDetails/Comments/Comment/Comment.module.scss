@@ -3,10 +3,19 @@
 .Comment {
   margin: 2.4rem 0;
 
-  .AuthorDataAndDelete {
+  .AuthorDataAndIcons {
     align-items: center;
     display: flex;
     justify-content: space-between;
+  }
+
+  .Icons {
+    align-items: center;
+    display: flex;
+
+    & > *:not(:last-child) {
+      margin-right: 1.8rem;
+    }
   }
 
   .DeleteIcon {
@@ -16,9 +25,17 @@
     width: 2.1rem;
   }
 
+  .EditIcon {
+    cursor: pointer;
+    height: 2rem;
+    fill: #fff;
+    width: 2rem;
+  }
+
   .Content {
     font-size: 1.6rem;
     margin-top: 1.2rem;
     text-align: justify;
+    word-break: break-all;
   }
 }

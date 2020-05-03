@@ -13,17 +13,34 @@
   display: flex;
   justify-content: stretch;
 
+  .Icons {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    & > * {
+      margin: 1.2rem 0 1.2rem 1.2rem;
+    }
+  }
+
+  .EditPostIcon {
+    cursor: pointer;
+    fill: #fff;
+    height: 2.8rem;
+    width: 2.8rem;
+  }
+
   .DeletePostIcon {
     cursor: pointer;
-    height: 3rem;
     fill: var(--red);
-    margin-left: 1.2rem;
+    height: 3rem;
     width: 3rem;
   }
 }
 
-.Link:link,
-.Link:visited {
+.PostLink:link,
+.PostLink:visited {
   color: #fff;
   display: block;
   flex: 1;

@@ -13,30 +13,54 @@ export const postFail = (error) => ({
   error,
 });
 
-export const switchCanAddPost = (canAddPost) => ({
-  type: actionTypes.SWITCH_CAN_ADD_POST,
-  canAddPost,
+export const switchCanWritePost = (canWritePost) => ({
+  type: actionTypes.SWITCH_CAN_WRITE_POST,
+  canWritePost,
 });
 
-export const switchCanAddComment = (canAddComment) => ({
-  type: actionTypes.SWITCH_CAN_ADD_COMMENT,
-  canAddComment,
+export const switchCanWriteComment = (canWriteComment) => ({
+  type: actionTypes.SWITCH_CAN_WRITE_COMMENT,
+  canWriteComment,
 });
 
-export const createPost = ({ title, content }, history, canAddPost) => {
+export const checkIfCanWritePost = (canWritePost) => {
+  return (dispatch) => {
+    if (!canWritePost) {
+      dispatch(postFail(new Error('You have to wait 10 seconds after writing last comment')));
+      return false;
+    } else {
+      dispatch(switchCanWritePost(false));
+      setTimeout(() => {
+        dispatch(switchCanWritePost(true));
+        dispatch(postSuccess());
+      }, 10000);
+      return true;
+    }
+  };
+};
+
+export const checkIfCanWriteComment = (canWriteComment) => {
+  return (dispatch) => {
+    if (!canWriteComment) {
+      dispatch(postFail(new Error('You have to wait 10 seconds after writing last comment')));
+      return false;
+    } else {
+      dispatch(switchCanWriteComment(false));
+      setTimeout(() => {
+        dispatch(switchCanWriteComment(true));
+        dispatch(postSuccess());
+      }, 10000);
+      return true;
+    }
+  };
+};
+
+export const createPost = ({ title, content }, history, canWritePost) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
-      if (!canAddPost) {
-        throw new Error('You have to wait 10 seconds after writing last post');
-      } else {
-        dispatch(switchCanAddPost(false));
-        setTimeout(() => {
-          dispatch(switchCanAddPost(true));
-          dispatch(postSuccess());
-        }, 10000);
-      }
+      if (!dispatch(checkIfCanWritePost(canWritePost))) return;
       const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
       await firestore.collection('posts').add({
         authorUID,
@@ -51,6 +75,24 @@ export const createPost = ({ title, content }, history, canAddPost) => {
       });
       dispatch(postSuccess());
       history.push('/posts');
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const editPost = ({ title, content }, postID, history, canWritePost) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    dispatch(postStart());
+    const firestore = getFirestore();
+    try {
+      if (!dispatch(checkIfCanWritePost(canWritePost))) return;
+      await firestore.collection('posts').doc(postID).update({
+        title,
+        content,
+      });
+      dispatch(postSuccess());
+      history.push(`/posts/${postID}`);
     } catch (error) {
       dispatch(postFail(error));
     }
@@ -110,20 +152,12 @@ export const checkPostLiking = (postID) => {
   };
 };
 
-export const addComment = (content, postID, postAuthorUID, canAddComment) => {
+export const addComment = (content, postID, postAuthorUID, canWriteComment, inputCleared) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
-      if (!canAddComment) {
-        throw new Error('You have to wait 10 seconds after writing last comment');
-      } else {
-        dispatch(switchCanAddComment(false));
-        setTimeout(() => {
-          dispatch(switchCanAddComment(true));
-          dispatch(postSuccess());
-        }, 10000);
-      }
+      if (!dispatch(checkIfCanWriteComment(canWriteComment))) return;
       const { auth: { uid: userUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
       await firestore.collection('comments').add({
         authorFirstName: firstName,
@@ -135,6 +169,24 @@ export const addComment = (content, postID, postAuthorUID, canAddComment) => {
         content,
         createdAt: new Date(),
       });
+      inputCleared();
+      dispatch(postSuccess());
+    } catch (error) {
+      dispatch(postFail(error));
+    }
+  };
+};
+
+export const editComment = (content, commentID, canEditComment, closed) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    dispatch(postStart());
+    const firestore = getFirestore();
+    try {
+      if (!dispatch(checkIfCanWriteComment(canEditComment))) return;
+      await firestore.collection('comments').doc(commentID).update({
+        content,
+      });
+      closed();
       dispatch(postSuccess());
     } catch (error) {
       dispatch(postFail(error));

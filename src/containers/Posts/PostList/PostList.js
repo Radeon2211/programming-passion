@@ -9,19 +9,26 @@ const PostList = ({ posts, deletable, deleteStarted }) => {
   if (deletable) {
     postList = posts.map((post) => (
       <div className={classes.DeletePostWrapper} key={post.id}>
-        <Link to={`/posts/${post.id}`} className={classes.Link}>
+        <Link to={`/posts/${post.id}`} className={classes.PostLink}>
           <PostSummary
             post={post}
           />
         </Link>
-        <svg className={classes.DeletePostIcon} onClick={deleteStarted.bind(this, post.id)}>
-          <use href={`${sprite}#icon-bin`}></use>
-        </svg>
+        <div className={classes.Icons}>
+          <Link to={`/edit-post/${post.id}`}>
+            <svg className={classes.EditPostIcon}>
+              <use href={`${sprite}#icon-pencil`}></use>
+            </svg>
+          </Link>
+          <svg className={classes.DeletePostIcon} onClick={deleteStarted.bind(this, post.id)}>
+            <use href={`${sprite}#icon-bin`}></use>
+          </svg>
+        </div>
       </div>
     ));
   } else {
     postList = posts.map((post) => (
-      <Link to={`/posts/${post.id}`} className={classes.Link} key={post.id}>
+      <Link to={`/posts/${post.id}`} className={classes.PostLink} key={post.id}>
         <PostSummary
           post={post}
         />

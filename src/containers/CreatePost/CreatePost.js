@@ -20,7 +20,6 @@ class SignUp extends Component {
     this.props.onDeleteError();
   }
 
-
   inputChangedHandler = (inputId, e) => {
     this.setState({
       [inputId]: updateObject(this.state[inputId], {
@@ -37,7 +36,7 @@ class SignUp extends Component {
     for (const key in this.state) {
       data[key] = this.state[key].value.trim();
     }
-    this.props.onCreatePost(data, this.props.history, this.props.canAddPost);
+    this.props.onCreatePost(data, this.props.history, this.props.canWritePost);
   };
 
   render () {
@@ -58,11 +57,11 @@ class SignUp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  canAddPost: state.post.canAddPost,
+  canWritePost: state.post.canWritePost,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onCreatePost: (data, history, canAddPost) => dispatch(actions.createPost(data, history, canAddPost)),
+  onCreatePost: (data, history, canWritePost) => dispatch(actions.createPost(data, history, canWritePost)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 

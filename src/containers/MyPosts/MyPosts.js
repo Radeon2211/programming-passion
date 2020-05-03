@@ -39,7 +39,7 @@ class MyPosts extends Component {
   render () {
     let myPosts = (
       <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
-        You didn't write any post yet. <Link to="/create" className={classes.NoPostsLink}>Create one</Link>
+        You didn't write any post yet. <Link to="/create-post" className={classes.NoPostsLink}>Create one</Link>
       </Heading>
     );
     if (this.props.posts.length > 0) {

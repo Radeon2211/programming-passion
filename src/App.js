@@ -16,6 +16,7 @@ import Footer from './components/Footer/Footer';
 const SignIn = lazy(() => import('./containers/Auth/SignIn'));
 const SignUp = lazy(() => import('./containers/Auth/SignUp'));
 const CreatePost = lazy(() => import('./containers/CreatePost/CreatePost'));
+const EditPost = lazy(() => import('./containers/EditPost/EditPost'));
 const Settings = lazy(() => import('./containers/Settings/Settings'));
 const ChangeName = lazy(() => import('./containers/Auth/ChangeName'));
 const ChangeEmail = lazy(() => import('./containers/Auth/ChangeEmail'));
@@ -57,7 +58,8 @@ class App extends Component {
           <Switch>
             <Route path="/posts/:id" component={PostDetails} />
             <Route path="/posts" component={Posts} />
-            <Route path="/create" component={WaitingComponent(CreatePost)} />
+            <Route path="/create-post" component={WaitingComponent(CreatePost)} />
+            <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
             <Route path="/settings" component={WaitingComponent(Settings)} />
             <Route path="/change-name" component={WaitingComponent(ChangeName)} />
             <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
@@ -76,7 +78,8 @@ class App extends Component {
           <Switch>
             <Route path="/posts/:id" component={PostDetails} />
             <Route path="/posts" component={Posts} />
-            <Route path="/create" component={WaitingComponent(CreatePost)} />
+            <Route path="/create-post" component={WaitingComponent(CreatePost)} />
+            <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
             <Route path="/settings" component={WaitingComponent(Settings)} />
             <Route path="/change-name" component={WaitingComponent(ChangeName)} />
             <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />

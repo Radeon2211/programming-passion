@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../shared/utility';
+import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../../shared/utility';
 import { connect } from 'react-redux';
-import * as actions from '../../../../store/actions/indexActions';
-import Form from '../../../../components/UI/Form/Form';
+import * as actions from '../../../../../store/actions/indexActions';
+import Form from '../../../../../components/UI/Form/Form';
 
-class AddComment extends Component {
+class EditComment extends Component {
   state = {
-    content: createStateInput('textarea', 'Add comment', '',
+    content: createStateInput('textarea', 'Edit comment', this.props.currentContent,
       { id: 'content', autoComplete: 'off', placeholder: 'What do you think about this post...' },
       { minLength: 1, maxLength: 400 },
     ),
@@ -26,20 +26,14 @@ class AddComment extends Component {
     });
   };
 
-  inputClearedHandler = () => {
-    this.setState({
-      content: updateObject(this.state.content, {
-        value: '',
-        valid: false,
-        touched: false,
-      }),
-    });
-  };
-
   formSubmittedHandler = (e) => {
     e.preventDefault();
     const content = this.state.content.value.trim();
-    this.props.onAddComment(content, this.props.postID, this.props.postAuthorUID, this.props.canWriteComment, this.inputClearedHandler);
+    if (content === this.props.currentContent) {
+      this.props.cancelled();
+      return;
+    }
+    this.props.onEditComment(content, this.props.commentID, this.props.canEditComment, this.props.cancelled);
   };
 
   render () {
@@ -47,10 +41,11 @@ class AddComment extends Component {
 
     return (
       <Form
-        btnText="Add"
+        btnText="Edit"
         isValid={checkFormValidation(this.state)}
         submitted={this.formSubmittedHandler}
         isPostForm
+        cancelled={this.props.cancelled}
       >
         {inputs}
       </Form>
@@ -59,12 +54,12 @@ class AddComment extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  canWriteComment: state.post.canWriteComment,
+  canEditComment: state.post.canWriteComment,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddComment: (content, postID, postAuthorUID, canWriteComment, inputCleared) => dispatch(actions.addComment(content, postID, postAuthorUID, canWriteComment, inputCleared)),
+  onEditComment: (content, commentID, canEditComment, closed) => dispatch(actions.editComment(content, commentID, canEditComment, closed)),
   onDeleteError: () => dispatch(actions.deleteError()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddComment);
+export default connect(mapStateToProps, mapDispatchToProps)(EditComment);

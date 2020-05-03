@@ -6,13 +6,17 @@
   box-shadow: var(--shadow-4);
   justify-self: center;
   max-width: 100%;
-  margin-top: 5rem;
+  margin-top: 2.4rem;
   padding: 2.4rem;
   width: 65rem;
 
   .BtnAndLoader {
     display: flex;
     align-items: center;
+  }
+
+  .CancelButtonBox {
+    margin-left: 2.4rem;
   }
 
   .Error {
