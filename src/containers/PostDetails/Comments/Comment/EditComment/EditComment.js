@@ -6,7 +6,7 @@ import Form from '../../../../../components/UI/Form/Form';
 
 class EditComment extends Component {
   state = {
-    content: createStateInput('textarea', 'Edit comment', this.props.currentContent,
+    content: createStateInput('textarea', 'Content', this.props.currentContent,
       { id: 'content', autoComplete: 'off', placeholder: 'What do you think about this post...' },
       { minLength: 1, maxLength: 400 },
     ),
