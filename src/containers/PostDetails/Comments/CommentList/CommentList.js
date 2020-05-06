@@ -1,23 +1,35 @@
 import React from 'react';
+import classes from './CommentList.module.scss';
+import '../../../../css/animations.scss';
+import CSSTransition from 'react-transition-group/CSSTransition';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
 import Comment from '../Comment/Comment';
 import Line from '../../../../components/UI/Line/Line';
-import classes from './CommentList.module.scss';
 
 const CommentList = ({ comments, commentHandlingData }) => {
   const commentList = comments.map((comment) => (
-    <React.Fragment key={comment.id}>
-      <Line type="Begin" size="Size-1" />
-      <Comment
-        comment={comment}
-        commentHandlingData={commentHandlingData}
-      />
-    </React.Fragment>
+    <CSSTransition
+      key={comment.id}
+      timeout={300}
+      classNames="fade"
+    >
+      <div>
+        <Line type="Begin" size="Size-1" />
+        <Comment
+          comment={comment}
+          commentHandlingData={commentHandlingData}
+        />
+      </div>
+    </CSSTransition>
   ));
 
   return (
-    <div className={classes.CommentList}>
+    <TransitionGroup
+      component="div"
+      className={classes.CommentList}
+    >
       {commentList}
-    </div>
+    </TransitionGroup>
   );
 };
 

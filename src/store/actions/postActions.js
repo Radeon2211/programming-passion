@@ -26,7 +26,7 @@ export const switchCanWriteComment = (canWriteComment) => ({
 export const checkIfCanWritePost = (canWritePost) => {
   return (dispatch) => {
     if (!canWritePost) {
-      dispatch(postFail(new Error('You have to wait 10 seconds after writing last comment')));
+      dispatch(postFail(new Error('You have to wait 10 seconds after writing last post')));
       return false;
     } else {
       dispatch(switchCanWritePost(false));
