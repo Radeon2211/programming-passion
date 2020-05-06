@@ -1,10 +1,10 @@
 {
   "files": {
     "main.css": "/programming-passion/static/css/main.09954f1c.chunk.css",
-    "main.js": "/programming-passion/static/js/main.dbc04785.chunk.js",
-    "runtime-main.js": "/programming-passion/static/js/runtime-main.6548ed8e.js",
+    "main.js": "/programming-passion/static/js/main.068be262.chunk.js",
+    "runtime-main.js": "/programming-passion/static/js/runtime-main.591132e2.js",
     "static/js/2.f97ba324.chunk.js": "/programming-passion/static/js/2.f97ba324.chunk.js",
-    "static/css/3.0ce785bd.chunk.css": "/programming-passion/static/css/3.0ce785bd.chunk.css",
+    "static/css/3.99f8d2ad.chunk.css": "/programming-passion/static/css/3.99f8d2ad.chunk.css",
     "static/js/3.b3556d57.chunk.js": "/programming-passion/static/js/3.b3556d57.chunk.js",
     "static/css/4.4cea7411.chunk.css": "/programming-passion/static/css/4.4cea7411.chunk.css",
     "static/js/4.d53f7ead.chunk.js": "/programming-passion/static/js/4.d53f7ead.chunk.js",
@@ -19,15 +19,15 @@
     "static/js/13.8ffdcd3d.chunk.js": "/programming-passion/static/js/13.8ffdcd3d.chunk.js",
     "static/js/14.d1f57b0f.chunk.js": "/programming-passion/static/js/14.d1f57b0f.chunk.js",
     "index.html": "/programming-passion/index.html",
-    "precache-manifest.6426396e32b2fb193e43814b6b4526e3.js": "/programming-passion/precache-manifest.6426396e32b2fb193e43814b6b4526e3.js",
+    "precache-manifest.922af1da27d88e4a1e538ae614fe3228.js": "/programming-passion/precache-manifest.922af1da27d88e4a1e538ae614fe3228.js",
     "service-worker.js": "/programming-passion/service-worker.js",
     "static/js/2.f97ba324.chunk.js.LICENSE.txt": "/programming-passion/static/js/2.f97ba324.chunk.js.LICENSE.txt",
     "static/media/sprite.svg": "/programming-passion/static/media/sprite.7d45556d.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.6548ed8e.js",
+    "static/js/runtime-main.591132e2.js",
     "static/js/2.f97ba324.chunk.js",
     "static/css/main.09954f1c.chunk.css",
-    "static/js/main.dbc04785.chunk.js"
+    "static/js/main.068be262.chunk.js"
   ]
 }

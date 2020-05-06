@@ -1,18 +1,18 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "34ea0528214f1d8d09b33ff57d170ce8",
+    "revision": "69a2998c399fb9f6d295470c3779c618",
     "url": "/programming-passion/index.html"
   },
   {
-    "revision": "17fc38a46f3d27c28ac7",
-    "url": "/programming-passion/static/css/3.0ce785bd.chunk.css"
+    "revision": "1f3b5fbf5bd60d573789",
+    "url": "/programming-passion/static/css/3.99f8d2ad.chunk.css"
   },
   {
     "revision": "2c94d190c9ac9a36625a",
     "url": "/programming-passion/static/css/4.4cea7411.chunk.css"
   },
   {
-    "revision": "b42e966332f06d68a5c8",
+    "revision": "2751bdc6bf8676ae5e3b",
     "url": "/programming-passion/static/css/main.09954f1c.chunk.css"
   },
   {
@@ -44,7 +44,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/js/2.f97ba324.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "17fc38a46f3d27c28ac7",
+    "revision": "1f3b5fbf5bd60d573789",
     "url": "/programming-passion/static/js/3.b3556d57.chunk.js"
   },
   {
@@ -72,12 +72,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/js/9.4df16144.chunk.js"
   },
   {
-    "revision": "b42e966332f06d68a5c8",
-    "url": "/programming-passion/static/js/main.dbc04785.chunk.js"
+    "revision": "2751bdc6bf8676ae5e3b",
+    "url": "/programming-passion/static/js/main.068be262.chunk.js"
   },
   {
-    "revision": "3291cd84dda2e7d1489c",
-    "url": "/programming-passion/static/js/runtime-main.6548ed8e.js"
+    "revision": "10182b37e754c776cd96",
+    "url": "/programming-passion/static/js/runtime-main.591132e2.js"
   },
   {
     "revision": "7d45556d86ee34dcc183172e69237826",
