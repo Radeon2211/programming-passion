@@ -1,6 +1,7 @@
 {
   "short_name": "Programming Passion",
   "name": "Programming Passion",
+  "description": "Ideal place to grow as a developer",
   "icons": [
     {
       "src": "images/favicon.ico",
@@ -18,8 +19,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "rgb(52, 73, 94)",
-  "background_color": "#ffffff"
+  "background_color": "rgb(52, 73, 94)"
 }
