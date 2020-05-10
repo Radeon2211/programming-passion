@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
 import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class SignUp extends Component {
-  state = {
+const CreatePost = (props) => {
+  const [controls, setControls] = useState({
     title: createStateInput('input', 'Title', '',
       { type: 'text', id: 'title', autoComplete: 'off', placeholder: 'Post title...' },
       { minLength: 1, maxLength: 200 },
@@ -14,55 +14,52 @@ class SignUp extends Component {
       { id: 'content', placeholder: 'Share your thoughts...' },
       { minLength: 1, maxLength: 1200 },
     ),
-  };
+  });
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const canWritePost = useSelector((state) => state.post.canWritePost);
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
+  const dispatch = useDispatch();
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+  const onCreatePost = (data, history, canWritePost) => dispatch(actions.createPost(data, history, canWritePost));
+
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = (inputId, e) => {
+    e.persist();
+    setControls((prevState) => ({
+      ...prevState,
+      [inputId]: updateObject(controls[inputId], {
         value: e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
+        valid: checkValidity(e.target.value, controls[inputId].validation),
         touched: true,
       }),
-    });
+    }));
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
     const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
+    for (const key in controls) {
+      data[key] = controls[key].value.trim();
     }
-    this.props.onCreatePost(data, this.props.history, this.props.canWritePost);
+    onCreatePost(data, props.history, canWritePost);
   };
 
-  render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+  const inputs = createInputElements(controls, inputChangedHandler);
 
-    return (
-      <Form
-        headingText="Create Post"
-        btnText="Create"
-        isValid={checkFormValidation(this.state)}
-        submitted={this.formSubmittedHandler}
-        isPostForm
-      >
-        {inputs}
-      </Form>
-    );
-  }
-}
+  return (
+    <Form
+      headingText="Create Post"
+      btnText="Create"
+      isValid={checkFormValidation(controls)}
+      submitted={formSubmittedHandler}
+      isPostForm
+    >
+      {inputs}
+    </Form>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  canWritePost: state.post.canWritePost,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onCreatePost: (data, history, canWritePost) => dispatch(actions.createPost(data, history, canWritePost)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default CreatePost;

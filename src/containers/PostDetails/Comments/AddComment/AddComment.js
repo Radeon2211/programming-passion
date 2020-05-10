@@ -1,70 +1,70 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../shared/utility';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../../store/actions/indexActions';
 import Form from '../../../../components/UI/Form/Form';
 
-class AddComment extends Component {
-  state = {
+const AddComment = (props) => {
+  const [controls, setControls] = useState({
     content: createStateInput('textarea', 'Add comment', '',
       { id: 'content', autoComplete: 'off', placeholder: 'What do you think about this post...' },
       { minLength: 1, maxLength: 400 },
     ),
-  };
+  });
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const canWriteComment = useSelector((state) => state.post.canWriteComment);
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
+  const dispatch = useDispatch();
+  const onAddComment = (content, postID, postAuthorUID, canWriteComment, inputCleared) => (
+    dispatch(actions.addComment(content, postID, postAuthorUID, canWriteComment, inputCleared))
+  );
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = (inputId, e) => {
+    e.persist();
+    setControls((prevState) => ({
+      ...prevState,
+      [inputId]: updateObject(prevState[inputId], {
         value: e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
+        valid: checkValidity(e.target.value, prevState[inputId].validation),
         touched: e.target.value.length > 0 ? true : false,
       }),
-    });
+    }));
   };
 
-  inputClearedHandler = () => {
-    this.setState({
-      content: updateObject(this.state.content, {
+  const inputClearedHandler = () => {
+    setControls((prevState) => ({
+      ...prevState,
+      content: updateObject(controls.content, {
         value: '',
         valid: false,
         touched: false,
       }),
-    });
+    }));
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
-    const content = this.state.content.value.trim();
-    this.props.onAddComment(content, this.props.postID, this.props.postAuthorUID, this.props.canWriteComment, this.inputClearedHandler);
+    const content = controls.content.value.trim();
+    onAddComment(content, props.postID, props.postAuthorUID, canWriteComment, inputClearedHandler);
   };
 
-  render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+  const inputs = createInputElements(controls, inputChangedHandler);
 
-    return (
-      <Form
-        btnText="Add"
-        isValid={checkFormValidation(this.state)}
-        submitted={this.formSubmittedHandler}
-        isPostForm
-      >
-        {inputs}
-      </Form>
-    );
-  }
-}
+  return (
+    <Form
+      btnText="Add"
+      isValid={checkFormValidation(controls)}
+      submitted={formSubmittedHandler}
+      isPostForm
+    >
+      {inputs}
+    </Form>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  canWriteComment: state.post.canWriteComment,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onAddComment: (content, postID, postAuthorUID, canWriteComment, inputCleared) => dispatch(actions.addComment(content, postID, postAuthorUID, canWriteComment, inputCleared)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddComment);
+export default AddComment;

@@ -1,33 +1,36 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import classes from './ChangePhoto.module.scss';
 import Form from '../../components/UI/Form/Form';
 import { isValidFileType, calculateFileSize, isValidFileSize } from '../../shared/utility';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 import Button from '../../components/UI/Button/Button';
 
-class ChangePhoto extends Component {
-  state = {
-    photo: null,
-    photoPreview: null,
-    photoName: null,
-    photoSize: null,
-    error: null,
-  };
+const ChangePhoto = (props) => {
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoName, setPhotoName] = useState(null);
+  const [photoSize, setPhotoSize] = useState(null);
+  const [error, setError] = useState(null);
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const currentPhotoURL = useSelector((state) => state.firebase.profile.photoURL);
 
-  inputChangedHandler = async (e) => {
+  const dispatch = useDispatch();
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+  const onChangePhoto = (data, history) => dispatch(actions.changePhoto(data, history));
+  const onDeletePhoto = (currentPhotoURL, history) => dispatch(actions.deletePhoto(currentPhotoURL, history));
+
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = async (e) => {
     const files = e.target.files;
     if (!files.length > 0) {
-      await this.setState({
-        photo: null,
-        photoPreview: null,
-        photoName: null,
-        photoSize: null,
-      });
+      setPhoto(null);
+      setPhotoPreview(null);
+      setPhotoName(null);
+      setPhotoSize(null);
       return;
     }
 
@@ -36,131 +39,109 @@ class ChangePhoto extends Component {
     if (fileName.length > 25) {
       fileName = `${fileName.slice(0, 20)}...${file.type.split('/')[1]}`;
     }
-    await this.setState({
-      photoName: fileName,
-      photoSize: calculateFileSize(file.size),
-    });
+    setPhotoName(fileName);
+    setPhotoSize(calculateFileSize(file.size));
 
     if (!isValidFileType(file.type)) {
-      await this.setState({
-        photo: null,
-        photoPreview: null,
-        error: 'File extension is not valid',
-      });
+      setPhoto(null);
+      setPhotoPreview(null);
+      setError('File extension is not valid');
       return;
     } else {
-      await this.setState({
-        error: null,
-      });
+      setError(null);
     }
 
     if (!isValidFileSize(file.size)) {
-      await this.setState({
-        error: 'Maximum available size is 1MB',
-      });
+      setError('Maximum available size is 1MB');
     }
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      this.setState({
-        photo: file,
-        photoPreview: reader.result,
-      });
+      setPhoto(file);
+      setPhotoPreview(reader.result);
     };
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
-    if (!this.state.photo) return;
-    if (!isValidFileType(this.state.photo.type) || !isValidFileSize(this.state.photo.size)) return;
-    this.props.onChangePhoto(this.state.photo, this.props.history);
+    if (!photo) return;
+    if (!isValidFileType(photo.type) || !isValidFileSize(photo.size)) return;
+    onChangePhoto(photo, props.history);
   };
 
-  render () {
-    let preview = <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>;
-    let error = null;
-    let photo = null;
-    let deletePhotoButton = null;
+  let preview = <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>;
+  let errorEl = null;
+  let photoEl = null;
+  let deletePhotoButton = null;
 
-    if (this.state.error) {
-      error = <span className={classes.Error}>{this.state.error}</span>;
-    }
+  if (error) {
+    errorEl = <span className={classes.Error}>{error}</span>;
+  }
 
-    if (this.state.photoPreview) {
-      photo = (
-        <div className={classes.PhotoBox}>
-          <img src={this.state.photoPreview} alt="Preview" className={classes.Photo} />
+  if (photoPreview) {
+    photoEl = (
+      <div className={classes.PhotoBox}>
+        <img src={photoPreview} alt="Preview" className={classes.Photo} />
+      </div>
+    )
+  }
+
+  if (photo || error) {
+    preview = (
+      <div className={classes.Preview}>
+        <div className={classes.FileData}>
+          <span className={classes.FileDataRow}>
+            <span className={classes.FileDataCaption}>Name:</span> {photoName}
+          </span>
+          <span className={classes.FileDataRow}>
+            <span className={classes.FileDataCaption}>Size:</span> {photoSize}
+          </span>
         </div>
-      )
-    }
-
-    if (this.state.photo || this.state.error) {
-      preview = (
-        <div className={classes.Preview}>
-          <div className={classes.FileData}>
-            <span className={classes.FileDataRow}>
-              <span className={classes.FileDataCaption}>Name:</span> {this.state.photoName}
-            </span>
-            <span className={classes.FileDataRow}>
-              <span className={classes.FileDataCaption}>Size:</span> {this.state.photoSize}
-            </span>
-          </div>
-          {photo}
-        </div>
-      );
-    }
-
-    if (this.props.currentPhotoURL) {
-      deletePhotoButton = (
-        <Button
-          size="Small"
-          fill="Empty"
-          color="Red"
-          type="button"
-          clicked={this.props.onDeletePhoto.bind(this, this.props.currentPhotoURL, this.props.history)}
-        >
-          Delete your photo
-        </Button>
-      );
-    }
-
-    return (
-      <div className={classes.ChangePhoto}>
-        <Form
-          headingText="Change Photo"
-          btnText="Change"
-          isValid={this.state.photo && !this.state.error}
-          submitted={this.formSubmittedHandler}
-        >
-          <div className={classes.Content}>
-            <label htmlFor="photo" className={classes.Label}>
-              <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
-            </label>
-            {preview}
-            {error}
-            <input
-              type="file"
-              id="photo"
-              className={classes.Input}
-              onChange={this.inputChangedHandler}
-            />
-          </div>
-        </Form>
-        {deletePhotoButton}
+        {photoEl}
       </div>
     );
   }
-}
 
-const mapStateToProps = (state) => ({
-  currentPhotoURL: state.firebase.profile.photoURL,
-});
+  if (currentPhotoURL) {
+    deletePhotoButton = (
+      <Button
+        size="Small"
+        fill="Empty"
+        color="Red"
+        type="button"
+        clicked={onDeletePhoto.bind(this, currentPhotoURL, props.history)}
+      >
+        Delete your photo
+      </Button>
+    );
+  }
 
-const mapDispatchToProps = (dispatch) => ({
-  onChangePhoto: (data, history) => dispatch(actions.changePhoto(data, history)),
-  onDeletePhoto: (currentPhotoURL, history) => dispatch(actions.deletePhoto(currentPhotoURL, history)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
+  return (
+    <div className={classes.ChangePhoto}>
+      <Form
+        headingText="Change Photo"
+        btnText="Change"
+        isValid={photo && !error}
+        submitted={formSubmittedHandler}
+      >
+        <div className={classes.Content}>
+          <label htmlFor="photo" className={classes.Label}>
+            <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
+          </label>
+          {preview}
+          {errorEl}
+          <input
+            type="file"
+            id="photo"
+            className={classes.Input}
+            onChange={inputChangedHandler}
+          />
+        </div>
+      </Form>
+      {deletePhotoButton}
+    </div>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChangePhoto);
+export default ChangePhoto;

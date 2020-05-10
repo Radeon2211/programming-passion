@@ -1,22 +1,21 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useCallback, Fragment } from 'react';
+import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class SignOut extends Component {
-  componentDidMount() {
-    this.props.onSignOut();
-    this.props.history.goBack();
-  }
+const SignOut = (props) => {
+  const { history } = props;
 
-  render () {
-    return (
-      <Fragment />
-    );
-  }
-}
+  const dispatch = useDispatch();
+  const onSignOut = useCallback(() => dispatch(actions.signOut()), [dispatch]);
 
-const mapDispatchToProps = (dispatch) => ({
-  onSignOut: () => dispatch(actions.signOut()),
-});
+  useEffect(() => {
+    onSignOut();
+    history.goBack();
+  }, [onSignOut, history]);
 
-export default connect(null, mapDispatchToProps)(SignOut);
+  return (
+    <Fragment />
+  );
+};
+
+export default SignOut;

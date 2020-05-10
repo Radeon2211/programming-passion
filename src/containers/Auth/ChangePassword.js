@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
 import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class ChangePassword extends Component {
-  state = {
+const ChangePassword = (props) => {
+  const [controls, setControls] = useState({
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
       null,
@@ -20,50 +20,49 @@ class ChangePassword extends Component {
       { type: 'password', id: 'newPassword', autoComplete: 'new-password', placeholder: 'Type safe password...' },
       { minLength: 6 },
     ),
-  };
+  });
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const dispatch = useDispatch();
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+  const onChangePassword = (data, history) => dispatch(actions.changePassword(data, history));
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
-        value: inputId === 'newPassword' ? e.target.value.trim() : e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = (inputId, e) => {
+    e.persist();
+    setControls((prevState) => ({
+      ...prevState,
+      [inputId]: updateObject(controls[inputId], {
+        value: e.target.value,
+        valid: checkValidity(e.target.value, controls[inputId].validation),
         touched: true,
       }),
-    });
+    }));
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
     const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
+    for (const key in controls) {
+      data[key] = controls[key].value.trim();
     }
-    this.props.onChangePassword(data, this.props.history);
+    onChangePassword(data, props.history);
   };
 
-  render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+  const inputs = createInputElements(controls, inputChangedHandler);
 
-    return (
-      <Form
-        headingText="Change Password"
-        btnText="Change"
-        isValid={checkFormValidation(this.state)}
-        submitted={this.formSubmittedHandler}
-      >
-        {inputs}
-      </Form>
-    );
-  }
-}
+  return (
+    <Form
+      headingText="Change Password"
+      btnText="Change"
+      isValid={checkFormValidation(controls)}
+      submitted={formSubmittedHandler}
+    >
+      {inputs}
+    </Form>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onChangePassword: (data, history) => dispatch(actions.changePassword(data, history)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
-
-export default connect(null, mapDispatchToProps)(ChangePassword);
+export default ChangePassword;

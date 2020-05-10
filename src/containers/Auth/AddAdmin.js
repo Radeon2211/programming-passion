@@ -1,56 +1,55 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
 import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class AddAdmin extends Component {
-  state = {
+const AddAdmin = () => {
+  const [controls, setControls] = useState({
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: `Future admin's email` },
       { isEmail: true },
     ),
-  };
+  });
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const dispatch = useDispatch();
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+  const onAddAdmin = (email) => dispatch(actions.addAdmin(email));
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = (inputId, e) => {
+    e.persist();
+    setControls((prevState) => ({
+      ...prevState,
+      [inputId]: updateObject(controls[inputId], {
         value: e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
+        valid: checkValidity(e.target.value, controls[inputId].validation),
         touched: true,
       }),
-    });
+    }));
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
-    const email = this.state.email.value.trim();
-    this.props.onAddAdmin(email);
+    const email = controls.email.value.trim();
+    onAddAdmin(email);
   };
 
-  render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+  const inputs = createInputElements(controls, inputChangedHandler);
 
-    return (
-      <Form
-        headingText="Add Admin"
-        btnText="Add"
-        isValid={checkFormValidation(this.state)}
-        submitted={this.formSubmittedHandler}
-      >
-        {inputs}
-      </Form>
-    );
-  }
-}
+  return (
+    <Form
+      headingText="Add Admin"
+      btnText="Add"
+      isValid={checkFormValidation(controls)}
+      submitted={formSubmittedHandler}
+    >
+      {inputs}
+    </Form>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onAddAdmin: (email) => dispatch(actions.addAdmin(email)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
-
-export default connect(null, mapDispatchToProps)(AddAdmin);
+export default AddAdmin;

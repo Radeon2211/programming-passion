@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
 import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
-class DeleteAccount extends Component {
-  state = {
+const DeleteAccount = (props) => {
+  const [controls, setControls] = useState({
     email: createStateInput('input', 'Email', '',
       { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
       null,
@@ -16,50 +16,49 @@ class DeleteAccount extends Component {
       null,
       true,
     ),
-  };
+  });
 
-  componentDidMount() {
-    this.props.onDeleteError();
-  }
+  const dispatch = useDispatch();
+  const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
+  const onDeleteAccount = (data, history) => dispatch(actions.deleteAccount(data, history));
 
-  inputChangedHandler = (inputId, e) => {
-    this.setState({
-      [inputId]: updateObject(this.state[inputId], {
+  useEffect(() => {
+    onDeleteError();
+  }, [onDeleteError]);
+
+  const inputChangedHandler = (inputId, e) => {
+    e.persist();
+    setControls((prevState) => ({
+      ...prevState,
+      [inputId]: updateObject(controls[inputId], {
         value: e.target.value,
-        valid: checkValidity(e.target.value, this.state[inputId].validation),
+        valid: checkValidity(e.target.value, controls[inputId].validation),
         touched: true,
       }),
-    });
+    }));
   };
 
-  formSubmittedHandler = (e) => {
+  const formSubmittedHandler = (e) => {
     e.preventDefault();
     const data = {};
-    for (const key in this.state) {
-      data[key] = this.state[key].value.trim();
+    for (const key in controls) {
+      data[key] = controls[key].value.trim();
     }
-    this.props.onDeleteAccount(data, this.props.history);
+    onDeleteAccount(data, props.history);
   };
 
-  render () {
-    const inputs = createInputElements(this.state, this.inputChangedHandler);
+  const inputs = createInputElements(controls, inputChangedHandler);
 
-    return (
-      <Form
-        headingText="Delete Account"
-        btnText="Delete"
-        isValid={checkFormValidation(this.state)}
-        submitted={this.formSubmittedHandler}
-      >
-        {inputs}
-      </Form>
-    );
-  }
-}
+  return (
+    <Form
+      headingText="Delete Account"
+      btnText="Delete"
+      isValid={checkFormValidation(controls)}
+      submitted={formSubmittedHandler}
+    >
+      {inputs}
+    </Form>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onDeleteAccount: (data, history) => dispatch(actions.deleteAccount(data, history)),
-  onDeleteError: () => dispatch(actions.deleteError()),
-});
-
-export default connect(null, mapDispatchToProps)(DeleteAccount);
+export default DeleteAccount;

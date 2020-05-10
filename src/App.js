@@ -1,5 +1,5 @@
-import React, { Component, Fragment, Suspense, lazy } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useCallback, Fragment, Suspense, lazy } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import * as actions from './store/actions/indexActions';
 import Loader from './components/UI/Loader/Loader';
@@ -34,85 +34,80 @@ const WaitingComponent = (Component) => {
   );
 };
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onUpdateAdminState();
-  }
+const App = (props) => {
+  const authUID = useSelector((state) => state.firebase.auth.uid);
+  const isUserAdmin = useSelector((state) => state.auth.isUserAdmin);
 
-  render () {
-    let routes = (
-      <Switch>
-        <Route path="/signin" component={WaitingComponent(SignIn)} />
-        <Route path="/signup" component={WaitingComponent(SignUp)} />
-        <Route path="/posts/:id" component={PostDetails} />
-        <Route path="/posts" component={Posts} />
-        <Route path="/signout" component={SignOut} />
-        <Route path="/" component={Home} />
-        <Redirect to="/" />
-      </Switch>
-    );
+  const dispatch = useDispatch();
+  const onUpdateAdminState = useCallback(() => dispatch(actions.updateAdminState()), [dispatch]);
 
-    if (this.props.authUID) {
-      if (this.props.isUserAdmin) {
-        routes = (
-          <Switch>
-            <Route path="/posts/:id" component={PostDetails} />
-            <Route path="/posts" component={Posts} />
-            <Route path="/create-post" component={WaitingComponent(CreatePost)} />
-            <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
-            <Route path="/settings" component={WaitingComponent(Settings)} />
-            <Route path="/change-name" component={WaitingComponent(ChangeName)} />
-            <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
-            <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
-            <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
-            <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
-            <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
-            <Route path="/add-admin" component={WaitingComponent(AddAdmin)} />
-            <Route path="/remove-admin" component={WaitingComponent(RemoveAdmin)} />
-            <Route path="/signout" component={SignOut} />
-            <Redirect to="/posts" />
-          </Switch>
-        );
-      } else {
-        routes = (
-          <Switch>
-            <Route path="/posts/:id" component={PostDetails} />
-            <Route path="/posts" component={Posts} />
-            <Route path="/create-post" component={WaitingComponent(CreatePost)} />
-            <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
-            <Route path="/settings" component={WaitingComponent(Settings)} />
-            <Route path="/change-name" component={WaitingComponent(ChangeName)} />
-            <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
-            <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
-            <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
-            <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
-            <Route path="/my-posts" render={() => <MyPosts authUID={this.props.authUID} />} />
-            <Route path="/signout" component={SignOut} />
-            <Redirect to="/posts" />
-          </Switch>
-        );
-      }
+  useEffect(() => {
+    onUpdateAdminState();
+  }, [onUpdateAdminState]);
+
+  let routes = (
+    <Switch>
+      <Route path="/signin" component={WaitingComponent(SignIn)} />
+      <Route path="/signup" component={WaitingComponent(SignUp)} />
+      <Route path="/posts/:id" component={PostDetails} />
+      <Route path="/posts" component={Posts} />
+      <Route path="/signout" component={SignOut} />
+      <Route path="/" component={Home} />
+      <Redirect to="/" />
+    </Switch>
+  );
+
+  if (authUID) {
+    if (isUserAdmin) {
+      routes = (
+        <Switch>
+          <Route path="/posts/:id" component={PostDetails} />
+          <Route path="/posts" component={Posts} />
+          <Route path="/create-post" component={WaitingComponent(CreatePost)} />
+          <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
+          <Route path="/settings" component={WaitingComponent(Settings)} />
+          <Route path="/change-name" component={WaitingComponent(ChangeName)} />
+          <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
+          <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
+          <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
+          <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
+          <Route path="/my-posts" render={() => <MyPosts authUID={authUID} />} />
+          <Route path="/add-admin" component={WaitingComponent(AddAdmin)} />
+          <Route path="/remove-admin" component={WaitingComponent(RemoveAdmin)} />
+          <Route path="/signout" component={SignOut} />
+          <Redirect to="/posts" />
+        </Switch>
+      );
+    } else {
+      routes = (
+        <Switch>
+          <Route path="/posts/:id" component={PostDetails} />
+          <Route path="/posts" component={Posts} />
+          <Route path="/create-post" component={WaitingComponent(CreatePost)} />
+          <Route path="/edit-post/:id" component={WaitingComponent(EditPost)} />
+          <Route path="/settings" component={WaitingComponent(Settings)} />
+          <Route path="/change-name" component={WaitingComponent(ChangeName)} />
+          <Route path="/change-email" component={WaitingComponent(ChangeEmail)} />
+          <Route path="/change-password" component={WaitingComponent(ChangePassword)} />
+          <Route path="/change-photo" component={WaitingComponent(ChangePhoto)} />
+          <Route path="/delete-account" component={WaitingComponent(DeleteAccount)} />
+          <Route path="/my-posts" render={() => <MyPosts authUID={authUID} />} />
+          <Route path="/signout" component={SignOut} />
+          <Redirect to="/posts" />
+        </Switch>
+      );
     }
-
-    return (
-      <Fragment>
-        <Navbar isAuth={this.props.authUID} />
-        <Main>
-          {routes}
-        </Main>
-        <Footer />
-      </Fragment>
-    );
   }
+
+  return (
+    <Fragment>
+      <Navbar isAuth={authUID} />
+      <Main>
+        {routes}
+      </Main>
+      <Footer />
+    </Fragment>
+  );
 }
 
-const mapStateToProps = (state) => ({
-  authUID: state.firebase.auth.uid,
-  isUserAdmin: state.auth.isUserAdmin,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onUpdateAdminState: () => dispatch(actions.updateAdminState()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

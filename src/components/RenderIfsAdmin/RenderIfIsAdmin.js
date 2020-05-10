@@ -1,10 +1,7 @@
 import { connect } from 'react-redux';
 
 const RenderIfIsAdmin = ({ isUserAdmin, children }) => {
-  const content = isUserAdmin
-  ? children
-  : null;
-
+  const content = isUserAdmin ? children : null;
   return content;
 };
 

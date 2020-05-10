@@ -1,8 +1,7 @@
-import React, { Fragment, Component } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Fragment } from 'react';
 import classes from './PostDetails.module.scss';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import * as actions from '../../store/actions/indexActions';
 import { actionTypes as firestoreActionTypes } from 'redux-firestore';
@@ -15,235 +14,227 @@ import Modal from '../../components/UI/Modal/Modal';
 import RenderIfIsAdmin from '../../components/RenderIfsAdmin/RenderIfIsAdmin';
 import Heading from '../../components/UI/Heading/Heading';
 
-class PostDetails extends Component {
-  state = {
-    isLikingPossible: true,
-    isLiked: false,
-    commentIdToDelete: null,
-    isCommentModalVisible: false,
-    isPostModalVisible: false,
+const PostDetails = (props) => {
+  const isUnmounted = useRef(false);
+
+  const [isLikingPossible, setIsLikingPossible] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
+  const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
+  const [isPostModalVisible, setIsPostModalVisible] = useState(false);
+
+  const post = useSelector((state) => state.firestore.data.post === undefined ? undefined : state.firestore.data.post);
+  const comments = useSelector((state) => state.firestore.ordered.comments || []);
+  const authUID = useSelector((state) => state.firebase.auth.uid);
+
+  const dispatch = useDispatch();
+  const onTogglePostLiking = (postID, type) => dispatch(actions.togglePostLiking(postID, type));
+  const onCheckPostLiking = useCallback((postID) => dispatch(actions.checkPostLiking(postID)), [dispatch]);
+  const onDeleteComment = (commentID) => dispatch(actions.deleteComment(commentID));
+  const onDeletePost = (postID, history) => dispatch(actions.deletePost(postID, history));
+  const onSetAutoRedirectPath = (path) => dispatch(actions.setAutoRedirectPath(path));
+
+  let likingTimeout = null;
+
+  const { match, dispatch: firestoreDispatch } = props;
+
+  useEffect(() => {
+    const checkIfIsLiked = async () => {
+      const isLiked = await onCheckPostLiking(match.params.id);
+      setIsLiked(isLiked);
+    };
+    checkIfIsLiked();
+  }, [onCheckPostLiking, match]);
+
+  useEffect(() => {
+    return () => {
+      isUnmounted.current = true;
+      clearTimeout(likingTimeout);
+      firestoreDispatch({
+        type: firestoreActionTypes.CLEAR_DATA,
+        preserve: { ordered: true, data: ['allPosts', 'comments', 'userPosts'] },
+      });
+    };
+  }, [likingTimeout, firestoreDispatch]);
+
+  const startDeletingCommentHandler = (commentID) => {
+    setCommentIdToDelete(commentID);
+    setIsCommentModalVisible(true);
   };
 
-  likingTimeout = null;
-
-  async componentDidMount() {
-    const isLiked = await this.props.onCheckPostLiking(this.props.match.params.id);
-    this.setState({ isLiked });
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.likingTimeout);
-    this.props.dispatch({
-      type: firestoreActionTypes.CLEAR_DATA,
-      preserve: { ordered: true, data: ['allPosts', 'comments', 'userPosts'] },
-    });
-  }
-
-  startDeletingCommentHandler = (commentID) => {
-    this.setState({
-      commentIdToDelete: commentID,
-      isCommentModalVisible: true,
-    });
+  const deleteCommentHandler = () => {
+    setCommentIdToDelete(false);
+    setIsCommentModalVisible(false);
+    if (!commentIdToDelete) return;
+    onDeleteComment(commentIdToDelete);
   };
 
-  deleteCommentHandler = () => {
-    this.setState({
-      isCommentModalVisible: false,
-      isPostModalVisible: false,
-    });
-    if (!this.state.commentIdToDelete) return;
-    this.props.onDeleteComment(this.state.commentIdToDelete);
+  const startDeletingPostHandler = () => {
+    setIsPostModalVisible(true);
   };
 
-  startDeletingPostHandler = () => {
-    this.setState({
-      isPostModalVisible: true,
-    });
+  const deletePostHandler = () => {
+    setIsCommentModalVisible(true);
+    setIsPostModalVisible(false);
+    if (!match.params.id) return;
+    onDeletePost(match.params.id, props.history);
   };
 
-  deletePostHandler = () => {
-    this.setState({
-      isCommentModalVisible: false,
-      isPostModalVisible: false,
-    });
-    if (!this.props.match.params.id) return;
-    this.props.onDeletePost(this.props.match.params.id, this.props.history);
+  const cancelDeletingHandler = () => {
+    setCommentIdToDelete(null);
+    setIsCommentModalVisible(false);
+    setIsPostModalVisible(false);
   };
 
-  cancelDeletingHandler = () => {
-    this.setState({
-      commentIdToDelete: null,
-      isPostModalVisible: false,
-      isCommentModalVisible: false,
-    });
-  };
-
-  togglePostLiking = () => {
-    if (!this.state.isLikingPossible || !this.props.authUID) return;
-    if (this.state.isLiked) {
-      this.props.onTogglePostLiking(this.props.match.params.id, 'remove');
-      this.setState({ isLiked: false });
+  const togglePostLiking = () => {
+    if (!isLikingPossible || !authUID) return;
+    if (isLiked) {
+      onTogglePostLiking(match.params.id, 'remove');
+      setIsLiked(false);
     } else {
-      this.props.onTogglePostLiking(this.props.match.params.id, 'add');
-      this.setState({ isLiked: true });
+      onTogglePostLiking(match.params.id, 'add');
+      setIsLiked(true);
     }
-    this.setState({ isLikingPossible: false });
-    this.likingTimeout = setTimeout(() => {
-      this.setState({ isLikingPossible: true });
+    setIsLikingPossible(false);
+    likingTimeout = setTimeout(() => {
+      if (!isUnmounted.current) {
+        setIsLikingPossible(true);
+      }
     }, 2000);
   };
 
-  render () {
-    const commentHandlingData = {
-      authUID: this.props.authUID,
-      postAuthorUID: this.props.post ? this.props.post.authorUID : null,
-      deleteStarted: this.startDeletingCommentHandler,
-    };
+  const commentHandlingData = {
+    authUID: authUID,
+    postAuthorUID: post ? post.authorUID : null,
+    deleteStarted: startDeletingCommentHandler,
+  };
 
-    let postDetails = <Loader size="Small" />;
-    if (this.props.post === null) {
-      postDetails = <Heading variant="H6">This post does not exists</Heading>
-    }
+  let postDetails = <Loader size="Small" />;
+  if (post === null) {
+    postDetails = <Heading variant="H6">This post does not exists</Heading>
+  }
 
-    let unauthInfo = null;
+  let unauthInfo = null;
 
-    let postOptions = (
-      <RenderIfIsAdmin>
-        <div className={classes.PostOptions}>
-          <Line type="Begin" size="Size-2" />
-          <div className={classes.PostOptionsIcons}>
-            <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
-              <use href={`${sprite}#icon-bin`}></use>
-            </svg>
-          </div>
+  let postOptions = (
+    <RenderIfIsAdmin>
+      <div className={classes.PostOptions}>
+        <Line type="Begin" size="Size-2" />
+        <div className={classes.PostOptionsIcons}>
+          <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
+            <use href={`${sprite}#icon-bin`}></use>
+          </svg>
         </div>
-      </RenderIfIsAdmin>
-    );
+      </div>
+    </RenderIfIsAdmin>
+  );
 
-    if (this.props.post) {
-      const { authorFirstName, authorLastName, authorPhotoURL, title, content, likesCount, createdAt } = this.props.post;
-      const likesClasses = [classes.Likes];
-      if (this.state.isLiked) likesClasses.push(classes.Liked);
-      const likesText = likesCount === 1 ? `${likesCount} like` : `${likesCount} likes`;
+  if (post) {
+    const { authorFirstName, authorLastName, authorPhotoURL, title, content, likesCount, createdAt } = post;
+    const likesClasses = [classes.Likes];
+    if (isLiked) likesClasses.push(classes.Liked);
+    const likesText = likesCount === 1 ? `${likesCount} like` : `${likesCount} likes`;
 
-      if (!this.props.authUID) {
-        unauthInfo = (
-          <Fragment>
-            <div className={classes.UnauthInfo}>
-              <svg className={classes.LockIcon}>
-                <use href={`${sprite}#icon-lock`}></use>
-              </svg>
-              <span className={classes.UnauthCaption}>
-                <Link
-                  to="/signin"
-                  className={classes.UnauthCaptionLink}
-                  onClick={this.props.onSetAutoRedirectPath.bind(this, `/posts/${this.props.match.params.id}`)}
-                >Login</Link> or <Link
-                  to="/signup"
-                  className={classes.UnauthCaptionLink}
-                  onClick={this.props.onSetAutoRedirectPath.bind(this, `/posts/${this.props.match.params.id}`)}
-                >sign up</Link> to like and comment posts
-              </span>
-            </div>
-            <Line type="Begin" size="Size-2" />
-          </Fragment>
-        );
-      }
-
-      if (this.props.post.authorUID === this.props.authUID) {
-        postOptions = (
-          <div className={classes.PostOptions}>
-            <Line type="Begin" size="Size-2" />
-            <div className={classes.PostOptionsIcons}>
-              <Link to={`/edit-post/${this.props.match.params.id}`}>
-                <svg className={classes.EditPostIcon}>
-                  <use href={`${sprite}#icon-pencil`}></use>
-                </svg>
-              </Link>
-              <svg className={classes.DeletePostIcon} onClick={this.startDeletingPostHandler}>
-                <use href={`${sprite}#icon-bin`}></use>
-              </svg>
-            </div>
-          </div>
-        );
-      }
-
-      postDetails = (
+    if (!authUID) {
+      unauthInfo = (
         <Fragment>
-          <Modal
-            headingText="Deleting comment"
-            captionText="The operation is irreversible"
-            isVisible={this.state.isCommentModalVisible}
-            canceled={this.cancelDeletingHandler}
-            deleted={this.deleteCommentHandler}
-          />
-          <Modal
-            headingText="Deleting post"
-            captionText="The operation is irreversible"
-            isVisible={this.state.isPostModalVisible}
-            canceled={this.cancelDeletingHandler}
-            deleted={this.deletePostHandler}
-          />
-          <div className={classes.PostDetails}>
-            <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">{title}</Heading>
-            <div className={classes.Author}>
-              <AuthorData
-                size="Big"
-                firstName={authorFirstName}
-                lastName={authorLastName}
-                photoURL={authorPhotoURL}
-                createdAt={createdAt}
-              />
-            </div>
-            <Line type="Begin" size="Size-2" />
-            <p className={classes.Content}>{content}</p>
-            <div className={likesClasses.join(' ')}>
-              <div className={classes.LikeIconBox} onClick={this.togglePostLiking}>
-                <svg className={classes.LikeIcon}>
-                  <use href={`${sprite}#icon-heart`}></use>
-                </svg>
-              </div>
-              <span className={classes.LikeIconCaption}>{likesText}</span>
-            </div>
-            <Line type="Begin" size="Size-2" />
-            {unauthInfo}
-            <Comments
-              comments={this.props.comments}
-              postID={this.props.match.params.id}
-              commentHandlingData={commentHandlingData}
-            />
-            {postOptions}
+          <div className={classes.UnauthInfo}>
+            <svg className={classes.LockIcon}>
+              <use href={`${sprite}#icon-lock`}></use>
+            </svg>
+            <span className={classes.UnauthCaption}>
+              <Link
+                to="/signin"
+                className={classes.UnauthCaptionLink}
+                onClick={onSetAutoRedirectPath.bind(this, `/posts/${match.params.id}`)}
+              >Login</Link> or <Link
+                to="/signup"
+                className={classes.UnauthCaptionLink}
+                onClick={onSetAutoRedirectPath.bind(this, `/posts/${match.params.id}`)}
+              >sign up</Link> to like and comment posts
+            </span>
           </div>
+          <Line type="Begin" size="Size-2" />
         </Fragment>
       );
     }
 
-    return (
+    if (post.authorUID === authUID) {
+      postOptions = (
+        <div className={classes.PostOptions}>
+          <Line type="Begin" size="Size-2" />
+          <div className={classes.PostOptionsIcons}>
+            <Link to={`/edit-post/${match.params.id}`}>
+              <svg className={classes.EditPostIcon}>
+                <use href={`${sprite}#icon-pencil`}></use>
+              </svg>
+            </Link>
+            <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
+              <use href={`${sprite}#icon-bin`}></use>
+            </svg>
+          </div>
+        </div>
+      );
+    }
+
+    postDetails = (
       <Fragment>
-        {postDetails}
+        <Modal
+          headingText="Deleting comment"
+          captionText="The operation is irreversible"
+          isVisible={isCommentModalVisible}
+          canceled={cancelDeletingHandler}
+          deleted={deleteCommentHandler}
+        />
+        <Modal
+          headingText="Deleting post"
+          captionText="The operation is irreversible"
+          isVisible={isPostModalVisible}
+          canceled={cancelDeletingHandler}
+          deleted={deletePostHandler}
+        />
+        <div className={classes.PostDetails}>
+          <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">{title}</Heading>
+          <div className={classes.Author}>
+            <AuthorData
+              size="Big"
+              firstName={authorFirstName}
+              lastName={authorLastName}
+              photoURL={authorPhotoURL}
+              createdAt={createdAt}
+            />
+          </div>
+          <Line type="Begin" size="Size-2" />
+          <p className={classes.Content}>{content}</p>
+          <div className={likesClasses.join(' ')}>
+            <div className={classes.LikeIconBox} onClick={togglePostLiking}>
+              <svg className={classes.LikeIcon}>
+                <use href={`${sprite}#icon-heart`}></use>
+              </svg>
+            </div>
+            <span className={classes.LikeIconCaption}>{likesText}</span>
+          </div>
+          <Line type="Begin" size="Size-2" />
+          {unauthInfo}
+          <Comments
+            comments={comments}
+            postID={match.params.id}
+            commentHandlingData={commentHandlingData}
+          />
+          {postOptions}
+        </div>
       </Fragment>
     );
   }
-}
 
-const mapStateToProps = (state) => ({
-  post: state.firestore.data.post === undefined ? undefined : state.firestore.data.post,
-  comments: state.firestore.ordered.comments || [],
-  authUID: state.firebase.auth.uid,
-});
+  return (
+    <Fragment>
+      {postDetails}
+    </Fragment>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  onTogglePostLiking: (postID, type) => dispatch(actions.togglePostLiking(postID, type)),
-  onCheckPostLiking: (postID) => dispatch(actions.checkPostLiking(postID)),
-  onDeleteComment: (commentID) => dispatch(actions.deleteComment(commentID)),
-  onDeletePost: (postID, history) => dispatch(actions.deletePost(postID, history)),
-  onSetAutoRedirectPath: (path) => dispatch(actions.setAutoRedirectPath(path)),
-});
-
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect((state) => [
-    { collection: 'posts', doc: state.match.params.id, storeAs: 'post' },
-    { collection: 'comments', where: ['postID', '==', state.match.params.id], orderBy: ['createdAt', 'desc'], storeAs: 'comments' },
-  ])
-)(PostDetails);
+export default firestoreConnect((state) => [
+  { collection: 'posts', doc: state.match.params.id, storeAs: 'post' },
+  { collection: 'comments', where: ['postID', '==', state.match.params.id], orderBy: ['createdAt', 'desc'], storeAs: 'comments' },
+])(PostDetails);
