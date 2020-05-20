@@ -1,23 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import Input from '../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import { Formik } from 'formik';
 
 const SignUp = (props) => {
-  const [controls, setControls] = useState({
-    email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      null,
-      true,
-    ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
-      null,
-      true,
-    ),
-  });
-
   const autoRedirectPath = useSelector((state) => state.auth.autoRedirectPath);
 
   const dispatch = useDispatch();
@@ -28,38 +16,37 @@ const SignUp = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    onSignIn(data, props.history, autoRedirectPath);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      headingText="Sign In"
-      btnText="Login"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+      }}
+      onSubmit={(values) => {
+        onSignIn(values, props.history, autoRedirectPath);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ isValid, dirty }) => {
+        return (
+          <Form
+            headingText="Sign In"
+            btnText="Login"
+            isValid={isValid && dirty}
+          >
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'email', id: 'email', placeholder: 'Your email...', autoComplete: 'email' }}
+              label="Email"
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'password', id: 'password', placeholder: 'Your password...', autoComplete: 'current-password' }}
+              label="Password"
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

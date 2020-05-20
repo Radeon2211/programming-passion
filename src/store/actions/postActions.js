@@ -152,7 +152,7 @@ export const checkPostLiking = (postID) => {
   };
 };
 
-export const addComment = (content, postID, postAuthorUID, canWriteComment, inputCleared) => {
+export const addComment = (content, postID, postAuthorUID, canWriteComment, resetForm) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
@@ -169,7 +169,7 @@ export const addComment = (content, postID, postAuthorUID, canWriteComment, inpu
         content,
         createdAt: new Date(),
       });
-      inputCleared();
+      resetForm();
       dispatch(postSuccess());
     } catch (error) {
       dispatch(postFail(error));

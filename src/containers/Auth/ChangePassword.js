@@ -1,27 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import Input from '../../components/UI/Input/Input';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  newPassword: Yup.string().min(6).max(64).trim().required(),
+});
 
 const ChangePassword = (props) => {
-  const [controls, setControls] = useState({
-    email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      null,
-      true,
-    ),
-    oldPassword: createStateInput('input', 'Old password', '',
-      { type: 'password', id: 'oldPassword', autoComplete: 'current-password', placeholder: 'Your old password...' },
-      null,
-      true,
-    ),
-    newPassword: createStateInput('input', 'New password', '',
-      { type: 'password', id: 'newPassword', autoComplete: 'new-password', placeholder: 'Type safe password...' },
-      { minLength: 6 },
-    ),
-  });
-
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
   const onChangePassword = (data, history) => dispatch(actions.changePassword(data, history));
@@ -30,38 +19,46 @@ const ChangePassword = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    onChangePassword(data, props.history);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      headingText="Change Password"
-      btnText="Change"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
+    <Formik
+      initialValues={{
+        email: '',
+        oldPassword: '',
+        newPassword: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onChangePassword(values, props.history);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ errors, touched, isValid, dirty, setFieldTouched }) => {
+        return (
+          <Form
+            headingText="Change Password"
+            btnText="Change"
+            isValid={isValid && dirty}
+          >
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'email', id: 'email', placeholder: 'Your email...', autoComplete: 'email' }}
+              label="Email"
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'oldPassword', id: 'oldPassword', placeholder: 'Your current password...', autoComplete: 'current-password' }}
+              label="Old password"
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'newPassword', id: 'newPassword', placeholder: 'Type safe password...', autoComplete: 'new-password', onInput: setFieldTouched.bind(this, 'newPassword', true, true) }}
+              label="New password"
+              isValid={!!!errors.newPassword}
+              isTouched={touched.newPassword}
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

@@ -1,27 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import Input from '../../components/UI/Input/Input';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  newEmail: Yup.string().email().trim().required(),
+});
 
 const ChangeEmail = (props) => {
-  const [controls, setControls] = useState({
-    oldEmail: createStateInput('input', 'Old email', '',
-      { type: 'email', id: 'oldEmail', autoComplete: 'email', placeholder: 'Your old email...' },
-      null,
-      true,
-    ),
-    newEmail: createStateInput('input', 'New email', '',
-      { type: 'email', id: 'newEmail', autoComplete: 'email', placeholder: 'Your new email...' },
-      { isEmail: true },
-    ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
-      null,
-      true,
-    ),
-  });
-
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
   const onChangeEmail = (data, history) => dispatch(actions.changeEmail(data, history));
@@ -30,38 +19,46 @@ const ChangeEmail = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    onChangeEmail(data, props.history);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      headingText="Change Email"
-      btnText="Change"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
+    <Formik
+      initialValues={{
+        oldEmail: '',
+        newEmail: '',
+        password: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onChangeEmail(values, props.history);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ errors, touched, isValid, dirty, setFieldTouched }) => {
+        return (
+          <Form
+            headingText="Change Email"
+            btnText="Change"
+            isValid={isValid && dirty}
+          >
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'oldEmail', id: 'oldEmail', placeholder: 'Your old email...', autoComplete: 'email' }}
+              label="Old email"
+            />
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'newEmail', id: 'newEmail', placeholder: 'Your new email...', autoComplete: 'email', onInput: setFieldTouched.bind(this, 'newEmail', true, true) }}
+              label="New email"
+              isValid={!!!errors.newEmail}
+              isTouched={touched.newEmail}
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'password', id: 'password', placeholder: 'Your password...', autoComplete: 'current-password' }}
+              label="Password"
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

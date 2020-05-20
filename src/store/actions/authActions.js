@@ -3,14 +3,6 @@ import { createCustomError, isValidFileType, isValidFileSize } from '../../share
 import axios from 'axios';
 import { storage } from '../../config/fbConfig';
 
-export const isNameValid = (firstName, lastName) => {
-  if (firstName.length < 1 || firstName.length > 50
-    || lastName.length < 1 || lastName.length > 50) {
-      return false;
-    }
-  return true;
-}
-
 export const authStart = () => ({
   type: actionTypes.AUTH_START,
 });
@@ -55,9 +47,6 @@ export const signUp = ({ email, password, firstName, lastName }, history, redire
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      if (!isNameValid(firstName, lastName)) {
-        throw new Error('First and last name should be from 1 to 50 characters long');
-      }
       const { user: { uid } } = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await firestore.collection('users').doc(uid).set({
         firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
@@ -116,21 +105,18 @@ export const updateAuthorData = async (firestore, getState, updatedProps) => {
   await batch.commit();
 };
 
-export const changeName = ({ newFirstName, newLastName }, history) => {
+export const changeName = ({ firstName, lastName }, history) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(authStart());
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      if (!isNameValid(newFirstName, newLastName)) {
-        throw new Error('First and last name should have from 1 to 50 characters');
-      }
       const userUID = firebase.auth().currentUser.uid;
-      const firstName = `${newFirstName.slice(0, 1).toUpperCase()}${newFirstName.slice(1)}`;
-      const lastName = `${newLastName.slice(0, 1).toUpperCase()}${newLastName.slice(1)}`;
+      const firstNameFixed = `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`;
+      const lastNameFixed = `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`;
       await firestore.collection('users').doc(userUID).update({
-        firstName,
-        lastName,
+        firstName: firstNameFixed,
+        lastName: lastNameFixed,
       });
       const propsToUpdate = {
         authorFirstName: firstName,
@@ -250,7 +236,7 @@ export const deleteAccount = ({ email, password }, history) => {
   };
 };
 
-export const addAdmin = (email) => {
+export const addAdmin = (email, history) => {
   return async (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
@@ -264,6 +250,7 @@ export const addAdmin = (email) => {
       if (data.error) {
         throw new Error(data.error);
       }
+      history.goBack();
       dispatch(authSuccess('Admin has been added successfully'));
     } catch (error) {
       dispatch(authFail(error));
@@ -271,7 +258,7 @@ export const addAdmin = (email) => {
   };
 };
 
-export const removeAdmin = (email) => {
+export const removeAdmin = (email, history) => {
   return async (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
@@ -285,6 +272,7 @@ export const removeAdmin = (email) => {
       if (data.error) {
         throw new Error(data.error);
       }
+      history.goBack();
       dispatch(authSuccess('Admin has been removed successfully'));
     } catch (error) {
       dispatch(authFail(error));

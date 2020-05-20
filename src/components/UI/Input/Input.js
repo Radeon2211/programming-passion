@@ -1,11 +1,12 @@
 import React from 'react';
 import classes from './Input.module.scss';
+import { Field } from 'formik';
 
-const Input = ({ kind, label, value, config, validation, valid, touched, changed }) => {
+const Input = ({ kind, config, label, isValid, isTouched }) => {
   let input = null;
   let validClass = null;
-  if (touched && validation) {
-    validClass = valid ? classes.Valid : classes.Invalid;
+  if (isValid !== undefined && isTouched) {
+    validClass = isValid ? classes.Valid : classes.Invalid;
   }
   const inputWrapperClasses = [classes.InputWrapper, validClass];
 
@@ -20,34 +21,35 @@ const Input = ({ kind, label, value, config, validation, valid, touched, changed
   switch (kind) {
     case ('input'):
       input = (
-        <input
-          className={classes.Input}
-          {...config}
-          value={value}
-          onChange={changed}
-        />
+        <Field name={config.name}>
+          {({ field }) => (
+            <input className={classes.Input} {...config} {...field} />
+          )}
+        </Field>
       );
       break;
     case ('textarea'):
       const textareaClasses = [classes.Input, classes.Textarea];
       input = (
-        <textarea
-          className={textareaClasses.join(' ')}
-          {...config}
-          value={value}
-          onChange={changed}
-          onKeyDown={autoSize}
-        />
+        <Field name={config.name}>
+          {({ field }) => (
+            <textarea
+              className={textareaClasses.join(' ')}
+              {...config}
+              {...field}
+              onKeyDown={autoSize}
+            />
+          )}
+        </Field>
       );
       break;
     default:
       input = (
-        <input
-          className={classes.Input}
-          {...config}
-          value={value}
-          onChange={changed}
-        />
+        <Field name={config.name}>
+          {({ field }) => (
+            <input className={classes.Input} {...config} {...field} />
+          )}
+        </Field>
       );
   }
 

@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../../../../shared/utility';
+import React, { useEffect, useCallback } from 'react';
+import Form from '../../../../../components/UI/Form/Form';
+import Input from '../../../../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../../../store/actions/indexActions';
-import Form from '../../../../../components/UI/Form/Form';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  content: Yup.string().max(500).trim().required(),
+});
 
 const EditComment = (props) => {
-  const [controls, setControls] = useState({
-    content: createStateInput('textarea', 'Content', props.currentContent,
-      { id: 'content', autoComplete: 'off', placeholder: 'What do you think about this post...' },
-      { minLength: 1, maxLength: 400 },
-    ),
-  });
-
   const canEditComment = useSelector((state) => state.post.canWriteComment);
 
   const dispatch = useDispatch();
@@ -22,40 +21,35 @@ const EditComment = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(prevState[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, prevState[inputId].validation),
-        touched: e.target.value.length > 0 ? true : false,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const content = controls.content.value.trim();
-    if (content === props.currentContent) {
-      props.cancelled();
-      return;
-    }
-    onEditComment(content, props.commentID, canEditComment, props.cancelled);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      btnText="Edit"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
-      isPostForm
-      cancelled={props.cancelled}
+    <Formik
+      initialValues={{
+        content: props.currentContent,
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onEditComment(values.content, props.commentID, canEditComment, props.cancelled);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ errors, touched, isValid, dirty, setFieldTouched }) => {
+        return (
+          <Form
+            btnText="Edit"
+            isValid={isValid && dirty}
+            isPostForm
+            cancelled={props.cancelled}
+          >
+            <Input
+              kind="textarea"
+              config={{ name: 'content', id: 'content', placeholder: 'What do you think about this post...', onInput: setFieldTouched.bind(this, 'content', true, true) }}
+              label="Content"
+              isValid={!!!errors.content}
+              isTouched={touched.content}
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

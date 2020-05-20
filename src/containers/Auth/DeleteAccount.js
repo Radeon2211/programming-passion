@@ -1,23 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import Input from '../../components/UI/Input/Input';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import { Formik } from 'formik';
 
 const DeleteAccount = (props) => {
-  const [controls, setControls] = useState({
-    email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      null,
-      true,
-    ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'current-password', placeholder: 'Your password...' },
-      null,
-      true,
-    ),
-  });
-
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
   const onDeleteAccount = (data, history) => dispatch(actions.deleteAccount(data, history));
@@ -26,38 +14,37 @@ const DeleteAccount = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    onDeleteAccount(data, props.history);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      headingText="Delete Account"
-      btnText="Delete"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+      }}
+      onSubmit={(values) => {
+        onDeleteAccount(values, props.history);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ isValid, dirty }) => {
+        return (
+          <Form
+            headingText="Delete Account"
+            btnText="Delete"
+            isValid={isValid && dirty}
+          >
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'email', id: 'email', placeholder: 'Your email...', autoComplete: 'email' }}
+              label="Email"
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'password', id: 'password', placeholder: 'Your password...', autoComplete: 'current-password' }}
+              label="Password"
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

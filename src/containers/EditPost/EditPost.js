@@ -1,28 +1,24 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import Form from '../../components/UI/Form/Form';
+import Input from '../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
 import { actionTypes as firestoreActionTypes } from 'redux-firestore';
 import * as actions from '../../store/actions/indexActions';
 import Heading from '../../components/UI/Heading/Heading';
 import Loader from '../../components/UI/Loader/Loader';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  title: Yup.string().max(200).trim().required(),
+  content: Yup.string().max(1200).trim().required(),
+});
 
 const EditPost = (props) => {
   const oldData = useRef({
     title: null,
     content: null,
-  });
-
-  const [controls, setControls] = useState({
-    title: createStateInput('input', 'Title', '',
-      { type: 'text', id: 'title', autoComplete: 'off', placeholder: 'Post title...' },
-      { minLength: 1, maxLength: 200 },
-    ),
-    content: createStateInput('textarea', 'Content', '',
-      { id: 'content', placeholder: 'Share your thoughts...' },
-      { minLength: 1, maxLength: 1200 },
-    ),
   });
 
   const canEditPost = useSelector((state) => state.post.canWritePost);
@@ -37,29 +33,17 @@ const EditPost = (props) => {
   }, [onDeleteError]);
 
   const updateStateValues = useCallback(() => {
-    setControls((prevState) => ({
-      ...prevState,
-      title: updateObject(controls.title, {
-        value: post.title,
-        valid: true,
-      }),
-      content: updateObject(controls.content, {
-        value: post.content,
-        valid: true,
-      }),
-    }));
-
     oldData.current = {
       title: post.title,
       content: post.content,
     };
-  }, [controls, post]);
+  }, [post]);
 
   useEffect(() => {
-    if (post && controls.title.value === '') {
+    if (post && !oldData.current.title) {
       updateStateValues();
     }
-  }, [updateStateValues, controls, post]);
+  }, [updateStateValues, post]);
 
   const { dispatch: firestoreDispatch } = props;
 
@@ -70,55 +54,61 @@ const EditPost = (props) => {
         preserve: { ordered: true, data: ['allPosts', 'comments', 'userPosts'] },
       });
     };
-  }, [updateStateValues, firestoreDispatch]);
-
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
+  }, [firestoreDispatch]);
 
   const editingCancelledHandler = () => {
     props.history.goBack();
   };
 
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    if (data.title === oldData.current.title && data.content === oldData.current.content) {
-      props.history.push(`/posts/${props.match.params.id}`);
-      return;
-    }
-    onEditPost(data, props.match.params.id, props.history, canEditPost);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
-  let form = <Loader size="Small" />;
+  let form = null;
   if (post === null) {
-    form = <Heading variant="H6">This post does not exists</Heading>
+    form = <Heading variant="H6">This post does not exists</Heading>;
+  } else if (post === undefined) {
+    form = <Loader size="Small" />;
   } else {
     form = (
-      <Form
-        headingText={`Edit Post${post ? `: ${post.title}` : ''}`}
-        btnText="Edit"
-        isValid={checkFormValidation(controls)}
-        submitted={formSubmittedHandler}
-        isPostForm
-        cancelled={editingCancelledHandler}
+      <Formik
+        initialValues={{
+          title: post.title,
+          content: post.content,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          if (values.title === oldData.current.title && values.content === oldData.current.content) {
+            props.history.push(`/posts/${props.match.params.id}`);
+            return;
+          }
+          onEditPost(values, props.match.params.id, props.history, canEditPost);
+        }}
       >
-        {inputs}
-      </Form>
-    )
+        {({ errors, touched, isValid, dirty, setFieldTouched }) => {
+          return (
+            <Form
+              headingText={`Edit Post${post ? `: ${post.title}` : ''}`}
+              btnText="Edit"
+              isValid={isValid && dirty}
+              isPostForm
+              cancelled={editingCancelledHandler}
+            >
+              <Input
+                kind="input"
+                config={{ type: 'text', name: 'title', id: 'title', placeholder: 'Post title...', autoComplete: 'off', onInput: setFieldTouched.bind(this, 'title', true, true) }}
+                label="Title"
+                isValid={!!!errors.title}
+                isTouched={touched.title}
+              />
+              <Input
+                kind="textarea"
+                config={{ name: 'content', id: 'content', placeholder: 'Share your thoughts...', onInput: setFieldTouched.bind(this, 'content', true, true) }}
+                label="Content"
+                isValid={!!!errors.content}
+                isTouched={touched.content}
+              />
+            </Form>
+          );
+        }}
+      </Formik>
+    );
   }
 
   return form;

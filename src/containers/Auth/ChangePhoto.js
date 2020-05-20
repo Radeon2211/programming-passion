@@ -84,7 +84,7 @@ const ChangePhoto = (props) => {
       <div className={classes.PhotoBox}>
         <img src={photoPreview} alt="Preview" className={classes.Photo} />
       </div>
-    )
+    );
   }
 
   if (photo || error) {

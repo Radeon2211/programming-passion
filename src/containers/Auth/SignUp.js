@@ -1,29 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Form from '../../components/UI/Form/Form';
-import { updateObject, createInputElements, createStateInput, checkValidity, checkFormValidation } from '../../shared/utility';
+import Input from '../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  email: Yup.string().email().trim().required(),
+  password: Yup.string().min(6).max(64).trim().required(),
+  firstName: Yup.string().max(50).trim().required(),
+  lastName: Yup.string().max(50).trim().required(),
+});
 
 const SignUp = (props) => {
-  const [controls, setControls] = useState({
-    email: createStateInput('input', 'Email', '',
-      { type: 'email', id: 'email', autoComplete: 'email', placeholder: 'Your email...' },
-      { isEmail: true },
-    ),
-    password: createStateInput('input', 'Password', '',
-      { type: 'password', id: 'password', autoComplete: 'new-password', placeholder: 'Type safe password...' },
-      { minLength: 6 },
-    ),
-    firstName: createStateInput('input', 'First name', '',
-      { type: 'text', id: 'firstName', autoComplete: 'given-name', placeholder: 'Your first name...' },
-      { minLength: 1, maxLength: 50 },
-    ),
-    lastName: createStateInput('input', 'Last name', '',
-      { type: 'text', id: 'lastName', autoComplete: 'family-name', placeholder: 'Your last name...' },
-      { minLength: 1, maxLength: 50 },
-    )
-  });
-
   const autoRedirectPath = useSelector((state) => state.auth.autoRedirectPath);
 
   const dispatch = useDispatch();
@@ -34,39 +24,58 @@ const SignUp = (props) => {
     onDeleteError();
   }, [onDeleteError]);
 
-  const inputChangedHandler = (inputId, e) => {
-    e.persist();
-    setControls((prevState) => ({
-      ...prevState,
-      [inputId]: updateObject(controls[inputId], {
-        value: e.target.value,
-        valid: checkValidity(e.target.value, controls[inputId].validation),
-        touched: true,
-      }),
-    }));
-  };
-
-  const formSubmittedHandler = (e) => {
-    e.preventDefault();
-    if (!checkFormValidation(controls)) return;
-    const data = {};
-    for (const key in controls) {
-      data[key] = controls[key].value.trim();
-    }
-    onSignUp(data, props.history, autoRedirectPath);
-  };
-
-  const inputs = createInputElements(controls, inputChangedHandler);
-
   return (
-    <Form
-      headingText="Sign Up"
-      btnText="Join our community"
-      isValid={checkFormValidation(controls)}
-      submitted={formSubmittedHandler}
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onSignUp(values, props.history, autoRedirectPath);
+      }}
     >
-      {inputs}
-    </Form>
+      {({ errors, touched, isValid, dirty, setFieldTouched }) => {
+        return (
+          <Form
+            headingText="Sign Up"
+            btnText="Join our community"
+            isValid={isValid && dirty}
+          >
+            <Input
+              kind="input"
+              config={{ type: 'email', name: 'email', id: 'email', placeholder: 'Your email...', autoComplete: 'email', onInput: setFieldTouched.bind(this, 'email', true, true) }}
+              label="Email"
+              isValid={!!!errors.email}
+              isTouched={touched.email}
+            />
+            <Input
+              kind="input"
+              config={{ type: 'password', name: 'password', id: 'password', placeholder: 'Type safe password...', autoComplete: 'new-password', onInput: setFieldTouched.bind(this, 'password', true, true) }}
+              label="Password"
+              isValid={!!!errors.password}
+              isTouched={touched.password}
+            />
+            <Input
+              kind="input"
+              config={{ type: 'text', name: 'firstName', id: 'firstName', placeholder: 'Your new first name...', autoComplete: 'given-name', onInput: setFieldTouched.bind(this, 'firstName', true, true) }}
+              label="First name"
+              isValid={!!!errors.firstName}
+              isTouched={touched.firstName}
+            />
+            <Input
+              kind="input"
+              config={{ type: 'text', name: 'lastName', id: 'lastName', placeholder: 'Your new last name...', autoComplete: 'family-name',  onInput: setFieldTouched.bind(this, 'lastName', true, true) }}
+              label="Last name"
+              isValid={!!!errors.lastName}
+              isTouched={touched.lastName}
+            />
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

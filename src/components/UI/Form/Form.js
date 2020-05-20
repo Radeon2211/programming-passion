@@ -1,12 +1,16 @@
 import React from 'react';
 import classes from './Form.module.scss';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
-import Heading from '../../UI/Heading/Heading';
+import Heading from '../Heading/Heading';
+import { Form as FormikForm } from 'formik';
 
 const Form = (props) => {
-  const { headingText, btnText, isValid, submitted, isPostForm, cancelled, children, authLoading, postLoading, authError, postError } = props;
+  const { headingText, btnText, isValid, isPostForm, cancelled, children, submitted } = props;
+
+  const { loading: postLoading, error: postError } = useSelector((state) => state.post);
+  const { loading: authLoading, error: authError } = useSelector((state) => state.auth);
 
   const loading = isPostForm ? postLoading : authLoading;
   const loader = loading ? <Loader size="Small" /> : null;
@@ -14,7 +18,7 @@ const Form = (props) => {
 
   let heading = null;
   if (headingText) {
-    heading = <Heading variant="H4" mgBottom="Mg-Bottom-Medium">{headingText}</Heading>
+    heading = <Heading variant="H4" mgBottom="Mg-Bottom-Medium">{headingText}</Heading>;
   }
 
   let errorNode = null;
@@ -39,9 +43,9 @@ const Form = (props) => {
     );
   }
 
-  return (
-    <div className={classes.Container}>
-      {heading}
+  let form = null;
+  if (submitted) {
+    form = (
       <form className={classes.Form} onSubmit={submitted}>
         {children}
         <div className={classes.BtnAndLoader}>
@@ -58,16 +62,35 @@ const Form = (props) => {
           {loader}
         </div>
       </form>
+    );
+  } else {
+    form = (
+      <FormikForm className={classes.Form}>
+        {children}
+        <div className={classes.BtnAndLoader}>
+          <Button
+            size="Small"
+            fill="Filled"
+            color="Green"
+            type="submit"
+            disabled={!isValid || loading}
+          >
+            {btnText}
+          </Button>
+          {cancelButton}
+          {loader}
+        </div>
+      </FormikForm>
+    );
+  }
+
+  return (
+    <div className={classes.Container}>
+      {heading}
+      {form}
       {errorNode}
     </div>
   );
-}
+};
 
-const mapStateToProps = (state) => ({
-  authLoading: state.auth.loading,
-  postLoading: state.post.loading,
-  authError: state.auth.error,
-  postError: state.post.error,
-});
-
-export default connect(mapStateToProps)(Form);
+export default Form;
