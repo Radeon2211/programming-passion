@@ -34,7 +34,7 @@ const WaitingComponent = (Component) => {
   );
 };
 
-const App = (props) => {
+const App = () => {
   const authUID = useSelector((state) => state.firebase.auth.uid);
   const isUserAdmin = useSelector((state) => state.auth.isUserAdmin);
 
