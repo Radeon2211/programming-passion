@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a87f93d556f3cf8adfdc4ac20f3e18cb",
+    "revision": "fdd012a3b1422cbbef2b22245349d99b",
     "url": "/programming-passion/index.html"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/css/4.4cea7411.chunk.css"
   },
   {
-    "revision": "bcb75ec53a3b03913546",
+    "revision": "a512c83e5f949dcef8dd",
     "url": "/programming-passion/static/css/main.23b164cc.chunk.css"
   },
   {
@@ -72,8 +72,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/programming-passion/static/js/9.e14204fb.chunk.js"
   },
   {
-    "revision": "bcb75ec53a3b03913546",
-    "url": "/programming-passion/static/js/main.2aa410a4.chunk.js"
+    "revision": "a512c83e5f949dcef8dd",
+    "url": "/programming-passion/static/js/main.e130c2bd.chunk.js"
   },
   {
     "revision": "f7481876f5fcc5658c40",
