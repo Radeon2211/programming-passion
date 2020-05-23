@@ -1,8 +1,8 @@
-import React, { useState, Fragment } from 'react';
-import classes from '../Posts/Posts.module.scss';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
+import classes from '../Posts/Posts.module.scss';
 import * as actions from '../../store/actions/indexActions';
 import Line from '../../components/UI/Line/Line';
 import PostList from '../Posts/PostList/PostList';
@@ -36,21 +36,19 @@ const MyPosts = () => {
 
   let myPosts = (
     <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
-      You didn't write any post yet. <Link to="/create-post" className={classes.NoPostsLink}>Create one</Link>
+      You didn&apos;t write any post yet.
+      <Link to="/create-post" className={classes.NoPostsLink}>
+        {' '}
+        Create one
+      </Link>
     </Heading>
   );
   if (posts.length > 0) {
-    myPosts = (
-      <PostList
-        posts={posts}
-        deletable
-        deleteStarted={startDeletingPostHandler}
-      />
-    )
+    myPosts = <PostList posts={posts} deletable deleteStarted={startDeletingPostHandler} />;
   }
 
   return (
-    <Fragment>
+    <>
       <Modal
         headingText="Deleting post"
         captionText="The operation is irreversible"
@@ -59,15 +57,21 @@ const MyPosts = () => {
         deleted={deletePostHandler}
       />
       <div className={classes.Posts}>
-        <Heading variant="H3" mgBottom="Mg-Bottom-Small">See your posts</Heading>
+        <Heading variant="H3" mgBottom="Mg-Bottom-Small">
+          See your posts
+        </Heading>
         <Line type="Begin" size="Size-2" />
         {myPosts}
       </div>
-    </Fragment>
+    </>
   );
-}
-
+};
 
 export default firestoreConnect((state) => [
-  { collection: 'posts', where: ['authorUID', '==', state.authUID], orderBy: ['createdAt', 'desc'], storeAs: 'userPosts' },
+  {
+    collection: 'posts',
+    where: ['authorUID', '==', state.authUID],
+    orderBy: ['createdAt', 'desc'],
+    storeAs: 'userPosts',
+  },
 ])(MyPosts);

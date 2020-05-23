@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classes from './ChangePhoto.module.scss';
 import Form from '../../components/UI/Form/Form';
 import { isValidFileType, calculateFileSize, isValidFileSize } from '../../shared/utility';
-import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 import Button from '../../components/UI/Button/Button';
 
@@ -18,14 +18,15 @@ const ChangePhoto = (props) => {
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
   const onChangePhoto = (data, history) => dispatch(actions.changePhoto(data, history));
-  const onDeletePhoto = (currentPhotoURL, history) => dispatch(actions.deletePhoto(currentPhotoURL, history));
+  const onDeletePhoto = (curPhotoURL, history) =>
+    dispatch(actions.deletePhoto(curPhotoURL, history));
 
   useEffect(() => {
     onDeleteError();
   }, [onDeleteError]);
 
   const inputChangedHandler = async (e) => {
-    const files = e.target.files;
+    const { files } = e.target;
     if (!files.length > 0) {
       setPhoto(null);
       setPhotoPreview(null);
@@ -47,9 +48,8 @@ const ChangePhoto = (props) => {
       setPhotoPreview(null);
       setError('File extension is not valid');
       return;
-    } else {
-      setError(null);
     }
+    setError(null);
 
     if (!isValidFileSize(file.size)) {
       setError('Maximum available size is 1MB');
@@ -70,7 +70,13 @@ const ChangePhoto = (props) => {
     onChangePhoto(photo, props.history);
   };
 
-  let preview = <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>;
+  const deletedPhotoHandler = () => {
+    onDeletePhoto(currentPhotoURL, props.history);
+  };
+
+  let preview = (
+    <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>
+  );
   let errorEl = null;
   let photoEl = null;
   let deletePhotoButton = null;
@@ -92,10 +98,12 @@ const ChangePhoto = (props) => {
       <div className={classes.Preview}>
         <div className={classes.FileData}>
           <span className={classes.FileDataRow}>
-            <span className={classes.FileDataCaption}>Name:</span> {photoName}
+            <span className={classes.FileDataCaption}>Name: </span>
+            {photoName}
           </span>
           <span className={classes.FileDataRow}>
-            <span className={classes.FileDataCaption}>Size:</span> {photoSize}
+            <span className={classes.FileDataCaption}>Size: </span>
+            {photoSize}
           </span>
         </div>
         {photoEl}
@@ -105,13 +113,7 @@ const ChangePhoto = (props) => {
 
   if (currentPhotoURL) {
     deletePhotoButton = (
-      <Button
-        size="Small"
-        fill="Empty"
-        color="Red"
-        type="button"
-        clicked={onDeletePhoto.bind(this, currentPhotoURL, props.history)}
-      >
+      <Button size="Small" fill="Empty" color="Red" type="button" clicked={deletedPhotoHandler}>
         Delete your photo
       </Button>
     );
@@ -126,17 +128,15 @@ const ChangePhoto = (props) => {
         submitted={formSubmittedHandler}
       >
         <div className={classes.Content}>
+          {/* eslint-disable-next-line */}
           <label htmlFor="photo" className={classes.Label}>
-            <Button size="Small" fill="Empty" color="Green" type="button">Choose photo</Button>
+            <Button size="Small" fill="Empty" color="Green" type="button">
+              Choose photo
+            </Button>
           </label>
           {preview}
           {errorEl}
-          <input
-            type="file"
-            id="photo"
-            className={classes.Input}
-            onChange={inputChangedHandler}
-          />
+          <input type="file" id="photo" className={classes.Input} onChange={inputChangedHandler} />
         </div>
       </Form>
       {deletePhotoButton}

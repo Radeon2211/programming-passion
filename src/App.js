@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, Fragment, Suspense, lazy } from 'react';
+import React, { useEffect, useCallback, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import * as actions from './store/actions/indexActions';
@@ -28,8 +28,15 @@ const RemoveAdmin = lazy(() => import('./containers/Auth/RemoveAdmin'));
 
 const WaitingComponent = (Component) => {
   return (props) => (
-    <Suspense fallback={<div style={{ textAlign: 'center' }}><Loader size="Big" /></div>}>
-      <Component  {...props} />
+    <Suspense
+      fallback={
+        // eslint-disable-next-line react/jsx-wrap-multilines
+        <div style={{ textAlign: 'center' }}>
+          <Loader size="Big" />
+        </div>
+      }
+    >
+      <Component {...props} />
     </Suspense>
   );
 };
@@ -100,14 +107,12 @@ const App = () => {
   }
 
   return (
-    <Fragment>
+    <>
       <Navbar isAuth={authUID} />
-      <Main>
-        {routes}
-      </Main>
+      <Main>{routes}</Main>
       <Footer />
-    </Fragment>
+    </>
   );
-}
+};
 
 export default App;

@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import Form from '../../components/UI/Form/Form';
-import Input from '../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { actionTypes as firestoreActionTypes } from 'redux-firestore';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Form from '../../components/UI/Form/Form';
+import Input from '../../components/UI/Input/Input';
 import * as actions from '../../store/actions/indexActions';
 import Heading from '../../components/UI/Heading/Heading';
 import Loader from '../../components/UI/Loader/Loader';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
   title: Yup.string().max(200).trim().required(),
@@ -22,11 +22,14 @@ const EditPost = (props) => {
   });
 
   const canEditPost = useSelector((state) => state.post.canWritePost);
-  const post = useSelector((state) => state.firestore.data.post === undefined ? undefined : state.firestore.data.post);
+  const post = useSelector((state) =>
+    state.firestore.data.post === undefined ? undefined : state.firestore.data.post,
+  );
 
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
-  const onEditPost = (data, postID, history, canEditPost) => dispatch(actions.editPost(data, postID, history, canEditPost));
+  const onEditPost = (data, postID, history, canEditPostProp) =>
+    dispatch(actions.editPost(data, postID, history, canEditPostProp));
 
   useEffect(() => {
     onDeleteError();
@@ -74,7 +77,10 @@ const EditPost = (props) => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          if (values.title === oldData.current.title && values.content === oldData.current.content) {
+          if (
+            values.title === oldData.current.title &&
+            values.content === oldData.current.content
+          ) {
             props.history.push(`/posts/${props.match.params.id}`);
             return;
           }
@@ -92,16 +98,28 @@ const EditPost = (props) => {
             >
               <Input
                 kind="input"
-                config={{ type: 'text', name: 'title', id: 'title', placeholder: 'Post title...', autoComplete: 'off', onInput: setFieldTouched.bind(this, 'title', true, true) }}
+                config={{
+                  type: 'text',
+                  name: 'title',
+                  id: 'title',
+                  placeholder: 'Post title...',
+                  autoComplete: 'off',
+                  onInput: setFieldTouched.bind(this, 'title', true, true),
+                }}
                 label="Title"
-                isValid={!!!errors.title}
+                isValid={!errors.title}
                 isTouched={touched.title}
               />
               <Input
                 kind="textarea"
-                config={{ name: 'content', id: 'content', placeholder: 'Share your thoughts...', onInput: setFieldTouched.bind(this, 'content', true, true) }}
+                config={{
+                  name: 'content',
+                  id: 'content',
+                  placeholder: 'Share your thoughts...',
+                  onInput: setFieldTouched.bind(this, 'content', true, true),
+                }}
                 label="Content"
-                isValid={!!!errors.content}
+                isValid={!errors.content}
                 isTouched={touched.content}
               />
             </Form>

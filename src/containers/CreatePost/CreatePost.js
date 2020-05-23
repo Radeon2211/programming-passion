@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import Form from '../../components/UI/Form/Form';
-import Input from '../../components/UI/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
-import * as actions from '../../store/actions/indexActions';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Form from '../../components/UI/Form/Form';
+import Input from '../../components/UI/Input/Input';
+import * as actions from '../../store/actions/indexActions';
 
 const validationSchema = Yup.object({
   title: Yup.string().max(200).trim().required(),
@@ -16,7 +16,8 @@ const CreatePost = (props) => {
 
   const dispatch = useDispatch();
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
-  const onCreatePost = (data, history, canWritePost) => dispatch(actions.createPost(data, history, canWritePost));
+  const onCreatePost = (data, history, canWritePostProp) =>
+    dispatch(actions.createPost(data, history, canWritePostProp));
 
   useEffect(() => {
     onDeleteError();
@@ -35,24 +36,31 @@ const CreatePost = (props) => {
     >
       {({ errors, touched, isValid, dirty, setFieldTouched }) => {
         return (
-          <Form
-            headingText="Create Post"
-            btnText="Create"
-            isValid={isValid && dirty}
-            isPostForm
-          >
+          <Form headingText="Create Post" btnText="Create" isValid={isValid && dirty} isPostForm>
             <Input
               kind="input"
-              config={{ type: 'text', name: 'title', id: 'title', placeholder: 'Post title...', autoComplete: 'off', onInput: setFieldTouched.bind(this, 'title', true, true) }}
+              config={{
+                type: 'text',
+                name: 'title',
+                id: 'title',
+                placeholder: 'Post title...',
+                autoComplete: 'off',
+                onInput: setFieldTouched.bind(this, 'title', true, true),
+              }}
               label="Title"
-              isValid={!!!errors.title}
+              isValid={!errors.title}
               isTouched={touched.title}
             />
             <Input
               kind="textarea"
-              config={{ name: 'content', id: 'content', placeholder: 'Share your thoughts...', onInput: setFieldTouched.bind(this, 'content', true, true) }}
+              config={{
+                name: 'content',
+                id: 'content',
+                placeholder: 'Share your thoughts...',
+                onInput: setFieldTouched.bind(this, 'content', true, true),
+              }}
               label="Content"
-              isValid={!!!errors.content}
+              isValid={!errors.content}
               isTouched={touched.content}
             />
           </Form>

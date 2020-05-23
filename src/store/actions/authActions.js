@@ -1,6 +1,6 @@
+import axios from 'axios';
 import * as actionTypes from './actionTypes';
 import { createCustomError, isValidFileType, isValidFileSize } from '../../shared/utility';
-import axios from 'axios';
 import { storage } from '../../config/fbConfig';
 
 export const authStart = () => ({
@@ -17,8 +17,8 @@ export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
     error: customError,
-  }
-}
+  };
+};
 
 export const deleteError = () => ({
   type: actionTypes.DELETE_AUTH_ERROR,
@@ -47,12 +47,17 @@ export const signUp = ({ email, password, firstName, lastName }, history, redire
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      const { user: { uid } } = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await firestore.collection('users').doc(uid).set({
-        firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
-        lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
-        photoURL: '',
-      });
+      const {
+        user: { uid },
+      } = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await firestore
+        .collection('users')
+        .doc(uid)
+        .set({
+          firstName: `${firstName.slice(0, 1).toUpperCase()}${firstName.slice(1)}`,
+          lastName: `${lastName.slice(0, 1).toUpperCase()}${lastName.slice(1)}`,
+          photoURL: '',
+        });
       await firestore.collection('users').doc(uid).collection('likedPosts').doc('likedPosts').set({
         likedPosts: [],
       });
@@ -96,12 +101,16 @@ export const updateAuthorData = async (firestore, getState, updatedProps) => {
   const posts = await firestore.collection('posts').where('authorUID', '==', userUID).get();
   const comments = await firestore.collection('comments').where('authorUID', '==', userUID).get();
   const batch = firestore.batch();
-  posts.forEach(({ ref }) => batch.update(ref, {
-    ...updatedProps,
-  }));
-  comments.forEach(({ ref }) => batch.update(ref, {
-    ...updatedProps,
-  }));
+  posts.forEach(({ ref }) =>
+    batch.update(ref, {
+      ...updatedProps,
+    }),
+  );
+  comments.forEach(({ ref }) =>
+    batch.update(ref, {
+      ...updatedProps,
+    }),
+  );
   await batch.commit();
 };
 
@@ -243,9 +252,10 @@ export const addAdmin = (email, history) => {
     try {
       const userUID = firebase.auth().currentUser.uid;
       const authToken = await firebase.auth().currentUser.getIdToken();
-      const { data } = await axios.post('https://us-central1-programming-passion.cloudfunctions.net/onAddAdmin',
+      const { data } = await axios.post(
+        'https://us-central1-programming-passion.cloudfunctions.net/onAddAdmin',
         { email, userUID },
-        { headers: { 'Authorization': `Bearer ${authToken}` } }
+        { headers: { Authorization: `Bearer ${authToken}` } },
       );
       if (data.error) {
         throw new Error(data.error);
@@ -265,9 +275,10 @@ export const removeAdmin = (email, history) => {
     try {
       const userUID = firebase.auth().currentUser.uid;
       const authToken = await firebase.auth().currentUser.getIdToken();
-      const { data } = await axios.post('https://us-central1-programming-passion.cloudfunctions.net/onRemoveAdmin',
+      const { data } = await axios.post(
+        'https://us-central1-programming-passion.cloudfunctions.net/onRemoveAdmin',
         { email, userUID },
-        { headers: { 'Authorization': `Bearer ${authToken}` } }
+        { headers: { Authorization: `Bearer ${authToken}` } },
       );
       if (data.error) {
         throw new Error(data.error);

@@ -1,12 +1,12 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const RenderIfIsAdmin = ({ isUserAdmin, children }) => {
+const RenderIfIsAdmin = (props) => {
+  const { children } = props;
+
+  const isUserAdmin = useSelector((state) => state.auth.isUserAdmin);
+
   const content = isUserAdmin ? children : null;
   return content;
 };
 
-const mapStateToProps = (state) => ({
-  isUserAdmin: state.auth.isUserAdmin,
-});
-
-export default connect(mapStateToProps)(RenderIfIsAdmin);
+export default RenderIfIsAdmin;

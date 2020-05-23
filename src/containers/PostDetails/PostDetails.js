@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef, Fragment } from 'react';
-import classes from './PostDetails.module.scss';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
-import * as actions from '../../store/actions/indexActions';
 import { actionTypes as firestoreActionTypes } from 'redux-firestore';
+import * as actions from '../../store/actions/indexActions';
+import classes from './PostDetails.module.scss';
 import Line from '../../components/UI/Line/Line';
 import Loader from '../../components/UI/Loader/Loader';
 import AuthorData from '../../components/UI/AuthorData/AuthorData';
@@ -15,6 +15,8 @@ import RenderIfIsAdmin from '../../components/RenderIfsAdmin/RenderIfIsAdmin';
 import Heading from '../../components/UI/Heading/Heading';
 
 const PostDetails = (props) => {
+  const { match, dispatch: firestoreDispatch } = props;
+
   const isUnmounted = useRef(false);
 
   const [isLikingPossible, setIsLikingPossible] = useState(true);
@@ -23,25 +25,27 @@ const PostDetails = (props) => {
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
   const [isPostModalVisible, setIsPostModalVisible] = useState(false);
 
-  const post = useSelector((state) => state.firestore.data.post === undefined ? undefined : state.firestore.data.post);
+  const post = useSelector((state) =>
+    state.firestore.data.post === undefined ? undefined : state.firestore.data.post,
+  );
   const comments = useSelector((state) => state.firestore.ordered.comments || []);
   const authUID = useSelector((state) => state.firebase.auth.uid);
 
   const dispatch = useDispatch();
   const onTogglePostLiking = (postID, type) => dispatch(actions.togglePostLiking(postID, type));
-  const onCheckPostLiking = useCallback((postID) => dispatch(actions.checkPostLiking(postID)), [dispatch]);
+  const onCheckPostLiking = useCallback((postID) => dispatch(actions.checkPostLiking(postID)), [
+    dispatch,
+  ]);
   const onDeleteComment = (commentID) => dispatch(actions.deleteComment(commentID));
   const onDeletePost = (postID, history) => dispatch(actions.deletePost(postID, history));
   const onSetAutoRedirectPath = (path) => dispatch(actions.setAutoRedirectPath(path));
 
   let likingTimeout = null;
 
-  const { match, dispatch: firestoreDispatch } = props;
-
   useEffect(() => {
     const checkIfIsLiked = async () => {
-      const isLiked = await onCheckPostLiking(match.params.id);
-      setIsLiked(isLiked);
+      const isPostLiked = await onCheckPostLiking(match.params.id);
+      setIsLiked(isPostLiked);
     };
     checkIfIsLiked();
   }, [onCheckPostLiking, match]);
@@ -103,15 +107,19 @@ const PostDetails = (props) => {
     }, 2000);
   };
 
+  const unauthLinkClicked = () => {
+    onSetAutoRedirectPath(`/posts/${match.params.id}`);
+  };
+
   const commentHandlingData = {
-    authUID: authUID,
+    authUID,
     postAuthorUID: post ? post.authorUID : null,
     deleteStarted: startDeletingCommentHandler,
   };
 
   let postDetails = <Loader size="Small" />;
   if (post === null) {
-    postDetails = <Heading variant="H6">This post does not exists</Heading>
+    postDetails = <Heading variant="H6">This post does not exists</Heading>;
   }
 
   let unauthInfo = null;
@@ -122,7 +130,7 @@ const PostDetails = (props) => {
         <Line type="Begin" size="Size-2" />
         <div className={classes.PostOptionsIcons}>
           <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
-            <use href={`${sprite}#icon-bin`}></use>
+            <use href={`${sprite}#icon-bin`} />
           </svg>
         </div>
       </div>
@@ -130,32 +138,39 @@ const PostDetails = (props) => {
   );
 
   if (post) {
-    const { authorFirstName, authorLastName, authorPhotoURL, title, content, likesCount, createdAt } = post;
+    const {
+      authorFirstName,
+      authorLastName,
+      authorPhotoURL,
+      title,
+      content,
+      likesCount,
+      createdAt,
+    } = post;
     const likesClasses = [classes.Likes];
     if (isLiked) likesClasses.push(classes.Liked);
     const likesText = likesCount === 1 ? `${likesCount} like` : `${likesCount} likes`;
 
     if (!authUID) {
       unauthInfo = (
-        <Fragment>
+        <>
           <div className={classes.UnauthInfo}>
             <svg className={classes.LockIcon}>
-              <use href={`${sprite}#icon-lock`}></use>
+              <use href={`${sprite}#icon-lock`} />
             </svg>
             <span className={classes.UnauthCaption}>
-              <Link
-                to="/signin"
-                className={classes.UnauthCaptionLink}
-                onClick={onSetAutoRedirectPath.bind(this, `/posts/${match.params.id}`)}
-              >Login</Link> or <Link
-                to="/signup"
-                className={classes.UnauthCaptionLink}
-                onClick={onSetAutoRedirectPath.bind(this, `/posts/${match.params.id}`)}
-              >sign up</Link> to like and comment posts
+              <Link to="/signin" className={classes.UnauthCaptionLink} onClick={unauthLinkClicked}>
+                Login
+              </Link>
+              or
+              <Link to="/signup" className={classes.UnauthCaptionLink} onClick={unauthLinkClicked}>
+                sign up
+              </Link>
+              to like and comment posts
             </span>
           </div>
           <Line type="Begin" size="Size-2" />
-        </Fragment>
+        </>
       );
     }
 
@@ -166,11 +181,11 @@ const PostDetails = (props) => {
           <div className={classes.PostOptionsIcons}>
             <Link to={`/edit-post/${match.params.id}`}>
               <svg className={classes.EditPostIcon}>
-                <use href={`${sprite}#icon-pencil`}></use>
+                <use href={`${sprite}#icon-pencil`} />
               </svg>
             </Link>
             <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
-              <use href={`${sprite}#icon-bin`}></use>
+              <use href={`${sprite}#icon-bin`} />
             </svg>
           </div>
         </div>
@@ -178,7 +193,7 @@ const PostDetails = (props) => {
     }
 
     postDetails = (
-      <Fragment>
+      <>
         <Modal
           headingText="Deleting comment"
           captionText="The operation is irreversible"
@@ -194,7 +209,9 @@ const PostDetails = (props) => {
           deleted={deletePostHandler}
         />
         <div className={classes.PostDetails}>
-          <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">{title}</Heading>
+          <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">
+            {title}
+          </Heading>
           <div className={classes.Author}>
             <AuthorData
               size="Big"
@@ -207,9 +224,15 @@ const PostDetails = (props) => {
           <Line type="Begin" size="Size-2" />
           <p className={classes.Content}>{content}</p>
           <div className={likesClasses.join(' ')}>
-            <div className={classes.LikeIconBox} onClick={togglePostLiking}>
+            <div
+              className={classes.LikeIconBox}
+              onKeyDown={togglePostLiking}
+              onClick={togglePostLiking}
+              role="button"
+              tabIndex="0"
+            >
               <svg className={classes.LikeIcon}>
-                <use href={`${sprite}#icon-heart`}></use>
+                <use href={`${sprite}#icon-heart`} />
               </svg>
             </div>
             <span className={classes.LikeIconCaption}>{likesText}</span>
@@ -223,18 +246,19 @@ const PostDetails = (props) => {
           />
           {postOptions}
         </div>
-      </Fragment>
+      </>
     );
   }
 
-  return (
-    <Fragment>
-      {postDetails}
-    </Fragment>
-  );
+  return <>{postDetails}</>;
 };
 
 export default firestoreConnect((state) => [
   { collection: 'posts', doc: state.match.params.id, storeAs: 'post' },
-  { collection: 'comments', where: ['postID', '==', state.match.params.id], orderBy: ['createdAt', 'desc'], storeAs: 'comments' },
+  {
+    collection: 'comments',
+    where: ['postID', '==', state.match.params.id],
+    orderBy: ['createdAt', 'desc'],
+    storeAs: 'comments',
+  },
 ])(PostDetails);

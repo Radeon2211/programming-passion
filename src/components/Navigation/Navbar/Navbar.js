@@ -1,12 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import classes from './Navbar.module.scss';
 import logo from '../../../images/logo.jpg';
-import { Link } from 'react-router-dom';
 import SignedInLinks from '../SignedInLinks/SignedInLinks';
 import SignedOutLinks from '../SignedOutLinks/SignedOutLinks';
-import Heading from '../../../components/UI/Heading/Heading';
+import Heading from '../../UI/Heading/Heading';
 
-const Navbar = ({ isAuth }) => {
+const Navbar = (props) => {
+  const { isAuth } = props;
+
   const nav = isAuth ? <SignedInLinks /> : <SignedOutLinks />;
 
   return (

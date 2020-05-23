@@ -1,10 +1,10 @@
 import React from 'react';
-import classes from './Form.module.scss';
 import { useSelector } from 'react-redux';
+import { Form as FormikForm } from 'formik';
+import classes from './Form.module.scss';
 import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import Heading from '../Heading/Heading';
-import { Form as FormikForm } from 'formik';
 
 const Form = (props) => {
   const { headingText, btnText, isValid, isPostForm, cancelled, children, submitted } = props;
@@ -18,7 +18,11 @@ const Form = (props) => {
 
   let heading = null;
   if (headingText) {
-    heading = <Heading variant="H4" mgBottom="Mg-Bottom-Medium">{headingText}</Heading>;
+    heading = (
+      <Heading variant="H4" mgBottom="Mg-Bottom-Medium">
+        {headingText}
+      </Heading>
+    );
   }
 
   let errorNode = null;
@@ -30,13 +34,7 @@ const Form = (props) => {
   if (cancelled) {
     cancelButton = (
       <div className={classes.CancelButtonBox}>
-        <Button
-          size="Small"
-          fill="Empty"
-          color="Green"
-          type="button"
-          clicked={cancelled}
-        >
+        <Button size="Small" fill="Empty" color="Green" type="button" clicked={cancelled}>
           Cancel
         </Button>
       </div>

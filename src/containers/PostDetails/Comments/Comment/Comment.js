@@ -8,8 +8,18 @@ import EditComment from './EditComment/EditComment';
 const Comment = (props) => {
   const [isEditingFormVisible, setIsEditingFormVisible] = useState(false);
 
-  const { comment: { id: commentID, authorFirstName, authorLastName, authorPhotoURL, authorUID, createdAt, content },
-    commentHandlingData: { authUID, postAuthorUID, deleteStarted } } = props;
+  const {
+    comment: {
+      id: commentID,
+      authorFirstName,
+      authorLastName,
+      authorPhotoURL,
+      authorUID,
+      createdAt,
+      content,
+    },
+    commentHandlingData: { authUID, postAuthorUID, deleteStarted },
+  } = props;
 
   const editingToggledHandler = () => {
     setIsEditingFormVisible((prevState) => !prevState);
@@ -21,9 +31,9 @@ const Comment = (props) => {
 
   let editIcon = null;
   if (authUID === authorUID) {
-      editIcon = (
-        <svg className={classes.EditIcon} onClick={editingToggledHandler}>
-        <use href={`${sprite}#icon-pencil`}></use>
+    editIcon = (
+      <svg className={classes.EditIcon} onClick={editingToggledHandler}>
+        <use href={`${sprite}#icon-pencil`} />
       </svg>
     );
   }
@@ -32,14 +42,14 @@ const Comment = (props) => {
   if (authUID === authorUID || authUID === postAuthorUID) {
     deleteIcon = (
       <svg className={classes.DeleteIcon} onClick={deleteStarted.bind(this, commentID)}>
-        <use href={`${sprite}#icon-bin`}></use>
+        <use href={`${sprite}#icon-bin`} />
       </svg>
     );
   } else {
     deleteIcon = (
       <RenderIfIsAdmin>
         <svg className={classes.DeleteIcon} onClick={deleteStarted.bind(this, commentID)}>
-          <use href={`${sprite}#icon-bin`}></use>
+          <use href={`${sprite}#icon-bin`} />
         </svg>
       </RenderIfIsAdmin>
     );
@@ -53,7 +63,7 @@ const Comment = (props) => {
         commentID={commentID}
         cancelled={editingCancelledHandler}
       />
-    )
+    );
   }
 
   return (
@@ -75,6 +85,6 @@ const Comment = (props) => {
       {editCommentForm}
     </div>
   );
-}
+};
 
 export default Comment;

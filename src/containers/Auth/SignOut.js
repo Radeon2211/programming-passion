@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, Fragment } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import * as actions from '../../store/actions/indexActions';
 
@@ -13,9 +13,7 @@ const SignOut = (props) => {
     history.goBack();
   }, [onSignOut, history]);
 
-  return (
-    <Fragment />
-  );
+  return <></>;
 };
 
 export default SignOut;

@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import Form from '../../components/UI/Form/Form';
-import Input from '../../components/UI/Input/Input';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/actions/indexActions';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Form from '../../components/UI/Form/Form';
+import Input from '../../components/UI/Input/Input';
+import * as actions from '../../store/actions/indexActions';
 
 const validationSchema = Yup.object({
   newEmail: Yup.string().email().trim().required(),
@@ -33,26 +33,41 @@ const ChangeEmail = (props) => {
     >
       {({ errors, touched, isValid, dirty, setFieldTouched }) => {
         return (
-          <Form
-            headingText="Change Email"
-            btnText="Change"
-            isValid={isValid && dirty}
-          >
+          <Form headingText="Change Email" btnText="Change" isValid={isValid && dirty}>
             <Input
               kind="input"
-              config={{ type: 'email', name: 'oldEmail', id: 'oldEmail', placeholder: 'Your old email...', autoComplete: 'email' }}
+              config={{
+                type: 'email',
+                name: 'oldEmail',
+                id: 'oldEmail',
+                placeholder: 'Your old email...',
+                autoComplete: 'email',
+              }}
               label="Old email"
             />
             <Input
               kind="input"
-              config={{ type: 'email', name: 'newEmail', id: 'newEmail', placeholder: 'Your new email...', autoComplete: 'email', onInput: setFieldTouched.bind(this, 'newEmail', true, true) }}
+              config={{
+                type: 'email',
+                name: 'newEmail',
+                id: 'newEmail',
+                placeholder: 'Your new email...',
+                autoComplete: 'email',
+                onInput: setFieldTouched.bind(this, 'newEmail', true, true),
+              }}
               label="New email"
-              isValid={!!!errors.newEmail}
+              isValid={!errors.newEmail}
               isTouched={touched.newEmail}
             />
             <Input
               kind="input"
-              config={{ type: 'password', name: 'password', id: 'password', placeholder: 'Your password...', autoComplete: 'current-password' }}
+              config={{
+                type: 'password',
+                name: 'password',
+                id: 'password',
+                placeholder: 'Your password...',
+                autoComplete: 'current-password',
+              }}
               label="Password"
             />
           </Form>

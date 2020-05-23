@@ -31,12 +31,18 @@ const switchCanWriteComment = (state, action) => {
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
-    case (actionTypes.POST_START): return postStart(state, action);
-    case (actionTypes.POST_SUCCESS): return postSuccess(state, action);
-    case (actionTypes.POST_FAIL): return postFail(state, action);
-    case (actionTypes.SWITCH_CAN_WRITE_POST): return switchCanWritePost(state, action);
-    case (actionTypes.SWITCH_CAN_WRITE_COMMENT): return switchCanWriteComment(state, action);
-    default: return state;
+    case actionTypes.POST_START:
+      return postStart(state, action);
+    case actionTypes.POST_SUCCESS:
+      return postSuccess(state, action);
+    case actionTypes.POST_FAIL:
+      return postFail(state, action);
+    case actionTypes.SWITCH_CAN_WRITE_POST:
+      return switchCanWritePost(state, action);
+    case actionTypes.SWITCH_CAN_WRITE_COMMENT:
+      return switchCanWriteComment(state, action);
+    default:
+      return state;
   }
 };
 

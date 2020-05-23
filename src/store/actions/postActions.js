@@ -28,14 +28,13 @@ export const checkIfCanWritePost = (canWritePost) => {
     if (!canWritePost) {
       dispatch(postFail(new Error('You have to wait 10 seconds after writing last post')));
       return false;
-    } else {
-      dispatch(switchCanWritePost(false));
-      setTimeout(() => {
-        dispatch(switchCanWritePost(true));
-        dispatch(postSuccess());
-      }, 10000);
-      return true;
     }
+    dispatch(switchCanWritePost(false));
+    setTimeout(() => {
+      dispatch(switchCanWritePost(true));
+      dispatch(postSuccess());
+    }, 10000);
+    return true;
   };
 };
 
@@ -44,14 +43,13 @@ export const checkIfCanWriteComment = (canWriteComment) => {
     if (!canWriteComment) {
       dispatch(postFail(new Error('You have to wait 10 seconds after writing last comment')));
       return false;
-    } else {
-      dispatch(switchCanWriteComment(false));
-      setTimeout(() => {
-        dispatch(switchCanWriteComment(true));
-        dispatch(postSuccess());
-      }, 10000);
-      return true;
     }
+    dispatch(switchCanWriteComment(false));
+    setTimeout(() => {
+      dispatch(switchCanWriteComment(true));
+      dispatch(postSuccess());
+    }, 10000);
+    return true;
   };
 };
 
@@ -61,7 +59,10 @@ export const createPost = ({ title, content }, history, canWritePost) => {
     const firestore = getFirestore();
     try {
       if (!dispatch(checkIfCanWritePost(canWritePost))) return;
-      const { auth: { uid: authorUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
+      const {
+        auth: { uid: authorUID },
+        profile: { firstName, lastName, photoURL },
+      } = getState().firebase;
       await firestore.collection('posts').add({
         authorUID,
         authorFirstName: firstName,
@@ -122,13 +123,23 @@ export const togglePostLiking = (postID, type) => {
     try {
       const userUID = firebase.auth().currentUser.uid;
       if (type === 'add') {
-        await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
-          'likedPosts': firestore.FieldValue.arrayUnion(postID),
-        });
+        await firestore
+          .collection('users')
+          .doc(userUID)
+          .collection('likedPosts')
+          .doc('likedPosts')
+          .update({
+            likedPosts: firestore.FieldValue.arrayUnion(postID),
+          });
       } else {
-        await firestore.collection('users').doc(userUID).collection('likedPosts').doc('likedPosts').update({
-          'likedPosts': firestore.FieldValue.arrayRemove(postID),
-        });
+        await firestore
+          .collection('users')
+          .doc(userUID)
+          .collection('likedPosts')
+          .doc('likedPosts')
+          .update({
+            likedPosts: firestore.FieldValue.arrayRemove(postID),
+          });
       }
     } catch (error) {
       dispatch(postFail(error));
@@ -137,13 +148,19 @@ export const togglePostLiking = (postID, type) => {
 };
 
 export const checkPostLiking = (postID) => {
+  // eslint-disable-next-line consistent-return
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     const firestore = getFirestore();
     try {
-      const currentUser = firebase.auth().currentUser;
+      const { currentUser } = firebase.auth();
       if (!currentUser) return false;
-      const likedPosts = await firestore.collection('users').doc(currentUser.uid).collection('likedPosts').where('likedPosts', 'array-contains', postID).get();
+      const likedPosts = await firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('likedPosts')
+        .where('likedPosts', 'array-contains', postID)
+        .get();
       if (likedPosts.docs.length > 0) return true;
       return false;
     } catch (error) {
@@ -158,7 +175,10 @@ export const addComment = (content, postID, postAuthorUID, canWriteComment, rese
     const firestore = getFirestore();
     try {
       if (!dispatch(checkIfCanWriteComment(canWriteComment))) return;
-      const { auth: { uid: userUID }, profile: { firstName, lastName, photoURL } } = getState().firebase;
+      const {
+        auth: { uid: userUID },
+        profile: { firstName, lastName, photoURL },
+      } = getState().firebase;
       await firestore.collection('comments').add({
         authorFirstName: firstName,
         authorLastName: lastName,

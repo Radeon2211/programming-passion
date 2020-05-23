@@ -1,26 +1,34 @@
 import React, { Component } from 'react';
-import classes from './Dropdown.module.scss';
 import { Link } from 'react-router-dom';
 import onClickOutside from 'react-onclickoutside';
+import classes from './Dropdown.module.scss';
 import sprite from '../../../../images/sprite.svg';
 
 class Dropdown extends Component {
   handleClickOutside = (e) => {
-    if (this.props.visible && !e.target.closest('#user')) this.props.closed();
+    const { visible, closed } = this.props;
+    if (visible && !e.target.closest('#user')) closed();
   };
 
-  render () {
+  render() {
+    const { visible } = this.props;
+
     const dropdownClasses = [classes.Dropdown];
-    if (this.props.visible) dropdownClasses.push(classes.Visible);
+    if (visible) dropdownClasses.push(classes.Visible);
 
     return (
-      <div className={dropdownClasses.join(' ')} onClick={this.handleClickOutside}>
+      <div
+        className={dropdownClasses.join(' ')}
+        onKeyDown={this.handleClickOutside}
+        role="button"
+        tabIndex="0"
+      >
         <ul className={classes.List}>
           <li className={classes.Item}>
             <Link to="/settings" className={classes.Link}>
               Settings
               <svg className={classes.Icon}>
-                <use href={`${sprite}#icon-cog`}></use>
+                <use href={`${sprite}#icon-cog`} />
               </svg>
             </Link>
           </li>
@@ -28,7 +36,7 @@ class Dropdown extends Component {
             <Link to="/signout" className={classes.Link}>
               Sign out
               <svg className={classes.Icon}>
-                <use href={`${sprite}#icon-switch`}></use>
+                <use href={`${sprite}#icon-switch`} />
               </svg>
             </Link>
           </li>
