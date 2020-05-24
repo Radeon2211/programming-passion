@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Form as FormikForm } from 'formik';
-import classes from './Form.module.scss';
+import * as SC from './Form.sc';
 import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import Heading from '../Heading/Heading';
@@ -13,7 +13,7 @@ const Form = (props) => {
   const { loading: authLoading, error: authError } = useSelector((state) => state.auth);
 
   const loading = isPostForm ? postLoading : authLoading;
-  const loader = loading ? <Loader size="Small" /> : null;
+  const loader = loading ? <Loader size="small" /> : null;
   const error = isPostForm ? postError : authError;
 
   let heading = null;
@@ -27,14 +27,14 @@ const Form = (props) => {
 
   let errorNode = null;
   if (error) {
-    errorNode = <span className={classes.Error}>{error}</span>;
+    errorNode = <span className="error">{error}</span>;
   }
 
   let cancelButton = null;
   if (cancelled) {
     cancelButton = (
-      <div className={classes.CancelButtonBox}>
-        <Button size="Small" fill="Empty" color="Green" type="button" clicked={cancelled}>
+      <div className="cancel-button-box">
+        <Button size="small" fill="empty" color="green" type="button" clicked={cancelled}>
           Cancel
         </Button>
       </div>
@@ -44,13 +44,13 @@ const Form = (props) => {
   let form = null;
   if (submitted) {
     form = (
-      <form className={classes.Form} onSubmit={submitted}>
+      <form onSubmit={submitted}>
         {children}
-        <div className={classes.BtnAndLoader}>
+        <div className="btn-and-loader">
           <Button
-            size="Small"
-            fill="Filled"
-            color="Green"
+            size="small"
+            fill="filled"
+            color="green"
             type="submit"
             disabled={!isValid || loading}
           >
@@ -63,13 +63,13 @@ const Form = (props) => {
     );
   } else {
     form = (
-      <FormikForm className={classes.Form}>
+      <FormikForm>
         {children}
-        <div className={classes.BtnAndLoader}>
+        <div className="btn-and-loader">
           <Button
-            size="Small"
-            fill="Filled"
-            color="Green"
+            size="small"
+            fill="filled"
+            color="green"
             type="submit"
             disabled={!isValid || loading}
           >
@@ -83,11 +83,11 @@ const Form = (props) => {
   }
 
   return (
-    <div className={classes.Container}>
+    <SC.Wrapper>
       {heading}
       {form}
       {errorNode}
-    </div>
+    </SC.Wrapper>
   );
 };
 

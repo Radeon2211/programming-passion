@@ -197,12 +197,11 @@ export const addComment = (content, postID, postAuthorUID, canWriteComment, rese
   };
 };
 
-export const editComment = (content, commentID, canEditComment, closed) => {
+export const editComment = (content, commentID, closed) => {
   return async (dispatch, getState, { getFirestore }) => {
     dispatch(postStart());
     const firestore = getFirestore();
     try {
-      if (!dispatch(checkIfCanWriteComment(canEditComment))) return;
       await firestore.collection('comments').doc(commentID).update({
         content,
       });

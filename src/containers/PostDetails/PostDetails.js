@@ -3,16 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import { actionTypes as firestoreActionTypes } from 'redux-firestore';
+import * as SC from './PostDetails.sc';
 import * as actions from '../../store/actions/indexActions';
-import classes from './PostDetails.module.scss';
 import Line from '../../components/UI/Line/Line';
 import Loader from '../../components/UI/Loader/Loader';
 import AuthorData from '../../components/UI/AuthorData/AuthorData';
 import sprite from '../../images/sprite.svg';
 import Comments from './Comments/Comments';
 import Modal from '../../components/UI/Modal/Modal';
-import RenderIfIsAdmin from '../../components/RenderIfsAdmin/RenderIfIsAdmin';
 import Heading from '../../components/UI/Heading/Heading';
+import PostOptions from './PostOptions/PostOptions';
 
 const PostDetails = (props) => {
   const { match, dispatch: firestoreDispatch } = props;
@@ -117,25 +117,12 @@ const PostDetails = (props) => {
     deleteStarted: startDeletingCommentHandler,
   };
 
-  let postDetails = <Loader size="Small" />;
+  let postDetails = <Loader size="small" />;
   if (post === null) {
     postDetails = <Heading variant="H6">This post does not exists</Heading>;
   }
 
   let unauthInfo = null;
-
-  let postOptions = (
-    <RenderIfIsAdmin>
-      <div className={classes.PostOptions}>
-        <Line type="Begin" size="Size-2" />
-        <div className={classes.PostOptionsIcons}>
-          <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
-            <use href={`${sprite}#icon-bin`} />
-          </svg>
-        </div>
-      </div>
-    </RenderIfIsAdmin>
-  );
 
   if (post) {
     const {
@@ -147,48 +134,28 @@ const PostDetails = (props) => {
       likesCount,
       createdAt,
     } = post;
-    const likesClasses = [classes.Likes];
-    if (isLiked) likesClasses.push(classes.Liked);
     const likesText = likesCount === 1 ? `${likesCount} like` : `${likesCount} likes`;
 
     if (!authUID) {
       unauthInfo = (
         <>
-          <div className={classes.UnauthInfo}>
-            <svg className={classes.LockIcon}>
+          <div className="unauth-info">
+            <svg className="lock-icon">
               <use href={`${sprite}#icon-lock`} />
             </svg>
-            <span className={classes.UnauthCaption}>
-              <Link to="/signin" className={classes.UnauthCaptionLink} onClick={unauthLinkClicked}>
+            <span className="unauth-caption">
+              <Link to="/signin" className="unauth-caption-link" onClick={unauthLinkClicked}>
                 Login
               </Link>
-              or
-              <Link to="/signup" className={classes.UnauthCaptionLink} onClick={unauthLinkClicked}>
-                sign up
+              &nbsp; or
+              <Link to="/signup" className="unauth-caption-link" onClick={unauthLinkClicked}>
+                &nbsp; sign up
               </Link>
-              to like and comment posts
+              &nbsp; to like and comment posts
             </span>
           </div>
-          <Line type="Begin" size="Size-2" />
+          <Line type="begin" size="2" />
         </>
-      );
-    }
-
-    if (post.authorUID === authUID) {
-      postOptions = (
-        <div className={classes.PostOptions}>
-          <Line type="Begin" size="Size-2" />
-          <div className={classes.PostOptionsIcons}>
-            <Link to={`/edit-post/${match.params.id}`}>
-              <svg className={classes.EditPostIcon}>
-                <use href={`${sprite}#icon-pencil`} />
-              </svg>
-            </Link>
-            <svg className={classes.DeletePostIcon} onClick={startDeletingPostHandler}>
-              <use href={`${sprite}#icon-bin`} />
-            </svg>
-          </div>
-        </div>
       );
     }
 
@@ -208,44 +175,48 @@ const PostDetails = (props) => {
           canceled={cancelDeletingHandler}
           deleted={deletePostHandler}
         />
-        <div className={classes.PostDetails}>
+        <SC.Wrapper>
           <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">
             {title}
           </Heading>
-          <div className={classes.Author}>
+          <div className="author">
             <AuthorData
-              size="Big"
+              size="big"
               firstName={authorFirstName}
               lastName={authorLastName}
               photoURL={authorPhotoURL}
               createdAt={createdAt}
             />
           </div>
-          <Line type="Begin" size="Size-2" />
-          <p className={classes.Content}>{content}</p>
-          <div className={likesClasses.join(' ')}>
+          <Line type="begin" size="2" />
+          <p className="content">{content}</p>
+          <SC.Likes liked={isLiked}>
             <div
-              className={classes.LikeIconBox}
+              className="like-icon-box"
               onKeyDown={togglePostLiking}
               onClick={togglePostLiking}
               role="button"
               tabIndex="0"
             >
-              <svg className={classes.LikeIcon}>
+              <svg className="like-icon">
                 <use href={`${sprite}#icon-heart`} />
               </svg>
             </div>
-            <span className={classes.LikeIconCaption}>{likesText}</span>
-          </div>
-          <Line type="Begin" size="Size-2" />
+            <span className="like-icon-caption">{likesText}</span>
+          </SC.Likes>
+          <Line type="begin" size="2" />
           {unauthInfo}
           <Comments
             comments={comments}
             postID={match.params.id}
             commentHandlingData={commentHandlingData}
           />
-          {postOptions}
-        </div>
+          <PostOptions
+            editable={post.authorUID === authUID}
+            postID={match.params.id}
+            deleteStarted={startDeletingPostHandler}
+          />
+        </SC.Wrapper>
       </>
     );
   }

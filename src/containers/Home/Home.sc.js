@@ -1,6 +1,7 @@
-@import '../../css/variables.scss';
+import styled from 'styled-components';
 
-.Home {
+// eslint-disable-next-line import/prefer-default-export
+export const Wrapper = styled.div`
   align-self: stretch;
   display: grid;
   grid-template-rows: 1fr repeat(2, max-content) repeat(3, 1fr);
@@ -9,38 +10,38 @@
   max-height: 100vh;
   row-gap: 4rem;
 
-  .ButtonBox {
+  & .button-box {
     align-items: center;
     display: flex;
     flex-direction: column;
     grid-row: 3 / 4;
   }
 
-  .LoginCaption {
+  & .login-caption {
     font-size: 1.6rem;
     margin-top: 1.6rem;
   }
 
-  .LoginLink:link,
-  .LoginLink:visited {
-    color: var(--green);
-    margin-left: .7rem;
+  & .login-link:link,
+  & .login-link:visited {
+    color: ${({ theme }) => theme.colors.green};
+    margin-left: 0.7rem;
     text-decoration: none;
-    transition: color .12s;
+    transition: color 0.12s;
 
     &:hover {
-      color: var(--green-dark-1);
+      color: ${({ theme }) => theme.colors.greenDark1};
     }
   }
 
-  .IncentiveBox {
+  & .incentive-box {
     grid-row: 4 / 5;
     text-align: center;
   }
 
-  .IncentiveCaption {
+  & .incentive-caption {
     display: block;
     font-size: 2rem;
     margin-bottom: 1.2rem;
   }
-}
+`;

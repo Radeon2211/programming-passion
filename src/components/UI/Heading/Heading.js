@@ -2,11 +2,10 @@ import React from 'react';
 import classes from './Heading.module.scss';
 
 const Heading = (props) => {
-  const { variant, role, thickness, color, align, mgTop, mgBottom, children } = props;
+  const { variant, thickness, color, align, mgTop, mgBottom, children } = props;
 
   let heading = null;
   const headingClasses = [classes[variant]];
-  if (role) headingClasses.push(classes[role]);
   if (thickness) headingClasses.push(classes[thickness]);
   if (color) headingClasses.push(classes[color]);
   if (align) headingClasses.push(classes[align]);

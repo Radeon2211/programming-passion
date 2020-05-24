@@ -1,9 +1,31 @@
 import React from 'react';
-import classes from './Comments.module.scss';
+import styled from 'styled-components';
 import CommentList from './CommentList/CommentList';
 import sprite from '../../../images/sprite.svg';
 import AddComment from './AddComment/AddComment';
 import Heading from '../../../components/UI/Heading/Heading';
+
+const SC = {};
+SC.Wrapper = styled.div`
+  margin-top: 4.8rem;
+
+  & .heading-box {
+    align-items: center;
+    display: flex;
+  }
+
+  & .comments-count {
+    font-size: 2.3rem;
+    margin-left: 0.6rem;
+  }
+
+  & .icon {
+    fill: #fff;
+    height: 2.7rem;
+    margin-right: 1.2rem;
+    width: 2.7rem;
+  }
+`;
 
 const Comments = ({ comments, postID, commentHandlingData }) => {
   const addComment = commentHandlingData.authUID ? (
@@ -11,20 +33,20 @@ const Comments = ({ comments, postID, commentHandlingData }) => {
   ) : null;
 
   return (
-    <div className={classes.Comments}>
-      <div className={classes.HeadingBox}>
-        <svg className={classes.Icon}>
+    <SC.Wrapper>
+      <div className="heading-box">
+        <svg className="icon">
           <use href={`${sprite}#icon-bubble`} />
         </svg>
         <Heading variant="H4" thickness="Thin">
           Comments
           {/* eslint-disable-next-line */}
-          <span className={classes.CommentsCount}>( {comments.length}{' '} )</span>
+          <span className="comments-count">( {comments.length}{' '} )</span>
         </Heading>
       </div>
       {addComment}
       <CommentList comments={comments} commentHandlingData={commentHandlingData} />
-    </div>
+    </SC.Wrapper>
   );
 };
 

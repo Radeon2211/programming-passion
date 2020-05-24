@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
-import classes from '../Posts/Posts.module.scss';
-import * as actions from '../../store/actions/indexActions';
-import Line from '../../components/UI/Line/Line';
-import PostList from '../Posts/PostList/PostList';
-import Modal from '../../components/UI/Modal/Modal';
-import Heading from '../../components/UI/Heading/Heading';
+import * as SC from '../Posts.sc';
+import * as actions from '../../../store/actions/indexActions';
+import Line from '../../../components/UI/Line/Line';
+import PostList from '../PostList/PostList';
+import Modal from '../../../components/UI/Modal/Modal';
+import Heading from '../../../components/UI/Heading/Heading';
 
 const MyPosts = () => {
   const [postIdToDelete, setPostIdToDelete] = useState(null);
@@ -37,7 +37,7 @@ const MyPosts = () => {
   let myPosts = (
     <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
       You didn&apos;t write any post yet.
-      <Link to="/create-post" className={classes.NoPostsLink}>
+      <Link to="/create-post" className="no-posts-link">
         {' '}
         Create one
       </Link>
@@ -56,13 +56,13 @@ const MyPosts = () => {
         canceled={cancelDeletingPostHandler}
         deleted={deletePostHandler}
       />
-      <div className={classes.Posts}>
+      <SC.Wrapper>
         <Heading variant="H3" mgBottom="Mg-Bottom-Small">
           See your posts
         </Heading>
-        <Line type="Begin" size="Size-2" />
+        <Line type="begin" size="2" />
         {myPosts}
-      </div>
+      </SC.Wrapper>
     </>
   );
 };

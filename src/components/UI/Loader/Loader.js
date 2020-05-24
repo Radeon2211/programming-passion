@@ -1,10 +1,10 @@
 import React from 'react';
-import classes from './Loader.module.scss';
+import * as SC from './Loader.sc';
 
-const Loader = ({ size }) => {
-  const loaderClasses = [classes.Loader, classes[size]];
+const Loader = (props) => {
+  const { size } = props;
 
-  return <div className={loaderClasses.join(' ')} />;
+  return <SC.Loader size={size} />;
 };
 
 export default Loader;

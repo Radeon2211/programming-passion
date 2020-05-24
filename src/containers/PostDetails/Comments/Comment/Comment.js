@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import classes from './Comment.module.scss';
+import * as SC from './Comment.sc';
 import AuthorData from '../../../../components/UI/AuthorData/AuthorData';
 import sprite from '../../../../images/sprite.svg';
 import RenderIfIsAdmin from '../../../../components/RenderIfsAdmin/RenderIfIsAdmin';
@@ -32,7 +32,7 @@ const Comment = (props) => {
   let editIcon = null;
   if (authUID === authorUID) {
     editIcon = (
-      <svg className={classes.EditIcon} onClick={editingToggledHandler}>
+      <svg className="edit-icon" onClick={editingToggledHandler}>
         <use href={`${sprite}#icon-pencil`} />
       </svg>
     );
@@ -41,14 +41,14 @@ const Comment = (props) => {
   let deleteIcon = null;
   if (authUID === authorUID || authUID === postAuthorUID) {
     deleteIcon = (
-      <svg className={classes.DeleteIcon} onClick={deleteStarted.bind(this, commentID)}>
+      <svg className="delete-icon" onClick={deleteStarted.bind(this, commentID)}>
         <use href={`${sprite}#icon-bin`} />
       </svg>
     );
   } else {
     deleteIcon = (
       <RenderIfIsAdmin>
-        <svg className={classes.DeleteIcon} onClick={deleteStarted.bind(this, commentID)}>
+        <svg className="delete-icon" onClick={deleteStarted.bind(this, commentID)}>
           <use href={`${sprite}#icon-bin`} />
         </svg>
       </RenderIfIsAdmin>
@@ -67,23 +67,23 @@ const Comment = (props) => {
   }
 
   return (
-    <div className={classes.Comment}>
-      <div className={classes.AuthorDataAndIcons}>
+    <SC.Wrapper>
+      <div className="author-data-and-icons">
         <AuthorData
-          size="Small"
+          size="small"
           firstName={authorFirstName}
           lastName={authorLastName}
           photoURL={authorPhotoURL}
           createdAt={createdAt}
         />
-        <div className={classes.Icons}>
+        <div className="icons">
           {editIcon}
           {deleteIcon}
         </div>
       </div>
-      <p className={classes.Content}>{content}</p>
+      <p className="content">{content}</p>
       {editCommentForm}
-    </div>
+    </SC.Wrapper>
   );
 };
 

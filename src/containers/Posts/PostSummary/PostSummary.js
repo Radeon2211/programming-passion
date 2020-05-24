@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from './PostSummary.module.scss';
+import * as SC from './PostSummary.sc';
 import Line from '../../../components/UI/Line/Line';
 import AuthorData from '../../../components/UI/AuthorData/AuthorData';
 import sprite from '../../../images/sprite.svg';
@@ -18,15 +18,15 @@ const PostSummary = (props) => {
     },
   } = props;
   return (
-    <div className={classes.PostSummary}>
-      <div className={classes.Left}>
+    <SC.Wrapper>
+      <div className="left">
         <Heading variant="H5" align="Left" mgBottom="Mg-Bottom-Small">
           {title}
         </Heading>
-        <Line type="Begin" size="Size-1" />
-        <div className={classes.User}>
+        <Line type="begin" size="1" />
+        <div className="user">
           <AuthorData
-            size="Small"
+            size="small"
             firstName={authorFirstName}
             lastName={authorLastName}
             photoURL={authorPhotoURL}
@@ -34,21 +34,21 @@ const PostSummary = (props) => {
           />
         </div>
       </div>
-      <div className={classes.Right}>
-        <div className={classes.IconBox}>
-          <svg className={classes.Icon}>
+      <div className="right">
+        <div className="icon-box">
+          <svg className="icon">
             <use href={`${sprite}#icon-heart`} />
           </svg>
-          <span className={classes.IconCaption}>{likesCount}</span>
+          <span className="icon-caption">{likesCount}</span>
         </div>
-        <div className={classes.IconBox}>
-          <svg className={classes.Icon}>
+        <div className="icon-box">
+          <svg className="icon">
             <use href={`${sprite}#icon-bubble`} />
           </svg>
-          <span className={classes.IconCaption}>{commentsCount}</span>
+          <span className="icon-caption">{commentsCount}</span>
         </div>
       </div>
-    </div>
+    </SC.Wrapper>
   );
 };
 

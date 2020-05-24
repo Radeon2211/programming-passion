@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Sriracha&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Handlee&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 
 :root {
   --theme: rgb(52, 73, 94);
@@ -15,18 +15,18 @@
   --gray-2: rgb(234, 234, 234);
   --gray-3: rgb(223, 223, 223);
   --gray-4: rgb(160, 160, 160);
-  --gray-4-transparent: rgba(160, 160, 160, .05);
+  --gray-4-transparent: rgba(160, 160, 160, 0.05);
 
-  --shadow-1: 0 0 2px rgba(0, 0, 0, .1);
-  --shadow-2: 0 0 2px rgba(0, 0, 0, .3);
-  --shadow-3: 0 0 3px rgba(0, 0, 0, .3);
-  --shadow-4: 0 0 5px rgba(0, 0, 0, .3);
-  --shadow-5: 0 0 8px rgba(0, 0, 0, .3);
+  --shadow-1: 0 0 2px rgba(0, 0, 0, 0.1);
+  --shadow-2: 0 0 2px rgba(0, 0, 0, 0.3);
+  --shadow-3: 0 0 3px rgba(0, 0, 0, 0.3);
+  --shadow-4: 0 0 5px rgba(0, 0, 0, 0.3);
+  --shadow-5: 0 0 8px rgba(0, 0, 0, 0.3);
 
-  --font-logo: 'Sriracha', cursive;
-  --font-home-heading: 'Handlee', cursive;
-  --font-heading: 'Roboto', sans-serif;
-  --font-main: 'Lato', sans-serif;
+  --font-logo: "Sriracha", cursive;
+  --font-home-heading: "Handlee", cursive;
+  --font-heading: "Roboto", sans-serif;
+  --font-main: "Lato", sans-serif;
 
   --z-index-1: 10;
   --z-index-2: 100;

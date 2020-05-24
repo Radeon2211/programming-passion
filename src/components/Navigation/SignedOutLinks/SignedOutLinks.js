@@ -1,9 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import classes from './SignedOutLinks.module.scss';
+import styled from 'styled-components';
 import * as actions from '../../../store/actions/indexActions';
 import Button from '../../UI/Button/Button';
+
+const SC = {};
+SC.Wrapper = styled.nav`
+  & > *:not(:last-child) {
+    margin-right: 2.4rem;
+  }
+`;
 
 const SignedOutLinks = () => {
   const dispatch = useDispatch();
@@ -14,18 +21,18 @@ const SignedOutLinks = () => {
   };
 
   return (
-    <nav className={classes.SignedOutLinks}>
+    <SC.Wrapper>
       <Link to="/signin" onClick={linkClickedHandler}>
-        <Button size="Small" fill="Empty" color="Green">
+        <Button size="small" fill="empty" color="green">
           Login
         </Button>
       </Link>
       <Link to="/signup" onClick={linkClickedHandler}>
-        <Button size="Small" fill="Filled" color="Green">
+        <Button size="small" fill="filled" color="green">
           Sign up
         </Button>
       </Link>
-    </nav>
+    </SC.Wrapper>
   );
 };
 

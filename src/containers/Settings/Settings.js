@@ -1,7 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import classes from './Settings.module.scss';
+import * as SC from './Settings.sc';
 import * as actions from '../../store/actions/indexActions';
 import Button from '../../components/UI/Button/Button';
 import UserPhoto from '../../images/no-user.jpg';
@@ -10,13 +10,22 @@ import Loader from '../../components/UI/Loader/Loader';
 import RenderIfIsAdmin from '../../components/RenderIfsAdmin/RenderIfIsAdmin';
 import Heading from '../../components/UI/Heading/Heading';
 
-const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSuccess }) => {
-  let userCreds = <Loader size="Small" />;
+const Settings = () => {
+  const success = useSelector((state) => state.auth.success);
+  const firstName = useSelector((state) => state.firebase.profile.firstName);
+  const lastName = useSelector((state) => state.firebase.profile.lastName);
+  const email = useSelector((state) => state.firebase.auth.email);
+  const photoURL = useSelector((state) => state.firebase.profile.photoURL);
+
+  const dispatch = useDispatch();
+  const onDeleteSuccess = () => dispatch(actions.deleteSuccess());
+
+  let userCreds = <Loader size="small" />;
   if (firstName && lastName && email) {
     userCreds = (
       <>
-        <Link to="/change-name" className={classes.UserLink}>{`${firstName} ${lastName}`}</Link>
-        <Link to="/change-email" className={classes.UserLink}>
+        <Link to="/change-name" className="user-link">{`${firstName} ${lastName}`}</Link>
+        <Link to="/change-email" className="user-link">
           {email}
         </Link>
       </>
@@ -28,78 +37,66 @@ const Settings = ({ success, firstName, lastName, email, photoURL, onDeleteSucce
   }
 
   return (
-    <div className={classes.Settings}>
-      <div className={classes.User}>
-        <Link to="/change-photo" className={classes.UserPhotoLink}>
-          <img src={photoURL || UserPhoto} alt="You" className={classes.UserPhoto} />
+    <SC.Wrapper>
+      <div className="user">
+        <Link to="/change-photo" className="user-photo-link">
+          <img src={photoURL || UserPhoto} alt="You" className="user-photo" />
         </Link>
         {userCreds}
       </div>
-      <Line type="Middle" size="Size-2" />
+      <Line type="middle" size="2" />
       <Heading variant="H6" align="Center">
         What would you like to do?
       </Heading>
-      <div className={classes.Buttons}>
-        <Link to="/change-name" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty" color="Green">
+      <div className="buttons">
+        <Link to="/change-name" className="button-link">
+          <Button size="small" fill="empty" color="green">
             Change name
           </Button>
         </Link>
-        <Link to="/change-email" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty" color="Green">
+        <Link to="/change-email" className="button-link">
+          <Button size="small" fill="empty" color="green">
             Change email
           </Button>
         </Link>
-        <Link to="/change-password" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty" color="Green">
+        <Link to="/change-password" className="button-link">
+          <Button size="small" fill="empty" color="green">
             Change password
           </Button>
         </Link>
-        <Link to="/change-photo" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty" color="Green">
+        <Link to="/change-photo" className="button-link">
+          <Button size="small" fill="empty" color="green">
             Change photo
           </Button>
         </Link>
-        <Link to="/delete-account" className={classes.ButtonLink}>
-          <Button size="Small" fill="Empty" color="Red">
+        <Link to="/delete-account" className="button-link">
+          <Button size="small" fill="empty" color="red">
             Delete account
           </Button>
         </Link>
       </div>
       <Link to="/my-posts">
-        <Button size="Small" fill="Filled" color="Green">
+        <Button size="small" fill="filled" color="green">
           View your posts
         </Button>
       </Link>
       <RenderIfIsAdmin>
-        <div className={classes.AdminSection}>
+        <div className="admin-section">
           <Link to="/add-admin">
-            <Button size="Small" fill="Filled" color="Green">
+            <Button size="small" fill="filled" color="green">
               Add admin
             </Button>
           </Link>
           <Link to="/remove-admin">
-            <Button size="Small" fill="Filled" color="Red">
+            <Button size="small" fill="filled" color="red">
               Remove admin
             </Button>
           </Link>
         </div>
       </RenderIfIsAdmin>
-      <span className={classes.Success}>{success}</span>
-    </div>
+      <span className="success">{success}</span>
+    </SC.Wrapper>
   );
 };
 
-const mapStateToProps = (state) => ({
-  success: state.auth.success,
-  firstName: state.firebase.profile.firstName,
-  lastName: state.firebase.profile.lastName,
-  email: state.firebase.auth.email,
-  photoURL: state.firebase.profile.photoURL,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onDeleteSuccess: () => dispatch(actions.deleteSuccess()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default Settings;

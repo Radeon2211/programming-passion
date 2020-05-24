@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
-import classes from './Posts.module.scss';
+import * as SC from './Posts.sc';
 import Line from '../../components/UI/Line/Line';
 import PostList from './PostList/PostList';
 import Heading from '../../components/UI/Heading/Heading';
@@ -12,7 +12,7 @@ const Posts = ({ posts }) => {
   let postList = (
     <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
       It look like there is no posts yet. Maybe you want to
-      <Link to="/create-post" className={classes.NoPostsLink}>
+      <Link to="/create-post" className="no-posts-link">
         {' '}
         create one
       </Link>
@@ -24,13 +24,13 @@ const Posts = ({ posts }) => {
   }
 
   return (
-    <div className={classes.Posts}>
+    <SC.Wrapper>
       <Heading variant="H3" mgBottom="Mg-Bottom-Small">
         Check out the latest posts
       </Heading>
-      <Line type="Begin" size="Size-2" />
+      <Line type="begin" size="2" />
       {postList}
-    </div>
+    </SC.Wrapper>
   );
 };
 

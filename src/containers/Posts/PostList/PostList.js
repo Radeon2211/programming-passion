@@ -1,49 +1,46 @@
 import React from 'react';
-import '../../../css/animations.scss';
 import CSSTransition from 'react-transition-group/CSSTransition';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import { Link } from 'react-router-dom';
-import classes from './PostList.module.scss';
+import * as SC from './PostList.sc';
 import PostSummary from '../PostSummary/PostSummary';
 import sprite from '../../../images/sprite.svg';
 
-const PostList = ({ posts, deletable, deleteStarted }) => {
+const PostList = (props) => {
+  const { posts, deletable, deleteStarted } = props;
+
   let postList = null;
   if (deletable) {
     postList = posts.map((post) => (
       <CSSTransition key={post.id} timeout={300} classNames="fade">
-        <div className={classes.DeletePostWrapper}>
-          <Link to={`/posts/${post.id}`} className={classes.PostLink}>
+        <SC.DeletePostWrapper>
+          <Link to={`/posts/${post.id}`} className="post-link">
             <PostSummary post={post} />
           </Link>
-          <div className={classes.Icons}>
+          <div className="icons">
             <Link to={`/edit-post/${post.id}`}>
-              <svg className={classes.EditPostIcon}>
+              <svg className="edit-post-icon">
                 <use href={`${sprite}#icon-pencil`} />
               </svg>
             </Link>
-            <svg className={classes.DeletePostIcon} onClick={deleteStarted.bind(this, post.id)}>
+            <svg className="delete-post-icon" onClick={deleteStarted.bind(this, post.id)}>
               <use href={`${sprite}#icon-bin`} />
             </svg>
           </div>
-        </div>
+        </SC.DeletePostWrapper>
       </CSSTransition>
     ));
   } else {
     postList = posts.map((post) => (
       <CSSTransition key={post.id} timeout={300} classNames="fade">
-        <Link to={`/posts/${post.id}`} className={classes.PostLink}>
+        <Link to={`/posts/${post.id}`} className="post-link">
           <PostSummary post={post} />
         </Link>
       </CSSTransition>
     ));
   }
 
-  return (
-    <TransitionGroup component="div" className={classes.PostList}>
-      {postList}
-    </TransitionGroup>
-  );
+  return <TransitionGroup component={SC.List}>{postList}</TransitionGroup>;
 };
 
 export default PostList;

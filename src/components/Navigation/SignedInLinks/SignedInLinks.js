@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import classes from './SignedInLinks.module.scss';
+import * as SC from './SignedInLinks.sc';
 import Button from '../../UI/Button/Button';
 import Dropdown from './Dropdown/Dropdown';
 import noUser from '../../../images/no-user.jpg';
@@ -21,29 +21,19 @@ const SignedInLinks = () => {
     }
   };
 
-  const arrowClasses = [classes.Arrow];
-  if (dropdownIsVisible) arrowClasses.push(classes.Rotated);
-
   return (
-    <nav className={classes.SignedInLinks}>
+    <SC.Wrapper>
       <Link to="/create-post">
-        <Button size="Small" fill="Filled" color="Green">
+        <Button size="small" fill="filled" color="green">
           Create post
         </Button>
       </Link>
-      <div
-        className={classes.User}
-        id="user"
-        onClick={toggleDropdownHandler}
-        onKeyDown={toggleDropdownHandler}
-        role="button"
-        tabIndex="0"
-      >
-        <img src={photoURL || noUser} alt="You" className={classes.UserPhoto} />
-        <div className={arrowClasses.join(' ')} />
+      <SC.User id="user" onClick={toggleDropdownHandler}>
+        <img src={photoURL || noUser} alt="You" className="photo" />
+        <SC.Arrow rotated={dropdownIsVisible} />
         <Dropdown visible={dropdownIsVisible} closed={closeDropdownHandler} />
-      </div>
-    </nav>
+      </SC.User>
+    </SC.Wrapper>
   );
 };
 

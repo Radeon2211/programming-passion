@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import classes from './ChangePhoto.module.scss';
+import * as SC from './ChangePhoto.sc';
 import Form from '../../components/UI/Form/Form';
 import { isValidFileType, calculateFileSize, isValidFileSize } from '../../shared/utility';
 import * as actions from '../../store/actions/indexActions';
@@ -74,73 +74,71 @@ const ChangePhoto = (props) => {
     onDeletePhoto(currentPhotoURL, props.history);
   };
 
-  let preview = (
-    <div className={classes.Preview}>No file currently selected for upload. Max size is 1MB.</div>
-  );
+  let preview = <SC.Preview>No file currently selected for upload. Max size is 1MB.</SC.Preview>;
   let errorEl = null;
   let photoEl = null;
   let deletePhotoButton = null;
 
   if (error) {
-    errorEl = <span className={classes.Error}>{error}</span>;
+    errorEl = <span className="error">{error}</span>;
   }
 
   if (photoPreview) {
     photoEl = (
-      <div className={classes.PhotoBox}>
-        <img src={photoPreview} alt="Preview" className={classes.Photo} />
+      <div className="photo-box">
+        <img src={photoPreview} alt="Preview" className="photo" />
       </div>
     );
   }
 
   if (photo || error) {
     preview = (
-      <div className={classes.Preview}>
-        <div className={classes.FileData}>
-          <span className={classes.FileDataRow}>
-            <span className={classes.FileDataCaption}>Name: </span>
+      <SC.Preview>
+        <div className="file-data">
+          <span className="file-data-row">
+            <span className="file-data-caption">Name: </span>
             {photoName}
           </span>
-          <span className={classes.FileDataRow}>
-            <span className={classes.FileDataCaption}>Size: </span>
+          <span className="file-data-row">
+            <span className="file-data-caption">Size: </span>
             {photoSize}
           </span>
         </div>
         {photoEl}
-      </div>
+      </SC.Preview>
     );
   }
 
   if (currentPhotoURL) {
     deletePhotoButton = (
-      <Button size="Small" fill="Empty" color="Red" type="button" clicked={deletedPhotoHandler}>
+      <Button size="small" fill="empty" color="red" type="button" clicked={deletedPhotoHandler}>
         Delete your photo
       </Button>
     );
   }
 
   return (
-    <div className={classes.ChangePhoto}>
+    <SC.Wrapper>
       <Form
         headingText="Change Photo"
         btnText="Change"
         isValid={photo && !error}
         submitted={formSubmittedHandler}
       >
-        <div className={classes.Content}>
+        <div className="content">
           {/* eslint-disable-next-line */}
-          <label htmlFor="photo" className={classes.Label}>
-            <Button size="Small" fill="Empty" color="Green" type="button">
+          <label htmlFor="photo" className="label">
+            <Button size="small" fill="empty" color="green" type="button">
               Choose photo
             </Button>
           </label>
           {preview}
           {errorEl}
-          <input type="file" id="photo" className={classes.Input} onChange={inputChangedHandler} />
+          <input type="file" id="photo" className="input" onChange={inputChangedHandler} />
         </div>
       </Form>
       {deletePhotoButton}
-    </div>
+    </SC.Wrapper>
   );
 };
 

@@ -1,15 +1,16 @@
-@import '../../../../css/variables.scss';
+import styled from 'styled-components';
 
-.Comment {
+// eslint-disable-next-line import/prefer-default-export
+export const Wrapper = styled.div`
   margin: 2.4rem 0;
 
-  .AuthorDataAndIcons {
+  & .author-data-and-icons {
     align-items: center;
     display: flex;
     justify-content: space-between;
   }
 
-  .Icons {
+  & .icons {
     align-items: center;
     display: flex;
 
@@ -18,24 +19,24 @@
     }
   }
 
-  .DeleteIcon {
+  & .delete-icon {
     cursor: pointer;
     height: 2.1rem;
     fill: var(--red);
     width: 2.1rem;
   }
 
-  .EditIcon {
+  & .edit-icon {
     cursor: pointer;
     height: 2rem;
     fill: #fff;
     width: 2rem;
   }
 
-  .Content {
+  & .content {
     font-size: 1.6rem;
     margin-top: 1.2rem;
     text-align: justify;
     word-break: break-all;
   }
-}
+`;

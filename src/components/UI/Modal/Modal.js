@@ -1,45 +1,38 @@
 import React from 'react';
+import * as SC from './Modal.sc';
 import Button from '../Button/Button';
-import classes from './Modal.module.scss';
 import Heading from '../Heading/Heading';
 
 const Modal = (props) => {
   const { headingText, captionText, isVisible, deleted, canceled } = props;
 
-  const backdropClasses = [classes.Backdrop];
-  const popupClasses = [classes.Popup];
-  if (isVisible) {
-    backdropClasses.push(classes.Visible);
-    popupClasses.push(classes.Visible);
-  }
-
   return (
     <>
-      <div
-        className={backdropClasses.join(' ')}
+      <SC.Backdrop
+        visible={isVisible}
         onClick={canceled}
         onKeyDown={canceled}
         tabIndex="0"
         role="button"
         aria-label="Close modal"
       />
-      <div className={popupClasses.join(' ')}>
+      <SC.Popup visible={isVisible}>
         <Heading variant="H4" color="Black">
           {headingText}
         </Heading>
-        <span className={classes.Caption}>
-          <span className={classes.Note}>Note: </span>
+        <span className="caption">
+          <span className="note">Note: </span>
           {captionText}
         </span>
-        <div className={classes.Buttons}>
-          <Button size="Small" fill="Filled" color="Green" clicked={canceled}>
+        <div className="buttons">
+          <Button size="small" fill="filled" color="green" clicked={canceled}>
             Cancel
           </Button>
-          <Button size="Small" fill="Filled" color="Red" clicked={deleted}>
+          <Button size="small" fill="filled" color="red" clicked={deleted}>
             Delete
           </Button>
         </div>
-      </div>
+      </SC.Popup>
     </>
   );
 };

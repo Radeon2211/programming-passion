@@ -1,6 +1,7 @@
-@import '../../css/variables.scss';
+import styled from 'styled-components';
 
-.Settings {
+// eslint-disable-next-line import/prefer-default-export
+export const Wrapper = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -10,17 +11,17 @@
     margin-bottom: 3.6rem;
   }
 
-  .User {
+  & .user {
     align-items: center;
     display: flex;
     flex-direction: column;
   }
 
-  .UserPhotoLink {
+  & .user-photo-link {
     margin-bottom: 1.2rem;
   }
 
-  .UserPhoto {
+  & .user-photo {
     border-radius: 50%;
     box-shadow: var(--shadow-2);
     height: 15rem;
@@ -28,8 +29,8 @@
     width: 15rem;
   }
 
-  .UserLink:link,
-  .UserLink:visited {
+  & .user-link:link,
+  & .user-link:visited {
     color: #fff;
     text-decoration: none;
     margin-bottom: 1.2rem;
@@ -37,27 +38,27 @@
     text-align: center;
   }
 
-  .Buttons {
+  & .buttons {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .ButtonLink {
+  & .button-link {
     margin: 0 1.2rem 2.4rem;
   }
 
-  .Success {
+  & .success {
     color: var(--green);
     font-size: 1.7rem;
     text-align: center;
   }
 
-  .AdminSection {
+  & .admin-section {
     display: block;
 
     & > *:not(:last-child) {
       margin-right: 2.4rem;
     }
   }
-}
+`;

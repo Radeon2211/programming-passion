@@ -1,17 +1,15 @@
 import React from 'react';
 import { Field } from 'formik';
-import classes from './Input.module.scss';
+import * as SC from './Input.sc';
 
 const Input = (props) => {
   const { kind, config, label, isValid, isTouched } = props;
 
   let input = null;
-  let validClass = null;
+  let valid = null;
   if (isValid !== undefined && isTouched) {
-    validClass = isValid ? classes.Valid : classes.Invalid;
+    valid = isValid ? 'valid' : 'invalid';
   }
-  const inputWrapperClasses = [classes.InputWrapper, validClass];
-  const textareaClasses = [classes.Input, classes.Textarea];
 
   const autoSize = (e) => {
     e.persist();
@@ -24,40 +22,27 @@ const Input = (props) => {
   switch (kind) {
     case 'input':
       input = (
-        <Field name={config.name}>
-          {({ field }) => <input className={classes.Input} {...config} {...field} />}
-        </Field>
+        <Field name={config.name}>{({ field }) => <SC.Input {...config} {...field} />}</Field>
       );
       break;
     case 'textarea':
       input = (
         <Field name={config.name}>
-          {({ field }) => (
-            <textarea
-              className={textareaClasses.join(' ')}
-              {...config}
-              {...field}
-              onKeyDown={autoSize}
-            />
-          )}
+          {({ field }) => <SC.Textarea {...config} {...field} onKeyDown={autoSize} />}
         </Field>
       );
       break;
     default:
       input = (
-        <Field name={config.name}>
-          {({ field }) => <input className={classes.Input} {...config} {...field} />}
-        </Field>
+        <Field name={config.name}>{({ field }) => <SC.Input {...config} {...field} />}</Field>
       );
   }
 
   return (
-    <div className={inputWrapperClasses.join(' ')}>
-      <label htmlFor={config.id} className={classes.Label}>
-        {label}
-      </label>
+    <SC.Wrapper className={valid}>
+      <SC.Label htmlFor={config.id}>{label}</SC.Label>
       {input}
-    </div>
+    </SC.Wrapper>
   );
 };
 

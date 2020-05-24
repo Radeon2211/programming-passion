@@ -10,7 +10,7 @@ import Home from './containers/Home/Home';
 import SignOut from './containers/Auth/SignOut';
 import Posts from './containers/Posts/Posts';
 import PostDetails from './containers/PostDetails/PostDetails';
-import MyPosts from './containers/MyPosts/MyPosts';
+import MyPosts from './containers/Posts/MyPosts/MyPosts';
 import Footer from './components/Footer/Footer';
 
 const SignIn = lazy(() => import('./containers/Auth/SignIn'));
@@ -32,7 +32,7 @@ const WaitingComponent = (Component) => {
       fallback={
         // eslint-disable-next-line react/jsx-wrap-multilines
         <div style={{ textAlign: 'center' }}>
-          <Loader size="Big" />
+          <Loader size="big" />
         </div>
       }
     >

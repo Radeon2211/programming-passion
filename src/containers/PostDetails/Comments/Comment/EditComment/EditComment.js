@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Form from '../../../../../components/UI/Form/Form';
@@ -13,11 +13,9 @@ const validationSchema = Yup.object({
 const EditComment = (props) => {
   const { currentContent, commentID, cancelled } = props;
 
-  const canEditComment = useSelector((state) => state.post.canWriteComment);
-
   const dispatch = useDispatch();
-  const onEditComment = (content, commentIDProp, canEditCommentProp, closed) =>
-    dispatch(actions.editComment(content, commentIDProp, canEditCommentProp, closed));
+  const onEditComment = (content, commentIDProp, closed) =>
+    dispatch(actions.editComment(content, commentIDProp, closed));
   const onDeleteError = useCallback(() => dispatch(actions.deleteError()), [dispatch]);
 
   useEffect(() => {
@@ -31,7 +29,7 @@ const EditComment = (props) => {
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
-        onEditComment(values.content, commentID, canEditComment, cancelled);
+        onEditComment(values.content, commentID, cancelled);
       }}
     >
       {({ errors, touched, isValid, dirty, setFieldTouched }) => {

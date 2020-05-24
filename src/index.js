@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import firebase from 'firebase/app';
 import thunk from 'redux-thunk';
 import { reduxFirestore, getFirestore, createFirestoreInstance } from 'redux-firestore';
@@ -8,6 +7,10 @@ import { ReactReduxFirebaseProvider, getFirebase, isLoaded } from 'react-redux-f
 import { HashRouter } from 'react-router-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider, useSelector } from 'react-redux';
+import styled, { ThemeProvider } from 'styled-components';
+
+import theme from './styled/theme';
+import GlobalStyles from './styled/globalStyles';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './store/reducers/rootReducer';
@@ -47,13 +50,18 @@ const rrfProps = {
   sessions: 'sessions',
 };
 
+const LoaderWrapper = styled.div`
+  text-align: center;
+  margin-top: 5rem;
+`;
+
 const AuthIsLoaded = ({ children }) => {
   const auth = useSelector((state) => state.firebase.auth);
   if (!isLoaded(auth))
     return (
-      <div className="LoaderWrapper">
-        <Loader size="Big" />
-      </div>
+      <LoaderWrapper>
+        <Loader size="big" />
+      </LoaderWrapper>
     );
   return children;
 };
@@ -64,7 +72,10 @@ ReactDOM.render(
       <ReactReduxFirebaseProvider {...rrfProps}>
         <AuthIsLoaded>
           <HashRouter>
-            <App />
+            <ThemeProvider theme={theme}>
+              <GlobalStyles />
+              <App />
+            </ThemeProvider>
           </HashRouter>
         </AuthIsLoaded>
       </ReactReduxFirebaseProvider>

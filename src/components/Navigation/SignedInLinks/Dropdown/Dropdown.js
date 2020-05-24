@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import onClickOutside from 'react-onclickoutside';
-import classes from './Dropdown.module.scss';
+import * as SC from './Dropdown.sc';
 import sprite from '../../../../images/sprite.svg';
 
 class Dropdown extends Component {
@@ -13,35 +13,27 @@ class Dropdown extends Component {
   render() {
     const { visible } = this.props;
 
-    const dropdownClasses = [classes.Dropdown];
-    if (visible) dropdownClasses.push(classes.Visible);
-
     return (
-      <div
-        className={dropdownClasses.join(' ')}
-        onKeyDown={this.handleClickOutside}
-        role="button"
-        tabIndex="0"
-      >
-        <ul className={classes.List}>
-          <li className={classes.Item}>
-            <Link to="/settings" className={classes.Link}>
+      <SC.Wrapper visible={visible} onClick={this.handleClickOutside}>
+        <ul className="list">
+          <li className="item">
+            <Link to="/settings" className="link">
               Settings
-              <svg className={classes.Icon}>
+              <svg className="icon">
                 <use href={`${sprite}#icon-cog`} />
               </svg>
             </Link>
           </li>
-          <li className={classes.Item}>
-            <Link to="/signout" className={classes.Link}>
+          <li className="item">
+            <Link to="/signout" className="link">
               Sign out
-              <svg className={classes.Icon}>
+              <svg className="icon">
                 <use href={`${sprite}#icon-switch`} />
               </svg>
             </Link>
           </li>
         </ul>
-      </div>
+      </SC.Wrapper>
     );
   }
 }

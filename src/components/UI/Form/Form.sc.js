@@ -1,8 +1,9 @@
-@import '../../../css/variables.scss';
+import styled from 'styled-components';
 
-.Container {
+// eslint-disable-next-line import/prefer-default-export
+export const Wrapper = styled.div`
   align-self: flex-start;
-  background-color: rgba(0, 0, 0, .1);
+  background-color: rgba(0, 0, 0, 0.1);
   box-shadow: var(--shadow-4);
   justify-self: center;
   max-width: 100%;
@@ -10,19 +11,19 @@
   padding: 2.4rem;
   width: 65rem;
 
-  .BtnAndLoader {
+  & .btn-and-loader {
     display: flex;
     align-items: center;
   }
 
-  .CancelButtonBox {
+  & .cancel-button-box {
     margin-left: 2.4rem;
   }
 
-  .Error {
+  & .error {
     color: var(--red);
     display: inline-block;
     font-size: 1.5rem;
     margin-top: 2.4rem;
   }
-}
+`;

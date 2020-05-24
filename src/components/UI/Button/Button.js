@@ -1,17 +1,20 @@
 import React from 'react';
-import classes from './Button.module.scss';
+import * as SC from './Button.sc';
 
 const Button = (props) => {
   const { size, fill, color, type, disabled, clicked, children } = props;
 
-  const btnClasses = [classes.Button, classes[size], classes[fill], classes[color]];
-  if (disabled) btnClasses.push(classes.Disabled);
-
   return (
-    // eslint-disable-next-line
-    <button className={btnClasses.join(' ')} type={type} disabled={disabled} onClick={clicked}>
+    <SC.Button
+      size={size}
+      fill={fill}
+      color={color}
+      disabled={disabled}
+      type={type}
+      onClick={clicked}
+    >
       {children}
-    </button>
+    </SC.Button>
   );
 };
 
