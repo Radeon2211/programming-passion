@@ -35,7 +35,7 @@ const MyPosts = () => {
   };
 
   let myPosts = (
-    <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
+    <Heading variant="h6" thickness="thin" mgTop="4">
       You didn&apos;t write any post yet.
       <Link to="/create-post" className="no-posts-link">
         {' '}
@@ -57,7 +57,7 @@ const MyPosts = () => {
         deleted={deletePostHandler}
       />
       <SC.Wrapper>
-        <Heading variant="H3" mgBottom="Mg-Bottom-Small">
+        <Heading variant="h3" mgBottom="1">
           See your posts
         </Heading>
         <Line type="begin" size="2" />

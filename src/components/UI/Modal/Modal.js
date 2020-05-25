@@ -17,7 +17,7 @@ const Modal = (props) => {
         aria-label="Close modal"
       />
       <SC.Popup visible={isVisible}>
-        <Heading variant="H4" color="Black">
+        <Heading variant="h4" color="black">
           {headingText}
         </Heading>
         <span className="caption">

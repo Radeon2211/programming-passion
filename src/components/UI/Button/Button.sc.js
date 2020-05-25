@@ -4,11 +4,11 @@ import styled from 'styled-components';
 export const Button = styled.button`
   background-color: transparent;
   border-radius: 1px;
-  box-shadow: var(--shadow-2);
+  box-shadow: ${({ theme }) => theme.shadows.shadow2};
   color: #fff;
   cursor: pointer;
   outline: none;
-  text-shadow: var(--shadow-1);
+  text-shadow: ${({ theme }) => theme.shadows.shadow1};
   transition: all .12s;
 
   &:hover {
@@ -79,13 +79,13 @@ export const Button = styled.button`
     if (color === 'green') {
       if (disabled) {
         return `
-          background-color: var(--green-dark-2);
-          border: 1px solid var(--green-dark-2);
+          background-color: ${theme.colors.greenDark2};
+          border: 1px solid ${theme.colors.greenDark2};
           cursor: not-allowed;
 
           &:hover {
-            background-color: var(--green-dark-2);
-            border: 1px solid var(--green-dark-2);
+            background-color: ${theme.colors.greenDark2};;
+            border: 1px solid ${theme.colors.greenDark2};
           }
         `;
       }

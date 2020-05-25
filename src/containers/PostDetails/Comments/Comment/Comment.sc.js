@@ -22,7 +22,7 @@ export const Wrapper = styled.div`
   & .delete-icon {
     cursor: pointer;
     height: 2.1rem;
-    fill: var(--red);
+    fill: ${({ theme }) => theme.colors.red};
     width: 2.1rem;
   }
 

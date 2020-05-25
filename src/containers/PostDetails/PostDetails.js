@@ -119,7 +119,7 @@ const PostDetails = (props) => {
 
   let postDetails = <Loader size="small" />;
   if (post === null) {
-    postDetails = <Heading variant="H6">This post does not exists</Heading>;
+    postDetails = <Heading variant="h6">This post does not exists</Heading>;
   }
 
   let unauthInfo = null;
@@ -176,7 +176,7 @@ const PostDetails = (props) => {
           deleted={deletePostHandler}
         />
         <SC.Wrapper>
-          <Heading variant="H4" align="Left" mgBottom="Mg-Bottom-Small">
+          <Heading variant="h4" align="left" mgBottom="1">
             {title}
           </Heading>
           <div className="author">

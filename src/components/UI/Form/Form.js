@@ -19,7 +19,7 @@ const Form = (props) => {
   let heading = null;
   if (headingText) {
     heading = (
-      <Heading variant="H4" mgBottom="Mg-Bottom-Medium">
+      <Heading variant="h4" mgBottom="2">
         {headingText}
       </Heading>
     );

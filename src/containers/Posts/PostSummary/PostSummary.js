@@ -20,7 +20,7 @@ const PostSummary = (props) => {
   return (
     <SC.Wrapper>
       <div className="left">
-        <Heading variant="H5" align="Left" mgBottom="Mg-Bottom-Small">
+        <Heading variant="h5" align="left" mgBottom="1">
           {title}
         </Heading>
         <Line type="begin" size="1" />

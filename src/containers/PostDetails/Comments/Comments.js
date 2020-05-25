@@ -38,7 +38,7 @@ const Comments = ({ comments, postID, commentHandlingData }) => {
         <svg className="icon">
           <use href={`${sprite}#icon-bubble`} />
         </svg>
-        <Heading variant="H4" thickness="Thin">
+        <Heading variant="h4" thickness="thin">
           Comments
           {/* eslint-disable-next-line */}
           <span className="comments-count">( {comments.length}{' '} )</span>

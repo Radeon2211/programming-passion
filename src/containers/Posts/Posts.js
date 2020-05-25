@@ -10,7 +10,7 @@ import Heading from '../../components/UI/Heading/Heading';
 
 const Posts = ({ posts }) => {
   let postList = (
-    <Heading variant="H6" thickness="Thin" mgTop="Mg-Top-VeryBig">
+    <Heading variant="h6" thickness="thin" mgTop="4">
       It look like there is no posts yet. Maybe you want to
       <Link to="/create-post" className="no-posts-link">
         {' '}
@@ -25,7 +25,7 @@ const Posts = ({ posts }) => {
 
   return (
     <SC.Wrapper>
-      <Heading variant="H3" mgBottom="Mg-Bottom-Small">
+      <Heading variant="h3" mgBottom="1">
         Check out the latest posts
       </Heading>
       <Line type="begin" size="2" />

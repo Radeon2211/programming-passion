@@ -15,7 +15,7 @@ const Navbar = (props) => {
     <SC.Wrapper>
       <Link to="/" className="heading-link">
         <header className="heading-text">
-          <Heading variant="H2">Programming Passion</Heading>
+          <Heading variant="h2">Programming Passion</Heading>
         </header>
         <img src={logo} alt="Programming Passion" className="logo" />
       </Link>

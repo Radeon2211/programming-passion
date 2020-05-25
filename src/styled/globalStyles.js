@@ -43,7 +43,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body::-webkit-scrollbar-track {
-    background-color: var(--theme);
+    background-color: ${({ theme }) => theme.colors.theme};
     border-left: 1px solid ${({ theme }) => theme.colors.themeDark};
     box-shadow: inset 0 0 5px ${({ theme }) => theme.colors.themeDark};
   }

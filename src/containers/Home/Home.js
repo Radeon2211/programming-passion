@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <SC.Wrapper>
-      <Heading variant="H1" align="Center">
+      <Heading variant="h1" align="center">
         <span>Get smarter about programming</span>
         <span>and share the knowledge</span>
       </Heading>

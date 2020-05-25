@@ -25,7 +25,7 @@ export const Wrapper = styled.div`
 
   & .delete-post-icon {
     cursor: pointer;
-    fill: var(--red);
+    fill: ${({ theme }) => theme.colors.red};
     height: 3.6rem;
     width: 3.6rem;
   }

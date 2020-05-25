@@ -45,7 +45,7 @@ const Settings = () => {
         {userCreds}
       </div>
       <Line type="middle" size="2" />
-      <Heading variant="H6" align="Center">
+      <Heading variant="h6" align="Center">
         What would you like to do?
       </Heading>
       <div className="buttons">

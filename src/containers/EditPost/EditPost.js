@@ -65,7 +65,7 @@ const EditPost = (props) => {
 
   let form = null;
   if (post === null) {
-    form = <Heading variant="H6">This post does not exists</Heading>;
+    form = <Heading variant="h6">This post does not exists</Heading>;
   } else if (post === undefined) {
     form = <Loader size="Small" />;
   } else {
